@@ -149,6 +149,19 @@ pub fn change_binding(
         }
     };
 
+    validate_shortcut_for_implementation(&binding, settings.keyboard_implementation)?;
+    // Capture suspends registrations, so the native manager cannot detect a
+    // collision with another saved mouse binding until capture has ended.
+    if handy_keys::is_mouse_shortcut(&binding) {
+        let requested = binding.parse::<::handy_keys::Hotkey>().ok();
+        if settings.bindings.iter().any(|(other_id, other)| {
+            other_id != &id
+                && other.current_binding.parse::<::handy_keys::Hotkey>().ok() == requested
+        }) {
+            return Err(format!("Shortcut '{}' is already in use", binding));
+        }
+    }
+
     // If this is the cancel binding, just update the settings and return
     // It's managed dynamically, so we don't register/unregister here
     if id == "cancel" {
@@ -169,14 +182,6 @@ pub fn change_binding(
     if let Err(e) = unregister_shortcut(&app, binding_to_modify.clone()) {
         let error_msg = format!("Failed to unregister shortcut: {}", e);
         error!("change_binding error: {}", error_msg);
-    }
-
-    // Validate the new shortcut for the current keyboard implementation
-    if let Err(e) = validate_shortcut_for_implementation(&binding, settings.keyboard_implementation)
-    {
-        warn!("change_binding validation error: {}", e);
-        restore_registration(&app, &binding_to_modify);
-        return Err(e);
     }
 
     // Create an updated binding

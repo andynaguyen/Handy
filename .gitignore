@@ -45,3 +45,6 @@ result
 
 # Python bytecode (scripts/)
 __pycache__/
+
+# Standalone tests for the vendored input library
+/src-tauri/vendor/handy-keys/Cargo.lock

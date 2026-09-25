@@ -27,7 +27,7 @@
 //! polled from a dedicated recording thread. Events are emitted to the frontend
 //! via Tauri's event system.
 
-use handy_keys::{Hotkey, HotkeyId, HotkeyManager, HotkeyState, KeyboardListener};
+use handy_keys::{Hotkey, HotkeyId, HotkeyManager, HotkeyState, Key, KeyboardListener};
 use log::{debug, error, info};
 use serde::Serialize;
 use specta::Type;
@@ -89,12 +89,17 @@ impl HandyKeysState {
     /// Create a new HandyKeysState
     pub fn new(app: AppHandle) -> Result<Self, String> {
         let (cmd_tx, cmd_rx) = mpsc::channel::<ManagerCommand>();
+        let (ready_tx, ready_rx) = mpsc::channel();
 
         // Start the manager thread
         let app_clone = app.clone();
         let thread_handle = thread::spawn(move || {
-            Self::manager_thread(cmd_rx, app_clone);
+            Self::manager_thread(cmd_rx, app_clone, ready_tx);
         });
+
+        ready_rx
+            .recv()
+            .map_err(|_| "Shortcut manager stopped during initialization".to_string())??;
 
         Ok(Self {
             command_sender: Mutex::new(cmd_tx),
@@ -107,7 +112,11 @@ impl HandyKeysState {
     }
 
     /// The main manager thread - owns the HotkeyManager and processes commands
-    fn manager_thread(cmd_rx: Receiver<ManagerCommand>, app: AppHandle) {
+    fn manager_thread(
+        cmd_rx: Receiver<ManagerCommand>,
+        app: AppHandle,
+        ready: Sender<Result<(), String>>,
+    ) {
         info!("handy-keys manager thread started");
 
         // Create the HotkeyManager in this thread
@@ -115,9 +124,11 @@ impl HandyKeysState {
             Ok(m) => m,
             Err(e) => {
                 error!("Failed to create HotkeyManager: {}", e);
+                let _ = ready.send(Err(format!("Failed to create shortcut listener: {}", e)));
                 return;
             }
         };
+        let _ = ready.send(Ok(()));
 
         // Maps binding IDs to HotkeyIds and hotkey strings
         let mut binding_to_hotkey: HashMap<String, HotkeyId> = HashMap::new();
@@ -311,15 +322,30 @@ impl HandyKeysState {
             };
 
             if let Some(key_event) = event {
-                // Convert to frontend-friendly format
-                let frontend_event = FrontendKeyEvent {
-                    modifiers: modifiers_to_strings(key_event.modifiers),
-                    key: key_event.key.map(|k| k.to_string().to_lowercase()),
-                    is_key_down: key_event.is_key_down,
-                    hotkey_string: key_event
+                let modifiers = modifiers_to_strings(key_event.modifiers);
+                let key = key_event.key.map(|k| k.to_string().to_lowercase());
+                // Tauri's keyboard parser cannot read side-specific modifiers.
+                // Its macOS recorder still uses native events for extra mouse buttons.
+                let hotkey_string = if get_settings(&app).keyboard_implementation
+                    == settings::KeyboardImplementation::Tauri
+                {
+                    modifiers
+                        .iter()
+                        .chain(key.iter())
+                        .cloned()
+                        .collect::<Vec<_>>()
+                        .join("+")
+                } else {
+                    key_event
                         .as_hotkey()
                         .map(|h| h.to_handy_string())
-                        .unwrap_or_default(),
+                        .unwrap_or_default()
+                };
+                let frontend_event = FrontendKeyEvent {
+                    modifiers,
+                    key,
+                    is_key_down: key_event.is_key_down,
+                    hotkey_string,
                 };
 
                 // Emit to frontend
@@ -383,25 +409,25 @@ impl Drop for HandyKeysState {
 fn modifiers_to_strings(modifiers: handy_keys::Modifiers) -> Vec<String> {
     let mut result = Vec::new();
 
-    if modifiers.contains(handy_keys::Modifiers::CTRL) {
+    if modifiers.intersects(handy_keys::Modifiers::CTRL) {
         result.push("ctrl".to_string());
     }
-    if modifiers.contains(handy_keys::Modifiers::OPT) {
+    if modifiers.intersects(handy_keys::Modifiers::OPT) {
         #[cfg(target_os = "macos")]
         result.push("option".to_string());
         #[cfg(not(target_os = "macos"))]
         result.push("alt".to_string());
     }
-    if modifiers.contains(handy_keys::Modifiers::SHIFT) {
+    if modifiers.intersects(handy_keys::Modifiers::SHIFT) {
         result.push("shift".to_string());
     }
-    if modifiers.contains(handy_keys::Modifiers::CMD) {
+    if modifiers.intersects(handy_keys::Modifiers::CMD) {
         #[cfg(target_os = "macos")]
         result.push("command".to_string());
         #[cfg(not(target_os = "macos"))]
         result.push("super".to_string());
     }
-    if modifiers.contains(handy_keys::Modifiers::FN) {
+    if modifiers.intersects(handy_keys::Modifiers::FN) {
         result.push("fn".to_string());
     }
 
@@ -416,14 +442,51 @@ pub fn validate_shortcut(raw: &str) -> Result<(), String> {
     }
     // HandyKeys accepts modifier-only, key-only, and modifier+key combos
     // Just verify the string is parseable
-    raw.parse::<Hotkey>()
-        .map(|_| ())
-        .map_err(|e| format!("Invalid shortcut for HandyKeys: {}", e))
+    let hotkey = raw
+        .parse::<Hotkey>()
+        .map_err(|e| format!("Invalid shortcut for HandyKeys: {}", e))?;
+    #[cfg(target_os = "windows")]
+    if matches!(hotkey.key, Some(Key::Mouse6 | Key::Mouse7 | Key::Mouse8)) {
+        return Err("Mouse buttons 6 through 8 are not supported on Windows".into());
+    }
+    if matches!(hotkey.key, Some(Key::MouseLeft | Key::MouseRight)) && hotkey.modifiers.is_empty() {
+        return Err("Left and right mouse buttons require a modifier key".into());
+    }
+    Ok(())
+}
+
+/// Identify mouse bindings using the same parser as the global listener.
+pub fn is_mouse_shortcut(raw: &str) -> bool {
+    matches!(
+        raw.parse::<Hotkey>().ok().and_then(|hotkey| hotkey.key),
+        Some(
+            Key::MouseLeft
+                | Key::MouseRight
+                | Key::MouseMiddle
+                | Key::MouseX1
+                | Key::MouseX2
+                | Key::Mouse6
+                | Key::Mouse7
+                | Key::Mouse8
+        )
+    )
+}
+
+/// Mouse bindings also use this listener when Tauri handles keyboard shortcuts.
+fn ensure_initialized(app: &AppHandle) -> Result<(), String> {
+    static INITIALIZATION: Mutex<()> = Mutex::new(());
+    let _guard = INITIALIZATION
+        .lock()
+        .map_err(|_| "Failed to lock shortcut listener initialization")?;
+    if app.try_state::<HandyKeysState>().is_none() {
+        app.manage(HandyKeysState::new(app.clone())?);
+    }
+    Ok(())
 }
 
 /// Initialize handy-keys shortcuts
 pub fn init_shortcuts(app: &AppHandle) -> Result<(), String> {
-    let state = HandyKeysState::new(app.clone())?;
+    ensure_initialized(app)?;
 
     let default_bindings = settings::get_default_settings().bindings;
     let user_settings = settings::load_or_create_app_settings(app);
@@ -444,7 +507,7 @@ pub fn init_shortcuts(app: &AppHandle) -> Result<(), String> {
             .cloned()
             .unwrap_or(default_binding);
 
-        if let Err(e) = state.register(&binding) {
+        if let Err(e) = register_shortcut(app, binding) {
             error!(
                 "Failed to register handy-keys shortcut {} during init: {}",
                 id, e
@@ -452,7 +515,6 @@ pub fn init_shortcuts(app: &AppHandle) -> Result<(), String> {
         }
     }
 
-    app.manage(state);
     info!("handy-keys shortcuts initialized");
     Ok(())
 }
@@ -504,6 +566,8 @@ pub fn unregister_cancel_shortcut(app: &AppHandle) {
 
 /// Register a shortcut
 pub fn register_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<(), String> {
+    validate_shortcut(&binding.current_binding)?;
+    ensure_initialized(app)?;
     let state = app
         .try_state::<HandyKeysState>()
         .ok_or("HandyKeysState not initialized")?;
@@ -523,7 +587,9 @@ pub fn unregister_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<
 #[specta::specta]
 pub fn start_handy_keys_recording(app: AppHandle, binding_id: String) -> Result<(), String> {
     let settings = get_settings(&app);
-    if settings.keyboard_implementation != settings::KeyboardImplementation::HandyKeys {
+    if settings.keyboard_implementation != settings::KeyboardImplementation::HandyKeys
+        && !cfg!(target_os = "macos")
+    {
         return Err("handy-keys is not the active keyboard implementation".into());
     }
 
@@ -537,6 +603,7 @@ pub fn start_handy_keys_recording(app: AppHandle, binding_id: String) -> Result<
         return Err("secure-input-active".into());
     }
 
+    ensure_initialized(&app)?;
     let state = app
         .try_state::<HandyKeysState>()
         .ok_or("HandyKeysState not initialized")?;
@@ -557,7 +624,9 @@ pub fn start_handy_keys_recording(app: AppHandle, binding_id: String) -> Result<
 #[specta::specta]
 pub fn stop_handy_keys_recording(app: AppHandle) -> Result<(), String> {
     let settings = get_settings(&app);
-    if settings.keyboard_implementation != settings::KeyboardImplementation::HandyKeys {
+    if settings.keyboard_implementation != settings::KeyboardImplementation::HandyKeys
+        && !cfg!(target_os = "macos")
+    {
         return Err("handy-keys is not the active keyboard implementation".into());
     }
 
@@ -571,4 +640,84 @@ pub fn stop_handy_keys_recording(app: AppHandle) -> Result<(), String> {
     let result = state.stop_recording();
     super::resume_all_shortcuts(&app);
     result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{is_mouse_shortcut, validate_shortcut};
+
+    #[test]
+    fn extended_mouse_shortcuts_use_native_button_names() {
+        for binding in ["mouse6", "mouse7", "mouse8", "ctrl+mouse8"] {
+            assert!(is_mouse_shortcut(binding));
+            #[cfg(not(target_os = "windows"))]
+            assert!(validate_shortcut(binding).is_ok());
+            #[cfg(target_os = "windows")]
+            assert!(validate_shortcut(binding).is_err());
+            let parsed: handy_keys::Hotkey = binding.parse().unwrap();
+            assert_eq!(parsed.to_handy_string(), binding);
+        }
+    }
+
+    #[test]
+    fn accepts_supported_mouse_bindings() {
+        for binding in [
+            "MouseMiddle",
+            "MouseX1",
+            "MouseX2",
+            "control+MouseLeft",
+            "shift+MouseRight",
+            "alt+MouseMiddle",
+            "control+shift+MouseX1",
+            "fn+MouseX2",
+        ] {
+            assert!(is_mouse_shortcut(binding), "{binding}");
+            assert!(validate_shortcut(binding).is_ok(), "{binding}");
+        }
+    }
+
+    #[test]
+    fn requires_a_modifier_for_primary_mouse_buttons_and_their_aliases() {
+        for binding in [
+            "MouseLeft",
+            "MouseRight",
+            "leftclick",
+            "rmb",
+            "mouse1",
+            "mouse2",
+        ] {
+            assert!(is_mouse_shortcut(binding), "{binding}");
+            assert_eq!(
+                validate_shortcut(binding),
+                Err("Left and right mouse buttons require a modifier key".into()),
+                "{binding}"
+            );
+        }
+    }
+
+    #[test]
+    fn recognizes_mouse_aliases_and_preserves_keyboard_routing() {
+        for binding in [
+            "ctrl+LMB",
+            "mouse3",
+            "mouse4",
+            "mouse5",
+            "shift+back",
+            "forward",
+        ] {
+            assert!(is_mouse_shortcut(binding), "{binding}");
+            assert!(validate_shortcut(binding).is_ok(), "{binding}");
+        }
+        for binding in ["ctrl+Space", "shift", "Backspace", "ArrowLeft"] {
+            assert!(!is_mouse_shortcut(binding), "{binding}");
+        }
+    }
+
+    #[test]
+    fn rejects_unknown_buttons_and_multiple_main_inputs() {
+        for binding in ["MouseX3", "control+MouseX1+Space", "MouseLeft+MouseRight"] {
+            assert!(!is_mouse_shortcut(binding), "{binding}");
+            assert!(validate_shortcut(binding).is_err(), "{binding}");
+        }
+    }
 }

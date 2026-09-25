@@ -162,15 +162,26 @@
       "title": "General",
       "shortcut": {
         "title": "Handy Shortcuts",
-        "description": "Configure keyboard shortcuts to trigger speech-to-text recording",
+        "description": "Configure keyboard or mouse shortcuts to trigger speech-to-text recording",
         "loading": "Loading shortcuts...",
         "none": "No shortcuts configured",
         "notFound": "Shortcut not found",
         "pressKeys": "Press keys...",
+        "pressKeysOrMouse": "Press keys or a mouse button...",
+        "mouseButtons": {
+          "mouseleft": "Left Mouse",
+          "mouseright": "Right Mouse",
+          "mousemiddle": "Middle Mouse",
+          "mousex1": "Mouse 4",
+          "mousex2": "Mouse 5",
+          "mouse6": "Mouse 6",
+          "mouse7": "Mouse 7",
+          "mouse8": "Mouse 8"
+        },
         "bindings": {
           "transcribe": {
             "name": "Transcribe Shortcut",
-            "description": "The keyboard shortcut to record and transcribe your voice."
+            "description": "Press keys, a middle mouse button, or a side mouse button to record and transcribe your voice. Left and right mouse buttons require a modifier key."
           },
           "cancel": {
             "name": "Cancel Shortcut",

@@ -45,8 +45,16 @@ The process is entirely local:
      Do not use `dpkg -i` unless the dependencies are already installed. If you already used it, run `sudo apt --fix-broken install`.
 2. Install the application
 3. Launch Handy and grant necessary system permissions (microphone, accessibility)
-4. Configure your preferred keyboard shortcuts in Settings
+4. Configure your preferred keyboard or mouse shortcuts in Settings
 5. Start transcribing!
+
+### Mouse shortcuts
+
+Click the dictation shortcut in Settings, then press and release a middle or side mouse button. You can also hold a modifier such as Ctrl or Shift while pressing a mouse button. Left and right mouse buttons require a modifier.
+
+On macOS and Linux with the native shortcut backend, mouse buttons through M8 are supported.
+
+Mouse shortcuts use the selected recording mode, including push-to-talk and toggle. On macOS and Linux, mouse clicks also reach the active application, so a side button may still navigate back or forward. On Linux, the mouse listener requires access to `/dev/input` and `/dev/uinput`.
 
 ### Development Setup
 

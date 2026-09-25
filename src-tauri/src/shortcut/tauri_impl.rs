@@ -42,6 +42,9 @@ pub fn init_shortcuts(app: &AppHandle) {
 /// Validate a shortcut string for the Tauri global-shortcut implementation.
 /// Tauri requires at least one non-modifier key and doesn't support the fn key.
 pub fn validate_shortcut(raw: &str) -> Result<(), String> {
+    if super::handy_keys::is_mouse_shortcut(raw) {
+        return super::handy_keys::validate_shortcut(raw);
+    }
     if raw.trim().is_empty() {
         return Err("Shortcut cannot be empty".into());
     }
@@ -71,6 +74,9 @@ pub fn validate_shortcut(raw: &str) -> Result<(), String> {
 
 /// Register a shortcut using Tauri's global-shortcut plugin
 pub fn register_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<(), String> {
+    if super::handy_keys::is_mouse_shortcut(&binding.current_binding) {
+        return super::handy_keys::register_shortcut(app, binding);
+    }
     // Validate for Tauri requirements
     if let Err(e) = validate_shortcut(&binding.current_binding) {
         warn!(
@@ -137,6 +143,9 @@ pub fn register_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<()
 
 /// Unregister a shortcut from Tauri's global-shortcut plugin
 pub fn unregister_shortcut(app: &AppHandle, binding: ShortcutBinding) -> Result<(), String> {
+    if super::handy_keys::is_mouse_shortcut(&binding.current_binding) {
+        return super::handy_keys::unregister_shortcut(app, binding);
+    }
     let shortcut = match binding.current_binding.parse::<Shortcut>() {
         Ok(s) => s,
         Err(e) => {
@@ -201,5 +210,38 @@ pub fn unregister_cancel_shortcut(app: &AppHandle) {
                 let _ = unregister_shortcut(&app_clone, cancel_binding);
             }
         });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::validate_shortcut;
+
+    #[test]
+    fn mouse_bindings_use_handy_keys_validation() {
+        for binding in [
+            "MouseMiddle",
+            "MouseX1",
+            "MouseX2",
+            "ctrl+MouseLeft",
+            "fn+MouseRight",
+        ] {
+            assert!(validate_shortcut(binding).is_ok(), "{binding}");
+        }
+        for binding in ["MouseLeft", "MouseRight", "lmb", "mouse2"] {
+            assert_eq!(
+                validate_shortcut(binding),
+                Err("Left and right mouse buttons require a modifier key".into()),
+                "{binding}"
+            );
+        }
+    }
+
+    #[test]
+    fn keyboard_bindings_keep_tauri_requirements() {
+        assert!(validate_shortcut("ctrl+Space").is_ok());
+        assert!(validate_shortcut("ctrl+shift").is_err());
+        assert!(validate_shortcut("fn+Space").is_err());
+        assert!(validate_shortcut("").is_err());
     }
 }

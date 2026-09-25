@@ -2,6 +2,8 @@
  * Keyboard utility functions for handling keyboard events
  */
 
+import i18next from "i18next";
+
 export type OSType = "macos" | "windows" | "linux" | "unknown";
 
 // Shortcut parsers require compact tokens; keep display labels separate.
@@ -12,6 +14,52 @@ const COMPOUND_KEY_DISPLAY: Record<string, string> = {
   pagedown: "Page Down",
   printscreen: "Print Screen",
   scrolllock: "Scroll Lock",
+};
+
+const MOUSE_KEY_DISPLAY: Record<string, string> = {
+  mouseleft: "Left Mouse",
+  mouseright: "Right Mouse",
+  mousemiddle: "Middle Mouse",
+  mousex1: "Mouse 4",
+  mousex2: "Mouse 5",
+  mouse6: "Mouse 6",
+  mouse7: "Mouse 7",
+  mouse8: "Mouse 8",
+};
+
+/** Convert browser mouse buttons to the tokens accepted by handy-keys. */
+export const getMouseShortcut = (e: MouseEvent): string | null => {
+  const button = [
+    "mouseleft",
+    "mousemiddle",
+    "mouseright",
+    "mousex1",
+    "mousex2",
+    "mouse6",
+    "mouse7",
+    "mouse8",
+  ][e.button];
+  if (!button) {
+    return null;
+  }
+  const modifiers = [];
+  if (e.ctrlKey) {
+    modifiers.push("ctrl");
+  }
+  if (e.altKey) {
+    modifiers.push("alt");
+  }
+  if (e.shiftKey) {
+    modifiers.push("shift");
+  }
+  if (e.metaKey) {
+    modifiers.push("super");
+  }
+  // The native listener reserves unmodified primary clicks for normal use.
+  if ((e.button === 0 || e.button === 2) && modifiers.length === 0) {
+    return null;
+  }
+  return [...modifiers, button].join("+");
 };
 
 /**
@@ -168,6 +216,13 @@ export const getKeyName = (
  * Capitalize a key name for display (e.g. "space" -> "Space", "f1" -> "F1")
  */
 const capitalizeKey = (key: string): string => {
+  if (MOUSE_KEY_DISPLAY[key]) {
+    return (
+      i18next.t(`settings.general.shortcut.mouseButtons.${key}`, {
+        defaultValue: MOUSE_KEY_DISPLAY[key],
+      }) || MOUSE_KEY_DISPLAY[key]
+    );
+  }
   // fn key: keep lowercase
   if (key === "fn") return "fn";
   // Function keys: f1 -> F1
