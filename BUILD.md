@@ -178,6 +178,47 @@ not covered by the old grant. The reset procedure does not require this check.
 See [issue #1618](https://github.com/cjpais/Handy/issues/1618) for the related onboarding
 and stale-permission report.
 
+#### Keep the grant across rebuilds
+
+The reset above has to be repeated after every rebuild. To avoid that, sign local builds
+with a self-signed certificate. The designated requirement then names the certificate
+instead of a `cdhash`, so it stays the same from build to build. Create the identity once:
+
+```bash
+cd "$(mktemp -d)"
+cat > cfg <<'EOF'
+[req]
+distinguished_name=dn
+x509_extensions=ext
+prompt=no
+[dn]
+CN=Handy Local Signing
+[ext]
+basicConstraints=critical,CA:false
+keyUsage=critical,digitalSignature
+extendedKeyUsage=critical,codeSigning
+EOF
+openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 3650 -config cfg
+openssl pkcs12 -export -legacy -inkey key.pem -in cert.pem -out id.p12 -passout pass:temp
+security import id.p12 -k ~/Library/Keychains/login.keychain-db -P temp -T /usr/bin/codesign
+rm key.pem id.p12
+```
+
+`-legacy` is for OpenSSL 3 (Homebrew); drop it with the LibreSSL `openssl` that ships with
+macOS. `security find-identity -p codesigning` lists the identity as
+`CSSMERR_TP_NOT_TRUSTED`, which is fine: `codesign` doesn't need the certificate to be
+trusted.
+
+Then build with it:
+
+```bash
+APPLE_SIGNING_IDENTITY="Handy Local Signing" bun run tauri build
+```
+
+Run the reset procedure once for the first build signed this way. Later rebuilds signed with
+the same identity keep the Accessibility grant. To remove the identity, delete
+"Handy Local Signing" from the login keychain in Keychain Access.
+
 ### AppImage build fails on Arch / rolling-release distros
 
 `linuxdeploy` bundles its own `strip` binary which is too old to process system libraries built with newer toolchains on rolling-release distros (Arch, CachyOS, Manjaro, EndeavourOS).
