@@ -15,6 +15,7 @@
     "advanced": "Lanjutan",
     "postProcessing": "Pascaproses",
     "history": "Riwayat",
+    "stats": "Statistik",
     "debug": "Debug",
     "about": "Tentang"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Pilih prompt di atas untuk melihat dan mengedit detailnya.",
         "createFirst": "Klik 'Buat Prompt Baru' di atas untuk membuat prompt pascaproses pertama Anda."
       }
+    },
+    "stats": {
+      "loading": "Memuat statistik...",
+      "loadError": "Gagal memuat statistik.",
+      "ranges": {
+        "today": "Hari ini",
+        "week": "7 hari",
+        "month": "30 hari",
+        "all": "Semua"
+      },
+      "wordsPerMinute": "Kata per menit",
+      "totalWords": "Kata yang didiktekan",
+      "transcriptions": "Dikte",
+      "streak_one": "{{count}} hari berturut-turut",
+      "streak_other": "{{count}} hari berturut-turut",
+      "longestStreak_one": "Rekor: {{count}} hari berturut-turut",
+      "longestStreak_other": "Rekor: {{count}} hari berturut-turut",
+      "dayTooltip_one": "{{formattedCount}} kata pada {{date}}",
+      "dayTooltip_other": "{{formattedCount}} kata pada {{date}}",
+      "less": "Lebih sedikit",
+      "more": "Lebih banyak"
     },
     "history": {
       "title": "Riwayat",

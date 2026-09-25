@@ -794,6 +794,13 @@ impl ShortcutAction for TranscribeAction {
                                 return;
                             }
 
+                            let duration_ms = (sample_count as u64 * 1000
+                                / crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as u64)
+                                as i64;
+                            if let Err(err) = hm.record_usage(&transcription, duration_ms) {
+                                error!("Failed to record usage stats: {}", err);
+                            }
+
                             // Save to history if WAV was saved
                             if wav_saved {
                                 if let Err(err) = hm.save_entry(

@@ -15,6 +15,7 @@
     "advanced": "ऐडवांस",
     "postProcessing": "पोस्ट प्रोसेस",
     "history": "इतिहास",
+    "stats": "आंकड़े",
     "debug": "डिबग",
     "about": "के बारे में"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "जानकारी देखने और बदलाव करने के लिए, ऊपर कोई प्रॉम्प्ट चुनें.",
         "createFirst": "अपना पहला पोस्ट-प्रोसेसिंग प्रॉम्प्ट बनाने के लिए, ऊपर 'नया प्रॉम्प्ट बनाएं' पर क्लिक करें."
       }
+    },
+    "stats": {
+      "loading": "आंकड़े लोड हो रहे हैं...",
+      "loadError": "आंकड़े लोड नहीं किए जा सके.",
+      "ranges": {
+        "today": "आज",
+        "week": "7 दिन",
+        "month": "30 दिन",
+        "all": "अब तक"
+      },
+      "wordsPerMinute": "प्रति मिनट शब्द",
+      "totalWords": "बोले गए शब्द",
+      "transcriptions": "डिक्टेशन",
+      "streak_one": "लगातार {{count}} दिन",
+      "streak_other": "लगातार {{count}} दिन",
+      "longestStreak_one": "सबसे लंबा सिलसिला: {{count}} दिन",
+      "longestStreak_other": "सबसे लंबा सिलसिला: {{count}} दिन",
+      "dayTooltip_one": "{{date}} को {{formattedCount}} शब्द",
+      "dayTooltip_other": "{{date}} को {{formattedCount}} शब्द",
+      "less": "कम",
+      "more": "ज़्यादा"
     },
     "history": {
       "title": "इतिहास",

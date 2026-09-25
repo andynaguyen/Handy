@@ -1,8 +1,8 @@
 use anyhow::{anyhow, Result};
 use chrono::{DateTime, Local, Utc};
 use log::{debug, error, info};
-use rusqlite::{params, Connection, OptionalExtension};
-use rusqlite_migration::{Migrations, M};
+use rusqlite::{params, Connection, OptionalExtension, Transaction};
+use rusqlite_migration::{HookResult, Migrations, M};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::fs;
@@ -17,7 +17,8 @@ use tauri_specta::Event;
 /// Note: For users upgrading from tauri-plugin-sql, migrate_from_tauri_plugin_sql()
 /// converts the old _sqlx_migrations table tracking to the user_version pragma,
 /// ensuring migrations don't re-run on existing databases.
-static MIGRATIONS: &[M] = &[
+fn migrations() -> Migrations<'static> {
+    Migrations::new(vec![
     M::up(
         "CREATE TABLE IF NOT EXISTS transcription_history (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,12 +32,89 @@ static MIGRATIONS: &[M] = &[
     M::up("ALTER TABLE transcription_history ADD COLUMN post_processed_text TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_prompt TEXT;"),
     M::up("ALTER TABLE transcription_history ADD COLUMN post_process_requested BOOLEAN NOT NULL DEFAULT 0;"),
-];
+    // Usage stats live in their own table so history retention cleanup doesn't erase them.
+    M::up_with_hook(
+        "CREATE TABLE usage_stats (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp INTEGER NOT NULL,
+            word_count INTEGER NOT NULL,
+            duration_ms INTEGER NOT NULL
+        );",
+        backfill_usage_stats,
+    ),
+    ])
+}
+
+/// Seed usage stats from existing history. Old entries have no recorded
+/// duration, so they get 0 and are left out of the words-per-minute average.
+fn backfill_usage_stats(tx: &Transaction) -> HookResult {
+    let mut stmt = tx.prepare(
+        "SELECT timestamp, transcription_text FROM transcription_history WHERE transcription_text != ''",
+    )?;
+    let rows = stmt
+        .query_map([], |row| {
+            Ok((row.get::<_, i64>(0)?, row.get::<_, String>(1)?))
+        })?
+        .collect::<rusqlite::Result<Vec<_>>>()?;
+    for (timestamp, text) in rows {
+        let word_count = count_words(&text);
+        if word_count > 0 {
+            tx.execute(
+                "INSERT INTO usage_stats (timestamp, word_count, duration_ms) VALUES (?1, ?2, 0)",
+                params![timestamp, word_count],
+            )?;
+        }
+    }
+    Ok(())
+}
+
+/// Count words in a transcription. Chinese and Japanese are written without
+/// spaces, so each ideograph or kana character counts as one word.
+fn count_words(text: &str) -> i64 {
+    let mut count = 0;
+    let mut in_word = false;
+    for c in text.chars() {
+        if is_cjk(c) {
+            count += 1;
+            in_word = false;
+        } else if c.is_alphanumeric() {
+            if !in_word {
+                count += 1;
+                in_word = true;
+            }
+        } else if c.is_whitespace() {
+            in_word = false;
+        }
+    }
+    count
+}
+
+fn is_cjk(c: char) -> bool {
+    matches!(c,
+        '\u{3040}'..='\u{30FF}' // Hiragana, Katakana
+        | '\u{3400}'..='\u{4DBF}' // CJK Extension A
+        | '\u{4E00}'..='\u{9FFF}' // CJK Unified Ideographs
+        | '\u{F900}'..='\u{FAFF}' // CJK Compatibility Ideographs
+    )
+}
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct PaginatedHistory {
     pub entries: Vec<HistoryEntry>,
     pub has_more: bool,
+}
+
+/// Usage totals for one local calendar day. Days without dictation are omitted.
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
+pub struct DailyUsage {
+    /// YYYY-MM-DD in the user's local timezone.
+    pub date: String,
+    pub words: i64,
+    pub transcriptions: i64,
+    /// Words from transcriptions with a recorded duration. Entries backfilled
+    /// from history have none, so words per minute uses this instead of `words`.
+    pub timed_words: i64,
+    pub duration_ms: i64,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type, tauri_specta::Event)]
@@ -105,8 +183,7 @@ impl HistoryManager {
         // tauri-plugin-sql used _sqlx_migrations table, rusqlite_migration uses user_version pragma
         self.migrate_from_tauri_plugin_sql(&conn)?;
 
-        // Create migrations object and run to latest version
-        let migrations = Migrations::new(MIGRATIONS.to_vec());
+        let migrations = migrations();
 
         // Validate migrations in debug builds
         #[cfg(debug_assertions)]
@@ -554,6 +631,61 @@ impl HistoryManager {
         Ok(entry)
     }
 
+    /// Record one completed transcription for the stats page.
+    pub fn record_usage(&self, text: &str, duration_ms: i64) -> Result<()> {
+        let conn = self.get_connection()?;
+        Self::record_usage_with_conn(&conn, Utc::now().timestamp(), text, duration_ms)
+    }
+
+    fn record_usage_with_conn(
+        conn: &Connection,
+        timestamp: i64,
+        text: &str,
+        duration_ms: i64,
+    ) -> Result<()> {
+        let word_count = count_words(text);
+        if word_count == 0 {
+            return Ok(());
+        }
+        conn.execute(
+            "INSERT INTO usage_stats (timestamp, word_count, duration_ms) VALUES (?1, ?2, ?3)",
+            params![timestamp, word_count, duration_ms],
+        )?;
+        Ok(())
+    }
+
+    /// Per-day usage, oldest first.
+    pub fn get_daily_usage(&self) -> Result<Vec<DailyUsage>> {
+        let conn = self.get_connection()?;
+        Self::get_daily_usage_with_conn(&conn)
+    }
+
+    fn get_daily_usage_with_conn(conn: &Connection) -> Result<Vec<DailyUsage>> {
+        let mut stmt = conn.prepare(
+            "SELECT
+                date(timestamp, 'unixepoch', 'localtime') AS day,
+                SUM(word_count),
+                COUNT(*),
+                SUM(CASE WHEN duration_ms > 0 THEN word_count ELSE 0 END),
+                SUM(duration_ms)
+             FROM usage_stats
+             GROUP BY day
+             ORDER BY day",
+        )?;
+        let days = stmt
+            .query_map([], |row| {
+                Ok(DailyUsage {
+                    date: row.get(0)?,
+                    words: row.get(1)?,
+                    transcriptions: row.get(2)?,
+                    timed_words: row.get(3)?,
+                    duration_ms: row.get(4)?,
+                })
+            })?
+            .collect::<rusqlite::Result<Vec<_>>>()?;
+        Ok(days)
+    }
+
     pub async fn toggle_saved_status(&self, id: i64) -> Result<()> {
         let conn = self.get_connection()?;
 
@@ -697,6 +829,37 @@ mod tests {
             ],
         )
         .expect("insert history entry");
+    }
+
+    #[test]
+    fn count_words_handles_punctuation_and_cjk() {
+        assert_eq!(count_words(""), 0);
+        assert_eq!(count_words("  ...  "), 0);
+        assert_eq!(count_words("Hello, world! It's well-known."), 4);
+        assert_eq!(count_words("你好世界"), 4);
+        assert_eq!(count_words("Handy は すごい"), 5);
+    }
+
+    #[test]
+    fn usage_stats_migration_backfills_history_without_duration() {
+        let mut conn = Connection::open_in_memory().expect("open in-memory db");
+        let migrations = migrations();
+        migrations.to_version(&mut conn, 4).expect("migrate to v4");
+        insert_entry(&conn, 100, "one two three", None);
+        insert_entry(&conn, 200, "", None);
+        migrations.to_latest(&mut conn).expect("migrate to latest");
+
+        HistoryManager::record_usage_with_conn(&conn, 300, "four five six seven", 2_000)
+            .expect("record usage");
+        HistoryManager::record_usage_with_conn(&conn, 400, "  ", 1_000).expect("record usage");
+
+        let days = HistoryManager::get_daily_usage_with_conn(&conn).expect("daily usage");
+        let sum = |field: fn(&DailyUsage) -> i64| days.iter().map(field).sum::<i64>();
+        assert_eq!(sum(|d| d.words), 7);
+        assert_eq!(sum(|d| d.transcriptions), 2);
+        // Only the recorded dictation has a duration.
+        assert_eq!(sum(|d| d.timed_words), 4);
+        assert_eq!(sum(|d| d.duration_ms), 2_000);
     }
 
     #[test]

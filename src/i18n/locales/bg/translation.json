@@ -15,6 +15,7 @@
     "advanced": "Разширени",
     "postProcessing": "Постобработка",
     "history": "История",
+    "stats": "Статистика",
     "debug": "Отстраняване",
     "about": "За приложението"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Изберете подкана по-горе, за да видите и редактирате подробностите ѝ.",
         "createFirst": "Натиснете „Нова подкана“ по-горе, за да създадете първата си подкана за постобработка."
       }
+    },
+    "stats": {
+      "loading": "Зареждане на статистиката...",
+      "loadError": "Зареждането на статистиката не бе успешно.",
+      "ranges": {
+        "today": "Днес",
+        "week": "7 дни",
+        "month": "30 дни",
+        "all": "Всичко"
+      },
+      "wordsPerMinute": "Думи в минута",
+      "totalWords": "Продиктувани думи",
+      "transcriptions": "Диктовки",
+      "streak_one": "{{count}} ден поред",
+      "streak_other": "{{count}} дни поред",
+      "longestStreak_one": "Най-дълга серия: {{count}} ден",
+      "longestStreak_other": "Най-дълга серия: {{count}} дни",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} дума",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} думи",
+      "less": "По-малко",
+      "more": "Повече"
     },
     "history": {
       "title": "История",

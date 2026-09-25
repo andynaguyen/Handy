@@ -15,6 +15,7 @@
     "advanced": "Pokročilé",
     "postProcessing": "Následné zpracování",
     "history": "Historie",
+    "stats": "Statistiky",
     "debug": "Ladění",
     "about": "O aplikaci"
   },
@@ -453,6 +454,33 @@
         "selectToEdit": "Vyberte výše prompt, abyste zobrazili a upravili jeho podrobnosti.",
         "createFirst": "Klikněte nahoře na 'Vytvořit nový prompt' a vytvořte svůj první prompt pro následné zpracování."
       }
+    },
+    "stats": {
+      "loading": "Načítám statistiky...",
+      "loadError": "Statistiky se nepodařilo načíst.",
+      "ranges": {
+        "today": "Dnes",
+        "week": "7 dní",
+        "month": "30 dní",
+        "all": "Vše"
+      },
+      "wordsPerMinute": "Slov za minutu",
+      "totalWords": "Nadiktovaná slova",
+      "transcriptions": "Diktáty",
+      "streak_one": "{{count}} den v řadě",
+      "streak_few": "{{count}} dny v řadě",
+      "streak_many": "{{count}} dne v řadě",
+      "streak_other": "{{count}} dní v řadě",
+      "longestStreak_one": "Nejdelší série: {{count}} den",
+      "longestStreak_few": "Nejdelší série: {{count}} dny",
+      "longestStreak_many": "Nejdelší série: {{count}} dne",
+      "longestStreak_other": "Nejdelší série: {{count}} dní",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} slovo",
+      "dayTooltip_few": "{{date}}: {{formattedCount}} slova",
+      "dayTooltip_many": "{{date}}: {{formattedCount}} slova",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} slov",
+      "less": "Méně",
+      "more": "Více"
     },
     "history": {
       "title": "Historie",

@@ -15,6 +15,7 @@
     "advanced": "高级",
     "postProcessing": "后处理",
     "history": "历史记录",
+    "stats": "统计",
     "debug": "调试",
     "about": "关于"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "选择上方的提示词以查看和编辑其详细信息。",
         "createFirst": "点击上方的「创建新提示词」来创建您的第一个后处理提示词。"
       }
+    },
+    "stats": {
+      "loading": "加载统计数据中...",
+      "loadError": "无法加载统计数据。",
+      "ranges": {
+        "today": "今天",
+        "week": "7 天",
+        "month": "30 天",
+        "all": "全部"
+      },
+      "wordsPerMinute": "每分钟字数",
+      "totalWords": "听写字数",
+      "transcriptions": "听写次数",
+      "streak_one": "连续 {{count}} 天",
+      "streak_other": "连续 {{count}} 天",
+      "longestStreak_one": "最长连续：{{count}} 天",
+      "longestStreak_other": "最长连续：{{count}} 天",
+      "dayTooltip_one": "{{date}}：{{formattedCount}} 字",
+      "dayTooltip_other": "{{date}}：{{formattedCount}} 字",
+      "less": "少",
+      "more": "多"
     },
     "history": {
       "title": "历史记录",

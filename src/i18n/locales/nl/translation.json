@@ -15,6 +15,7 @@
     "advanced": "Geavanceerd",
     "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
+    "stats": "Statistieken",
     "debug": "Probleemoplossing",
     "about": "Over Handy"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Selecteer hierboven een prompt om de details te bekijken en te bewerken.",
         "createFirst": "Klik hierboven op 'Nieuwe prompt maken' om je eerste naverwerkingsprompt aan te maken."
       }
+    },
+    "stats": {
+      "loading": "Statistieken laden...",
+      "loadError": "Statistieken laden mislukt.",
+      "ranges": {
+        "today": "Vandaag",
+        "week": "7 dagen",
+        "month": "30 dagen",
+        "all": "Alles"
+      },
+      "wordsPerMinute": "Woorden per minuut",
+      "totalWords": "Gedicteerde woorden",
+      "transcriptions": "Dictaten",
+      "streak_one": "{{count}} dag op rij",
+      "streak_other": "{{count}} dagen op rij",
+      "longestStreak_one": "Langste reeks: {{count}} dag",
+      "longestStreak_other": "Langste reeks: {{count}} dagen",
+      "dayTooltip_one": "{{formattedCount}} woord op {{date}}",
+      "dayTooltip_other": "{{formattedCount}} woorden op {{date}}",
+      "less": "Minder",
+      "more": "Meer"
     },
     "history": {
       "title": "Geschiedenis",

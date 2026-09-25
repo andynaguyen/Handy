@@ -15,6 +15,7 @@
     "advanced": "Gelişmiş",
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
+    "stats": "İstatistikler",
     "debug": "Hata Ayıklama",
     "about": "Hakkında"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Ayrıntılarını görüntülemek ve düzenlemek için yukarıdan bir prompt seçin.",
         "createFirst": "İlk son işlem promptunuzu oluşturmak için yukarıdaki “Yeni Prompt Oluştur” seçeneğine tıklayın."
       }
+    },
+    "stats": {
+      "loading": "İstatistikler yükleniyor...",
+      "loadError": "İstatistikler yüklenemedi.",
+      "ranges": {
+        "today": "Bugün",
+        "week": "7 gün",
+        "month": "30 gün",
+        "all": "Tümü"
+      },
+      "wordsPerMinute": "Dakika başına kelime",
+      "totalWords": "Dikte edilen kelime",
+      "transcriptions": "Dikteler",
+      "streak_one": "{{count}} günlük seri",
+      "streak_other": "{{count}} günlük seri",
+      "longestStreak_one": "En uzun seri: {{count}} gün",
+      "longestStreak_other": "En uzun seri: {{count}} gün",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} kelime",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} kelime",
+      "less": "Az",
+      "more": "Çok"
     },
     "history": {
       "title": "Geçmiş",

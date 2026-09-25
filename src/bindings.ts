@@ -859,6 +859,14 @@ async getHistoryEntries(cursor: number | null, limit: number | null) : Promise<R
     else return { status: "error", error: e  as any };
 }
 },
+async getDailyUsage() : Promise<Result<DailyUsage[], string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("get_daily_usage") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async toggleHistoryEntrySaved(id: number) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("toggle_history_entry_saved", { id }) };
@@ -1011,6 +1019,19 @@ export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_d
 export type BindingResponse = { success: boolean; binding: ShortcutBinding | null; error: string | null }
 export type ClipboardHandling = "dont_modify" | "copy_to_clipboard"
 export type CustomSounds = { start: boolean; stop: boolean }
+/**
+ * Usage totals for one local calendar day. Days without dictation are omitted.
+ */
+export type DailyUsage = { 
+/**
+ * YYYY-MM-DD in the user's local timezone.
+ */
+date: string; words: number; transcriptions: number; 
+/**
+ * Words from transcriptions with a recorded duration. Entries backfilled
+ * from history have none, so words per minute uses this instead of `words`.
+ */
+timed_words: number; duration_ms: number }
 export type EngineType = 
 /**
  * Any GGML/GGUF model loaded through transcribe-cpp (Whisper, Parakeet,

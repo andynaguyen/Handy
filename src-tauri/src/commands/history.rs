@@ -1,6 +1,6 @@
 use crate::actions::process_transcription_output;
 use crate::managers::{
-    history::{HistoryManager, PaginatedHistory},
+    history::{DailyUsage, HistoryManager, PaginatedHistory},
     transcription::TranscriptionManager,
 };
 use std::sync::Arc;
@@ -18,6 +18,14 @@ pub async fn get_history_entries(
         .get_history_entries(cursor, limit)
         .await
         .map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub async fn get_daily_usage(
+    history_manager: State<'_, Arc<HistoryManager>>,
+) -> Result<Vec<DailyUsage>, String> {
+    history_manager.get_daily_usage().map_err(|e| e.to_string())
 }
 
 #[tauri::command]

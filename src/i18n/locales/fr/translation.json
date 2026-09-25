@@ -15,6 +15,7 @@
     "advanced": "Avancé",
     "postProcessing": "Post-traitement",
     "history": "Historique",
+    "stats": "Statistiques",
     "debug": "Débogage",
     "about": "À propos"
   },
@@ -453,6 +454,30 @@
         "selectToEdit": "Sélectionnez un prompt ci-dessus pour voir et modifier ses détails.",
         "createFirst": "Cliquez sur 'Créer un nouveau prompt' ci-dessus pour créer votre premier prompt de post-traitement."
       }
+    },
+    "stats": {
+      "loading": "Chargement des statistiques...",
+      "loadError": "Impossible de charger les statistiques.",
+      "ranges": {
+        "today": "Aujourd'hui",
+        "week": "7 jours",
+        "month": "30 jours",
+        "all": "Tout"
+      },
+      "wordsPerMinute": "Mots par minute",
+      "totalWords": "Mots dictés",
+      "transcriptions": "Dictées",
+      "streak_one": "{{count}} jour d'affilée",
+      "streak_many": "{{count}} de jours d'affilée",
+      "streak_other": "{{count}} jours d'affilée",
+      "longestStreak_one": "Plus longue série : {{count}} jour",
+      "longestStreak_many": "Plus longue série : {{count}} de jours",
+      "longestStreak_other": "Plus longue série : {{count}} jours",
+      "dayTooltip_one": "{{formattedCount}} mot le {{date}}",
+      "dayTooltip_many": "{{formattedCount}} de mots le {{date}}",
+      "dayTooltip_other": "{{formattedCount}} mots le {{date}}",
+      "less": "Moins",
+      "more": "Plus"
     },
     "history": {
       "title": "Historique",

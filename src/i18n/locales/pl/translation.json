@@ -15,6 +15,7 @@
     "advanced": "Zaawansowane",
     "postProcessing": "Postproces",
     "history": "Historia",
+    "stats": "Statystyki",
     "debug": "Debugowanie",
     "about": "O programie"
   },
@@ -453,6 +454,33 @@
         "selectToEdit": "Wybierz prompt powyżej, aby zobaczyć i edytować jego szczegóły.",
         "createFirst": "Kliknij 'Utwórz nowy prompt' powyżej, aby utworzyć pierwszy prompt postprocessingu."
       }
+    },
+    "stats": {
+      "loading": "Wczytywanie statystyk...",
+      "loadError": "Nie udało się wczytać statystyk.",
+      "ranges": {
+        "today": "Dziś",
+        "week": "7 dni",
+        "month": "30 dni",
+        "all": "Wszystko"
+      },
+      "wordsPerMinute": "Słowa na minutę",
+      "totalWords": "Podyktowane słowa",
+      "transcriptions": "Dyktowania",
+      "streak_one": "{{count}} dzień z rzędu",
+      "streak_few": "{{count}} dni z rzędu",
+      "streak_many": "{{count}} dni z rzędu",
+      "streak_other": "{{count}} dni z rzędu",
+      "longestStreak_one": "Najdłuższa seria: {{count}} dzień",
+      "longestStreak_few": "Najdłuższa seria: {{count}} dni",
+      "longestStreak_many": "Najdłuższa seria: {{count}} dni",
+      "longestStreak_other": "Najdłuższa seria: {{count}} dni",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} słowo",
+      "dayTooltip_few": "{{date}}: {{formattedCount}} słowa",
+      "dayTooltip_many": "{{date}}: {{formattedCount}} słów",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} słów",
+      "less": "Mniej",
+      "more": "Więcej"
     },
     "history": {
       "title": "Historia",

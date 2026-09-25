@@ -15,6 +15,7 @@
     "advanced": "מתקדם",
     "postProcessing": "עיבוד משלים",
     "history": "היסטוריה",
+    "stats": "סטטיסטיקה",
     "debug": "ניפוי שגיאות",
     "about": "אודות"
   },
@@ -453,6 +454,30 @@
         "selectToEdit": "בחר פרומפט למעלה כדי לצפות בפרטים שלו ולערוך אותם.",
         "createFirst": "לחץ על 'צור פרומפט חדש' למעלה כדי ליצור את פרומפט העיבוד הראשון שלך."
       }
+    },
+    "stats": {
+      "loading": "טוען סטטיסטיקה...",
+      "loadError": "טעינת הסטטיסטיקה נכשלה.",
+      "ranges": {
+        "today": "היום",
+        "week": "7 ימים",
+        "month": "30 ימים",
+        "all": "כל הזמן"
+      },
+      "wordsPerMinute": "מילים לדקה",
+      "totalWords": "מילים שהוכתבו",
+      "transcriptions": "הכתבות",
+      "streak_one": "{{count}} יום ברצף",
+      "streak_two": "יומיים ברצף",
+      "streak_other": "{{count}} ימים ברצף",
+      "longestStreak_one": "הרצף הארוך ביותר: {{count}} יום",
+      "longestStreak_two": "הרצף הארוך ביותר: יומיים",
+      "longestStreak_other": "הרצף הארוך ביותר: {{count}} ימים",
+      "dayTooltip_one": "{{formattedCount}} מילה ב-{{date}}",
+      "dayTooltip_two": "{{formattedCount}} מילים ב-{{date}}",
+      "dayTooltip_other": "{{formattedCount}} מילים ב-{{date}}",
+      "less": "פחות",
+      "more": "יותר"
     },
     "history": {
       "title": "היסטוריה",

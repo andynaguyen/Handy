@@ -15,6 +15,7 @@
     "advanced": "Avançado",
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
+    "stats": "Estatísticas",
     "debug": "Depuração",
     "about": "Sobre"
   },
@@ -453,6 +454,30 @@
         "selectToEdit": "Selecione um prompt acima para visualizar e editar seus detalhes.",
         "createFirst": "Clique em 'Criar Novo Prompt' acima para criar seu primeiro prompt de pós-processamento."
       }
+    },
+    "stats": {
+      "loading": "Carregando estatísticas...",
+      "loadError": "Falha ao carregar estatísticas.",
+      "ranges": {
+        "today": "Hoje",
+        "week": "7 dias",
+        "month": "30 dias",
+        "all": "Tudo"
+      },
+      "wordsPerMinute": "Palavras por minuto",
+      "totalWords": "Palavras ditadas",
+      "transcriptions": "Ditados",
+      "streak_one": "{{count}} dia seguido",
+      "streak_many": "{{count}} de dias seguidos",
+      "streak_other": "{{count}} dias seguidos",
+      "longestStreak_one": "Maior sequência: {{count}} dia",
+      "longestStreak_many": "Maior sequência: {{count}} de dias",
+      "longestStreak_other": "Maior sequência: {{count}} dias",
+      "dayTooltip_one": "{{formattedCount}} palavra em {{date}}",
+      "dayTooltip_many": "{{formattedCount}} de palavras em {{date}}",
+      "dayTooltip_other": "{{formattedCount}} palavras em {{date}}",
+      "less": "Menos",
+      "more": "Mais"
     },
     "history": {
       "title": "Histórico",

@@ -15,6 +15,7 @@
     "advanced": "Avancerat",
     "postProcessing": "Efterbearbetning",
     "history": "Historik",
+    "stats": "Statistik",
     "debug": "Felsökning",
     "about": "Om"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Välj en prompt ovan för att visa och redigera dess detaljer.",
         "createFirst": "Klicka på 'Skapa ny prompt' ovan för att skapa din första prompt för efterbearbetning."
       }
+    },
+    "stats": {
+      "loading": "Laddar statistik...",
+      "loadError": "Det gick inte att läsa in statistik.",
+      "ranges": {
+        "today": "I dag",
+        "week": "7 dagar",
+        "month": "30 dagar",
+        "all": "Allt"
+      },
+      "wordsPerMinute": "Ord per minut",
+      "totalWords": "Dikterade ord",
+      "transcriptions": "Dikteringar",
+      "streak_one": "{{count}} dag i rad",
+      "streak_other": "{{count}} dagar i rad",
+      "longestStreak_one": "Rekord: {{count}} dag i rad",
+      "longestStreak_other": "Rekord: {{count}} dagar i rad",
+      "dayTooltip_one": "{{formattedCount}} ord den {{date}}",
+      "dayTooltip_other": "{{formattedCount}} ord den {{date}}",
+      "less": "Mindre",
+      "more": "Mer"
     },
     "history": {
       "title": "Historik",

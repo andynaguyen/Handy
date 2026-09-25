@@ -15,6 +15,7 @@
     "advanced": "उन्नत",
     "postProcessing": "पोस्ट प्रोसेस",
     "history": "हिस्ट्री",
+    "stats": "तथ्याङ्क",
     "debug": "डिबग",
     "about": "बारेमा"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "विवरण हेर्न र सम्पादन गर्न माथिबाट प्रम्प्ट चयन गर्नुहोस्।",
         "createFirst": "आफ्नो पहिलो पोस्ट-प्रोसेसिङ प्रम्प्ट बनाउन माथिको 'नयाँ प्रम्प्ट बनाउनुहोस्' क्लिक गर्नुहोस्।"
       }
+    },
+    "stats": {
+      "loading": "तथ्याङ्क लोड गरिँदैछ...",
+      "loadError": "तथ्याङ्क लोड गर्न सकिएन।",
+      "ranges": {
+        "today": "आज",
+        "week": "7 दिन",
+        "month": "30 दिन",
+        "all": "सबै समय"
+      },
+      "wordsPerMinute": "प्रति मिनेट शब्द",
+      "totalWords": "बोलेर लेखिएका शब्द",
+      "transcriptions": "डिक्टेसन",
+      "streak_one": "लगातार {{count}} दिन",
+      "streak_other": "लगातार {{count}} दिन",
+      "longestStreak_one": "सबैभन्दा लामो क्रम: {{count}} दिन",
+      "longestStreak_other": "सबैभन्दा लामो क्रम: {{count}} दिन",
+      "dayTooltip_one": "{{date}} मा {{formattedCount}} शब्द",
+      "dayTooltip_other": "{{date}} मा {{formattedCount}} शब्द",
+      "less": "कम",
+      "more": "बढी"
     },
     "history": {
       "title": "हिस्ट्री",

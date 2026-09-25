@@ -15,6 +15,7 @@
     "advanced": "Продвинутые",
     "postProcessing": "Постобработка",
     "history": "История",
+    "stats": "Статистика",
     "debug": "Отладка",
     "about": "О программе"
   },
@@ -453,6 +454,33 @@
         "selectToEdit": "Выберите запрос выше, чтобы просмотреть и изменить его сведения.",
         "createFirst": "Нажмите «Создать новый запрос» выше, чтобы создать первый запрос для постобработки."
       }
+    },
+    "stats": {
+      "loading": "Загрузка статистики...",
+      "loadError": "Не удалось загрузить статистику.",
+      "ranges": {
+        "today": "Сегодня",
+        "week": "7 дней",
+        "month": "30 дней",
+        "all": "Всё время"
+      },
+      "wordsPerMinute": "Слов в минуту",
+      "totalWords": "Надиктовано слов",
+      "transcriptions": "Диктовки",
+      "streak_one": "{{count}} день подряд",
+      "streak_few": "{{count}} дня подряд",
+      "streak_many": "{{count}} дней подряд",
+      "streak_other": "{{count}} дней подряд",
+      "longestStreak_one": "Рекорд: {{count}} день подряд",
+      "longestStreak_few": "Рекорд: {{count}} дня подряд",
+      "longestStreak_many": "Рекорд: {{count}} дней подряд",
+      "longestStreak_other": "Рекорд: {{count}} дней подряд",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} слово",
+      "dayTooltip_few": "{{date}}: {{formattedCount}} слова",
+      "dayTooltip_many": "{{date}}: {{formattedCount}} слов",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} слов",
+      "less": "Меньше",
+      "more": "Больше"
     },
     "history": {
       "title": "История",

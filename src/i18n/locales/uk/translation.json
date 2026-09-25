@@ -15,6 +15,7 @@
     "advanced": "Розширені",
     "postProcessing": "Постобробка",
     "history": "Історія",
+    "stats": "Статистика",
     "debug": "Дебаг",
     "about": "Інфо"
   },
@@ -453,6 +454,33 @@
         "selectToEdit": "Оберіть промпт вище для перегляду та редагування його деталей.",
         "createFirst": "Натисніть «Створити новий промпт» вище, щоб створити ваш перший промпт постобробки."
       }
+    },
+    "stats": {
+      "loading": "Завантаження статистики...",
+      "loadError": "Не вдалося завантажити статистику.",
+      "ranges": {
+        "today": "Сьогодні",
+        "week": "7 днів",
+        "month": "30 днів",
+        "all": "Весь час"
+      },
+      "wordsPerMinute": "Слів за хвилину",
+      "totalWords": "Надиктовано слів",
+      "transcriptions": "Диктування",
+      "streak_one": "{{count}} день поспіль",
+      "streak_few": "{{count}} дні поспіль",
+      "streak_many": "{{count}} днів поспіль",
+      "streak_other": "{{count}} днів поспіль",
+      "longestStreak_one": "Рекорд: {{count}} день поспіль",
+      "longestStreak_few": "Рекорд: {{count}} дні поспіль",
+      "longestStreak_many": "Рекорд: {{count}} днів поспіль",
+      "longestStreak_other": "Рекорд: {{count}} днів поспіль",
+      "dayTooltip_one": "{{date}}: {{formattedCount}} слово",
+      "dayTooltip_few": "{{date}}: {{formattedCount}} слова",
+      "dayTooltip_many": "{{date}}: {{formattedCount}} слів",
+      "dayTooltip_other": "{{date}}: {{formattedCount}} слів",
+      "less": "Менше",
+      "more": "Більше"
     },
     "history": {
       "title": "Історія",

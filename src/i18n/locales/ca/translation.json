@@ -15,6 +15,7 @@
     "advanced": "Avançat",
     "postProcessing": "Postprocessament",
     "history": "Historial",
+    "stats": "Estadístiques",
     "debug": "Depuració",
     "about": "Quant a"
   },
@@ -453,6 +454,30 @@
         "selectToEdit": "Seleccioneu una indicació more amunt per veure'n i editar-ne els detalls.",
         "createFirst": "Feu clic a «Creeu una indicació nova» més amunt per crear la primera indicació de postprocessament."
       }
+    },
+    "stats": {
+      "loading": "S'estan carregant les estadístiques...",
+      "loadError": "No s'han pogut carregar les estadístiques.",
+      "ranges": {
+        "today": "Avui",
+        "week": "7 dies",
+        "month": "30 dies",
+        "all": "Tot"
+      },
+      "wordsPerMinute": "Paraules per minut",
+      "totalWords": "Paraules dictades",
+      "transcriptions": "Dictats",
+      "streak_one": "{{count}} dia seguit",
+      "streak_many": "{{count}} de dies seguits",
+      "streak_other": "{{count}} dies seguits",
+      "longestStreak_one": "Ratxa més llarga: {{count}} dia",
+      "longestStreak_many": "Ratxa més llarga: {{count}} de dies",
+      "longestStreak_other": "Ratxa més llarga: {{count}} dies",
+      "dayTooltip_one": "{{formattedCount}} paraula el {{date}}",
+      "dayTooltip_many": "{{formattedCount}} de paraules el {{date}}",
+      "dayTooltip_other": "{{formattedCount}} paraules el {{date}}",
+      "less": "Menys",
+      "more": "Més"
     },
     "history": {
       "title": "Historial",

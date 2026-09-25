@@ -126,11 +126,22 @@ function validateTranslations(): void {
       (keyPath) => !hasKeyPath(langData, keyPath),
     );
 
-    // Find extra keys (keys in language but not in reference)
+    // Find extra keys (keys in language but not in reference). Plural forms
+    // English lacks (_zero/_two/_few/_many) are allowed when the reference
+    // pluralizes the same key with _other.
     const langKeyPaths = getAllKeyPaths(langData);
-    const extra = langKeyPaths.filter(
-      (keyPath) => !hasKeyPath(referenceData, keyPath),
-    );
+    const extra = langKeyPaths.filter((keyPath) => {
+      if (hasKeyPath(referenceData, keyPath)) {
+        return false;
+      }
+      const leaf = keyPath[keyPath.length - 1];
+      const plural = leaf.match(/^(.+)_(zero|two|few|many)$/);
+      if (plural) {
+        const otherPath = keyPath.slice(0, -1).concat([`${plural[1]}_other`]);
+        return !hasKeyPath(referenceData, otherPath);
+      }
+      return true;
+    });
 
     results[lang] = {
       valid: missing.length === 0 && extra.length === 0,

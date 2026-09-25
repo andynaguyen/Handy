@@ -15,6 +15,7 @@
     "advanced": "Avanceret",
     "postProcessing": "Efterbehandling",
     "history": "Historik",
+    "stats": "Statistik",
     "debug": "Fejlfinding",
     "about": "Om"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Vælg en prompt ovenfor for at se og redigere dens detaljer.",
         "createFirst": "Klik på 'Opret ny prompt' ovenfor for at oprette din første efterbehandlingsprompt."
       }
+    },
+    "stats": {
+      "loading": "Indlæser statistik...",
+      "loadError": "Kunne ikke indlæse statistik.",
+      "ranges": {
+        "today": "I dag",
+        "week": "7 dage",
+        "month": "30 dage",
+        "all": "Alt"
+      },
+      "wordsPerMinute": "Ord pr. minut",
+      "totalWords": "Dikterede ord",
+      "transcriptions": "Dikteringer",
+      "streak_one": "{{count}} dag i træk",
+      "streak_other": "{{count}} dage i træk",
+      "longestStreak_one": "Rekord: {{count}} dag i træk",
+      "longestStreak_other": "Rekord: {{count}} dage i træk",
+      "dayTooltip_one": "{{formattedCount}} ord den {{date}}",
+      "dayTooltip_other": "{{formattedCount}} ord den {{date}}",
+      "less": "Mindre",
+      "more": "Mere"
     },
     "history": {
       "title": "Historik",

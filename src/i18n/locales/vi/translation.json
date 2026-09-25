@@ -15,6 +15,7 @@
     "advanced": "Nâng cao",
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
+    "stats": "Thống kê",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "Chọn một prompt ở trên để xem và chỉnh sửa chi tiết.",
         "createFirst": "Nhấn 'Tạo Prompt mới' ở trên để tạo prompt xử lý sau đầu tiên của bạn."
       }
+    },
+    "stats": {
+      "loading": "Đang tải thống kê...",
+      "loadError": "Không thể tải thống kê.",
+      "ranges": {
+        "today": "Hôm nay",
+        "week": "7 ngày",
+        "month": "30 ngày",
+        "all": "Tất cả"
+      },
+      "wordsPerMinute": "Từ mỗi phút",
+      "totalWords": "Số từ đã đọc",
+      "transcriptions": "Số lần đọc",
+      "streak_one": "Chuỗi {{count}} ngày",
+      "streak_other": "Chuỗi {{count}} ngày",
+      "longestStreak_one": "Chuỗi dài nhất: {{count}} ngày",
+      "longestStreak_other": "Chuỗi dài nhất: {{count}} ngày",
+      "dayTooltip_one": "{{formattedCount}} từ vào {{date}}",
+      "dayTooltip_other": "{{formattedCount}} từ vào {{date}}",
+      "less": "Ít",
+      "more": "Nhiều"
     },
     "history": {
       "title": "Lịch sử",

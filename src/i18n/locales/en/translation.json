@@ -15,6 +15,7 @@
     "advanced": "Advanced",
     "postProcessing": "Post Process",
     "history": "History",
+    "stats": "Stats",
     "debug": "Debug",
     "about": "About"
   },
@@ -464,6 +465,27 @@
         "selectToEdit": "Select a prompt above to view and edit its details.",
         "createFirst": "Click 'Create New Prompt' above to create your first post-processing prompt."
       }
+    },
+    "stats": {
+      "loading": "Loading stats...",
+      "loadError": "Failed to load stats.",
+      "ranges": {
+        "today": "Today",
+        "week": "7 days",
+        "month": "30 days",
+        "all": "All time"
+      },
+      "wordsPerMinute": "Words per minute",
+      "totalWords": "Words dictated",
+      "transcriptions": "Dictations",
+      "streak_one": "{{count}} day streak",
+      "streak_other": "{{count}} day streak",
+      "longestStreak_one": "Longest streak: {{count}} day",
+      "longestStreak_other": "Longest streak: {{count}} days",
+      "dayTooltip_one": "{{formattedCount}} word on {{date}}",
+      "dayTooltip_other": "{{formattedCount}} words on {{date}}",
+      "less": "Less",
+      "more": "More"
     },
     "history": {
       "title": "History",

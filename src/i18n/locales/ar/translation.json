@@ -14,6 +14,7 @@
     "advanced": "متقدم",
     "postProcessing": "معالجة لاحقة",
     "history": "السجل",
+    "stats": "الإحصائيات",
     "debug": "تصحيح الأخطاء",
     "about": "حول",
     "models": "النماذج"
@@ -430,6 +431,39 @@
         "selectToEdit": ".اختر مطالبة أعلاه لعرض وتعديل تفاصيلها",
         "createFirst": ".انقر على 'إنشاء مطالبة جديدة' أعلاه لإنشاء أول مطالبة معالجة لاحقة لك"
       }
+    },
+    "stats": {
+      "loading": "جاري تحميل الإحصائيات...",
+      "loadError": "تعذر تحميل الإحصائيات.",
+      "ranges": {
+        "today": "اليوم",
+        "week": "7 أيام",
+        "month": "30 يومًا",
+        "all": "كل الأوقات"
+      },
+      "wordsPerMinute": "كلمة في الدقيقة",
+      "totalWords": "الكلمات المملاة",
+      "transcriptions": "الإملاءات",
+      "streak_zero": "أيام متتالية: {{count}}",
+      "streak_one": "أيام متتالية: {{count}}",
+      "streak_two": "أيام متتالية: {{count}}",
+      "streak_few": "أيام متتالية: {{count}}",
+      "streak_many": "أيام متتالية: {{count}}",
+      "streak_other": "أيام متتالية: {{count}}",
+      "longestStreak_zero": "أطول سلسلة: {{count}} يوم",
+      "longestStreak_one": "أطول سلسلة: {{count}} يوم",
+      "longestStreak_two": "أطول سلسلة: يومان",
+      "longestStreak_few": "أطول سلسلة: {{count}} أيام",
+      "longestStreak_many": "أطول سلسلة: {{count}} يومًا",
+      "longestStreak_other": "أطول سلسلة: {{count}} يوم",
+      "dayTooltip_zero": "لا توجد كلمات في {{date}}",
+      "dayTooltip_one": "{{formattedCount}} كلمة في {{date}}",
+      "dayTooltip_two": "كلمتان في {{date}}",
+      "dayTooltip_few": "{{formattedCount}} كلمات في {{date}}",
+      "dayTooltip_many": "{{formattedCount}} كلمةً في {{date}}",
+      "dayTooltip_other": "{{formattedCount}} كلمة في {{date}}",
+      "less": "أقل",
+      "more": "أكثر"
     },
     "history": {
       "title": "السجل",

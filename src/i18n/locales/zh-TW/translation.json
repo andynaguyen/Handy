@@ -15,6 +15,7 @@
     "advanced": "進階",
     "postProcessing": "後處理",
     "history": "歷史紀錄",
+    "stats": "統計",
     "debug": "偵錯",
     "about": "關於"
   },
@@ -453,6 +454,27 @@
         "selectToEdit": "選擇上方的提示詞以檢視和編輯其詳細資訊",
         "createFirst": "點選上方的「建立新提示詞」來建立您的第一個後處理提示詞"
       }
+    },
+    "stats": {
+      "loading": "載入統計資料中...",
+      "loadError": "無法載入統計資料。",
+      "ranges": {
+        "today": "今天",
+        "week": "7 天",
+        "month": "30 天",
+        "all": "全部"
+      },
+      "wordsPerMinute": "每分鐘字數",
+      "totalWords": "聽寫字數",
+      "transcriptions": "聽寫次數",
+      "streak_one": "連續 {{count}} 天",
+      "streak_other": "連續 {{count}} 天",
+      "longestStreak_one": "最長連續：{{count}} 天",
+      "longestStreak_other": "最長連續：{{count}} 天",
+      "dayTooltip_one": "{{date}}：{{formattedCount}} 字",
+      "dayTooltip_other": "{{date}}：{{formattedCount}} 字",
+      "less": "少",
+      "more": "多"
     },
     "history": {
       "title": "歷史紀錄",
