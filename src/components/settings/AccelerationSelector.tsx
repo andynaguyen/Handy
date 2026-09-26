@@ -49,7 +49,7 @@ function decodeTranscribeValue(value: string): {
 }
 
 export const AccelerationSelector: FC<AccelerationSelectorProps> = ({
-  descriptionMode = "tooltip",
+  descriptionMode = "inline",
   grouped = false,
 }) => {
   const { t } = useTranslation();

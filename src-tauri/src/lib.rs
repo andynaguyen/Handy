@@ -944,7 +944,7 @@ pub fn run(cli_args: CliArgs) {
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
                     .title("Handy")
-                    .inner_size(680.0, 570.0)
+                    .inner_size(1024.0, 800.0)
                     .min_inner_size(680.0, 570.0)
                     .resizable(true)
                     .maximizable(true)

@@ -13,7 +13,7 @@ interface OnboardingPreviewProps {
 
 export const OnboardingPreview: React.FC<OnboardingPreviewProps> = ({
   onPreview,
-  descriptionMode = "tooltip",
+  descriptionMode = "inline",
   grouped = false,
 }) => {
   const { t } = useTranslation();

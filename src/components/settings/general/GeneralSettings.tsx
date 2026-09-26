@@ -19,20 +19,20 @@ export const GeneralSettings: React.FC = () => {
   const isLinux = type() === "linux";
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("settings.general.title")}>
+      <SettingsGroup title={t("settings.general.shortcut.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
-        <ShortcutActivationSetting descriptionMode="tooltip" grouped={true} />
+        <ShortcutActivationSetting descriptionMode="inline" grouped={true} />
         {/* Cancel shortcut remains hidden on Linux because of dynamic shortcut instability. */}
         {!isLinux && <ShortcutInput shortcutId="cancel" grouped={true} />}
       </SettingsGroup>
       <ModelSettingsCard />
       <SettingsGroup title={t("settings.sound.title")}>
-        <MicrophoneSelector descriptionMode="tooltip" grouped={true} />
-        <ChannelSelector descriptionMode="tooltip" grouped={true} />
-        <MuteWhileRecording descriptionMode="tooltip" grouped={true} />
-        <AudioFeedback descriptionMode="tooltip" grouped={true} />
+        <MicrophoneSelector descriptionMode="inline" grouped={true} />
+        <ChannelSelector descriptionMode="inline" grouped={true} />
+        <MuteWhileRecording descriptionMode="inline" grouped={true} />
+        <AudioFeedback descriptionMode="inline" grouped={true} />
         <OutputDeviceSelector
-          descriptionMode="tooltip"
+          descriptionMode="inline"
           grouped={true}
           disabled={!audioFeedbackEnabled}
         />

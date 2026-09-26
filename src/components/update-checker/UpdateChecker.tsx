@@ -210,7 +210,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
     <>
       {showPortableUpdateDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-background border border-mid-gray/20 rounded-lg p-6 max-w-md w-full mx-4 space-y-4">
+          <div className="bg-background border border-mid-gray/20 rounded-2xl shadow-xl p-6 max-w-md w-full mx-4 space-y-4">
             <h2 className="text-base font-semibold">
               {t("footer.portableUpdateTitle")}
             </h2>
@@ -227,7 +227,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
                 {t("common.close")}
               </button>
               <button
-                className="px-3 py-1.5 text-sm rounded bg-logo-primary text-white hover:bg-logo-primary/80 transition-colors"
+                className="px-3 py-1.5 text-sm rounded bg-accent text-accent-contrast hover:bg-accent/80 transition-colors"
                 onClick={() => {
                   openUrl(portableInstallerUrl);
                   setShowPortableUpdateDialog(false);
@@ -248,7 +248,7 @@ const UpdateChecker: React.FC<UpdateCheckerProps> = ({ className = "" }) => {
             disabled={isUpdateDisabled}
             className={`transition-colors disabled:opacity-50 tabular-nums ${
               updateAvailable
-                ? "text-logo-primary hover:text-logo-primary/80 font-medium"
+                ? "text-accent hover:text-accent/80 font-medium"
                 : "text-text/60 hover:text-text/80"
             }`}
           >

@@ -32,46 +32,46 @@ export const AdvancedSettings: React.FC = () => {
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <SettingsGroup title={t("settings.advanced.groups.app")}>
-        <StartHidden descriptionMode="tooltip" grouped={true} />
-        <AutostartToggle descriptionMode="tooltip" grouped={true} />
-        <ShowTrayIcon descriptionMode="tooltip" grouped={true} />
-        <ShowOverlay descriptionMode="tooltip" grouped={true} />
-        <ModelUnloadTimeoutSetting descriptionMode="tooltip" grouped={true} />
-        <ExperimentalToggle descriptionMode="tooltip" grouped={true} />
+        <StartHidden descriptionMode="inline" grouped={true} />
+        <AutostartToggle descriptionMode="inline" grouped={true} />
+        <ShowTrayIcon descriptionMode="inline" grouped={true} />
+        <ShowOverlay descriptionMode="inline" grouped={true} />
+        <ModelUnloadTimeoutSetting descriptionMode="inline" grouped={true} />
+        <ExperimentalToggle descriptionMode="inline" grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.output")}>
-        <PasteMethodSetting descriptionMode="tooltip" grouped={true} />
-        <TypingToolSetting descriptionMode="tooltip" grouped={true} />
-        <ClipboardHandlingSetting descriptionMode="tooltip" grouped={true} />
-        <AutoSubmit descriptionMode="tooltip" grouped={true} />
+        <PasteMethodSetting descriptionMode="inline" grouped={true} />
+        <TypingToolSetting descriptionMode="inline" grouped={true} />
+        <ClipboardHandlingSetting descriptionMode="inline" grouped={true} />
+        <AutoSubmit descriptionMode="inline" grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.transcription")}>
-        <VoiceActivityDetection descriptionMode="tooltip" grouped={true} />
-        <FillerWordRemoval descriptionMode="tooltip" grouped={true} />
-        <CustomWords descriptionMode="tooltip" grouped />
-        <AppendTrailingSpace descriptionMode="tooltip" grouped={true} />
+        <VoiceActivityDetection descriptionMode="inline" grouped={true} />
+        <FillerWordRemoval descriptionMode="inline" grouped={true} />
+        <CustomWords descriptionMode="inline" grouped />
+        <AppendTrailingSpace descriptionMode="inline" grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.history")}>
-        <HistoryLimit descriptionMode="tooltip" grouped={true} />
+        <HistoryLimit descriptionMode="inline" grouped={true} />
         <RecordingRetentionPeriodSelector
-          descriptionMode="tooltip"
+          descriptionMode="inline"
           grouped={true}
         />
       </SettingsGroup>
 
       {experimentalEnabled && (
         <SettingsGroup title={t("settings.advanced.groups.experimental")}>
-          <PostProcessingToggle descriptionMode="tooltip" grouped={true} />
+          <PostProcessingToggle descriptionMode="inline" grouped={true} />
           <KeyboardImplementationSelector
-            descriptionMode="tooltip"
+            descriptionMode="inline"
             grouped={true}
           />
-          <AccelerationSelector descriptionMode="tooltip" grouped={true} />
-          <LazyStreamClose descriptionMode="tooltip" grouped={true} />
-          <VadBackendSelector descriptionMode="tooltip" grouped={true} />
+          <AccelerationSelector descriptionMode="inline" grouped={true} />
+          <LazyStreamClose descriptionMode="inline" grouped={true} />
+          <VadBackendSelector descriptionMode="inline" grouped={true} />
         </SettingsGroup>
       )}
     </div>

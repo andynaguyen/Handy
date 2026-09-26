@@ -11,10 +11,10 @@ import {
   type HistoryUpdatePayload,
 } from "@/bindings";
 import { useOsType } from "@/hooks/useOsType";
-import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
 import { copyToClipboard } from "./clipboard";
+import { toDateKey } from "../stats/usageStats";
 
 const IconButton: React.FC<{
   onClick: () => void;
@@ -26,10 +26,8 @@ const IconButton: React.FC<{
   <button
     onClick={onClick}
     disabled={disabled}
-    className={`p-1.5 rounded-md flex items-center justify-center transition-colors cursor-pointer disabled:cursor-not-allowed disabled:text-text/20 ${
-      active
-        ? "text-logo-primary hover:text-logo-primary/80"
-        : "text-text/50 hover:text-logo-primary"
+    className={`p-1.5 rounded-lg flex items-center justify-center transition-colors cursor-pointer hover:bg-mid-gray/15 disabled:cursor-not-allowed disabled:text-text/20 disabled:hover:bg-transparent ${
+      active ? "text-accent" : "text-text/45 hover:text-text"
     }`}
     title={title}
   >
@@ -38,6 +36,46 @@ const IconButton: React.FC<{
 );
 
 const PAGE_SIZE = 30;
+
+const startOfDay = (date: Date) =>
+  new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+/** "Today", "Yesterday", or a date, in the UI language. */
+const formatDayLabel = (date: Date, locale: string): string => {
+  const today = new Date();
+  // Rounded so DST days (23 or 25 hours) still count as one day apart.
+  const daysAgo = Math.round(
+    (startOfDay(today).getTime() - startOfDay(date).getTime()) / 86_400_000,
+  );
+  if (daysAgo === 0 || daysAgo === 1) {
+    return new Intl.RelativeTimeFormat(locale, { numeric: "auto" }).format(
+      -daysAgo,
+      "day",
+    );
+  }
+  return new Intl.DateTimeFormat(locale, {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: date.getFullYear() === today.getFullYear() ? undefined : "numeric",
+  }).format(date);
+};
+
+/** Entries arrive newest first, so each day's entries are contiguous. */
+const groupByDay = (entries: HistoryEntry[]) => {
+  const groups: { key: string; date: Date; entries: HistoryEntry[] }[] = [];
+  for (const entry of entries) {
+    const date = new Date(entry.timestamp * 1000);
+    const key = toDateKey(date);
+    const last = groups[groups.length - 1];
+    if (last?.key === key) {
+      last.entries.push(entry);
+    } else {
+      groups.push({ key, date, entries: [entry] });
+    }
+  }
+  return groups;
+};
 
 interface OpenRecordingsButtonProps {
   onClick: () => void;
@@ -50,18 +88,18 @@ const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
 }) => (
   <Button
     onClick={onClick}
-    variant="secondary"
+    variant="ghost"
     size="sm"
-    className="flex items-center gap-2"
+    className="flex items-center gap-1.5 text-text/60 hover:text-text"
     title={label}
   >
-    <FolderOpen className="w-4 h-4" />
+    <FolderOpen className="w-3.5 h-3.5" />
     <span>{label}</span>
   </Button>
 );
 
 export const HistorySettings: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const osType = useOsType();
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
@@ -227,62 +265,63 @@ export const HistorySettings: React.FC = () => {
     }
   };
 
-  let content: React.ReactNode;
+  const openFolderButton = (
+    <OpenRecordingsButton
+      onClick={openRecordingsFolder}
+      label={t("settings.history.openFolder")}
+    />
+  );
+  const dayHeader = (label: string, withFolderButton: boolean) => (
+    <div className="flex items-center justify-between gap-4 px-1 min-h-7">
+      <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-text/55">
+        {label}
+      </h2>
+      {withFolderButton && openFolderButton}
+    </div>
+  );
 
-  if (loading) {
-    content = (
-      <div className="px-4 py-3 text-center text-text/60">
-        {t("settings.history.loading")}
+  if (loading || entries.length === 0) {
+    return (
+      <div className="max-w-3xl w-full mx-auto space-y-2">
+        <div className="flex justify-end">{openFolderButton}</div>
+        <div className="px-4 py-10 text-center text-sm text-text/55 border border-mid-gray/15 rounded-2xl">
+          {loading
+            ? t("settings.history.loading")
+            : t("settings.history.empty")}
+        </div>
       </div>
-    );
-  } else if (entries.length === 0) {
-    content = (
-      <div className="px-4 py-3 text-center text-text/60">
-        {t("settings.history.empty")}
-      </div>
-    );
-  } else {
-    content = (
-      <>
-        <AudioPlayerGroup>
-          <div className="divide-y divide-mid-gray/20">
-            {entries.map((entry) => (
-              <HistoryEntryComponent
-                key={entry.id}
-                entry={entry}
-                onToggleSaved={() => toggleSaved(entry.id)}
-                onCopyText={() => copyToClipboard(entry.transcription_text)}
-                getAudioUrl={getAudioUrl}
-                deleteAudio={deleteAudioEntry}
-                retryTranscription={retryHistoryEntry}
-              />
-            ))}
-          </div>
-        </AudioPlayerGroup>
-        {/* Sentinel for infinite scroll */}
-        <div ref={sentinelRef} className="h-1" />
-      </>
     );
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-2">
-        <div className="px-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xs font-medium text-mid-gray uppercase tracking-wide">
-              {t("settings.history.title")}
-            </h2>
-          </div>
-          <OpenRecordingsButton
-            onClick={openRecordingsFolder}
-            label={t("settings.history.openFolder")}
-          />
+    <div className="max-w-3xl w-full mx-auto">
+      <AudioPlayerGroup>
+        <div className="space-y-6">
+          {groupByDay(entries).map((group, index) => (
+            <section key={group.key} className="space-y-2">
+              {dayHeader(
+                formatDayLabel(group.date, i18n.language),
+                index === 0,
+              )}
+              <div className="border border-mid-gray/15 rounded-2xl divide-y divide-mid-gray/15 overflow-hidden">
+                {group.entries.map((entry) => (
+                  <HistoryEntryComponent
+                    key={entry.id}
+                    entry={entry}
+                    onToggleSaved={() => toggleSaved(entry.id)}
+                    onCopyText={() => copyToClipboard(entry.transcription_text)}
+                    getAudioUrl={getAudioUrl}
+                    deleteAudio={deleteAudioEntry}
+                    retryTranscription={retryHistoryEntry}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
-        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible">
-          {content}
-        </div>
-      </div>
+      </AudioPlayerGroup>
+      {/* Sentinel for infinite scroll */}
+      <div ref={sentinelRef} className="h-1" />
     </div>
   );
 };
@@ -351,95 +390,103 @@ const HistoryEntryComponent: React.FC<HistoryEntryProps> = ({
     }
   };
 
-  const formattedDate = formatDateTime(String(entry.timestamp), i18n.language);
+  const time = new Intl.DateTimeFormat(i18n.language, {
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(entry.timestamp * 1000));
 
   return (
-    <div className="px-4 py-2 pb-5 flex flex-col gap-3">
-      <div className="flex justify-between items-center">
-        <p className="text-sm font-medium">{formattedDate}</p>
-        <div className="flex items-center">
-          <IconButton
-            onClick={handleCopyText}
-            disabled={!hasTranscription || retrying}
-            title={t("settings.history.copyToClipboard")}
-          >
-            {showCopied ? (
-              <Check width={16} height={16} />
-            ) : (
-              <Copy width={16} height={16} />
-            )}
-          </IconButton>
-          <IconButton
-            onClick={onToggleSaved}
-            disabled={retrying}
-            active={entry.saved}
-            title={
-              entry.saved
-                ? t("settings.history.unsave")
-                : t("settings.history.save")
-            }
-          >
-            <Star
-              width={16}
-              height={16}
-              fill={entry.saved ? "currentColor" : "none"}
-            />
-          </IconButton>
-          <IconButton
-            onClick={handleRetranscribe}
-            disabled={retrying}
-            title={t("settings.history.retranscribe")}
-          >
-            <RotateCcw
-              width={16}
-              height={16}
-              style={
-                retrying
-                  ? { animation: "spin 1s linear infinite reverse" }
-                  : undefined
+    <div className="flex gap-4 px-5 py-4 transition-colors hover:bg-card/60">
+      <time className="w-16 shrink-0 text-[13px] leading-6 text-text/50 tabular-nums">
+        {time}
+      </time>
+      <div className="flex-1 min-w-0 flex flex-col gap-2">
+        <p
+          className={`text-sm leading-6 ${
+            retrying
+              ? ""
+              : hasTranscription
+                ? "select-text cursor-text whitespace-pre-wrap break-words"
+                : "text-text/40"
+          }`}
+          style={
+            retrying
+              ? { animation: "transcribe-pulse 3s ease-in-out infinite" }
+              : undefined
+          }
+        >
+          {retrying && (
+            <style>{`
+                @keyframes transcribe-pulse {
+                  0%, 100% { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
+                  50% { color: color-mix(in srgb, var(--color-text) 90%, transparent); }
+                }
+              `}</style>
+          )}
+          {retrying
+            ? t("settings.history.transcribing")
+            : hasTranscription
+              ? entry.transcription_text
+              : t("settings.history.transcriptionFailed")}
+        </p>
+        <div className="flex items-center gap-3">
+          <AudioPlayer
+            onLoadRequest={handleLoadAudio}
+            className="flex-1 min-w-0"
+          />
+          <div className="flex items-center shrink-0 -me-1.5">
+            <IconButton
+              onClick={handleCopyText}
+              disabled={!hasTranscription || retrying}
+              title={t("settings.history.copyToClipboard")}
+            >
+              {showCopied ? (
+                <Check width={16} height={16} />
+              ) : (
+                <Copy width={16} height={16} />
+              )}
+            </IconButton>
+            <IconButton
+              onClick={onToggleSaved}
+              disabled={retrying}
+              active={entry.saved}
+              title={
+                entry.saved
+                  ? t("settings.history.unsave")
+                  : t("settings.history.save")
               }
-            />
-          </IconButton>
-          <IconButton
-            onClick={handleDeleteEntry}
-            disabled={retrying}
-            title={t("settings.history.delete")}
-          >
-            <Trash2 width={16} height={16} />
-          </IconButton>
+            >
+              <Star
+                width={16}
+                height={16}
+                fill={entry.saved ? "currentColor" : "none"}
+              />
+            </IconButton>
+            <IconButton
+              onClick={handleRetranscribe}
+              disabled={retrying}
+              title={t("settings.history.retranscribe")}
+            >
+              <RotateCcw
+                width={16}
+                height={16}
+                style={
+                  retrying
+                    ? { animation: "spin 1s linear infinite reverse" }
+                    : undefined
+                }
+              />
+            </IconButton>
+            <IconButton
+              onClick={handleDeleteEntry}
+              disabled={retrying}
+              title={t("settings.history.delete")}
+            >
+              <Trash2 width={16} height={16} />
+            </IconButton>
+          </div>
         </div>
       </div>
-
-      <p
-        className={`italic text-sm pb-2 ${
-          retrying
-            ? ""
-            : hasTranscription
-              ? "text-text/90 select-text cursor-text whitespace-pre-wrap break-words"
-              : "text-text/40"
-        }`}
-        style={
-          retrying
-            ? { animation: "transcribe-pulse 3s ease-in-out infinite" }
-            : undefined
-        }
-      >
-        {retrying && (
-          <style>{`
-            @keyframes transcribe-pulse {
-              0%, 100% { color: color-mix(in srgb, var(--color-text) 40%, transparent); }
-              50% { color: color-mix(in srgb, var(--color-text) 90%, transparent); }
-            }
-          `}</style>
-        )}
-        {retrying
-          ? t("settings.history.transcribing")
-          : hasTranscription
-            ? entry.transcription_text
-            : t("settings.history.transcriptionFailed")}
-      </p>
-
-      <AudioPlayer onLoadRequest={handleLoadAudio} className="w-full" />
     </div>
   );
 };

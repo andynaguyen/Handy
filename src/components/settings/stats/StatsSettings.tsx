@@ -24,19 +24,21 @@ type RangeId = (typeof RANGES)[number]["id"];
 
 const LEVEL_CLASSES = [
   "bg-mid-gray/15",
-  "bg-logo-primary/30",
-  "bg-logo-primary/55",
-  "bg-logo-primary/80",
-  "bg-logo-primary",
+  "bg-data/25",
+  "bg-data/50",
+  "bg-data/75",
+  "bg-data",
 ];
 
 const StatCard: React.FC<{ value: string; label: string }> = ({
   value,
   label,
 }) => (
-  <div className="bg-background border border-mid-gray/20 rounded-lg px-4 py-3">
-    <p className="text-2xl font-semibold tabular-nums">{value}</p>
-    <p className="text-xs font-medium text-mid-gray uppercase tracking-wide mt-1">
+  <div className="bg-card rounded-2xl px-5 py-4">
+    <p className="text-[28px] leading-tight font-semibold tracking-tight tabular-nums">
+      {value}
+    </p>
+    <p className="text-[11px] leading-4 font-medium text-text/55 uppercase tracking-[0.08em] mt-1.5">
       {label}
     </p>
   </div>
@@ -130,8 +132,8 @@ export const StatsSettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-3">
-        <div className="flex gap-1" role="group">
+      <div className="space-y-5">
+        <div className="flex gap-6 border-b border-mid-gray/20" role="group">
           {RANGES.map((candidate) => {
             const selected = candidate.id === rangeId;
             return (
@@ -140,10 +142,10 @@ export const StatsSettings: React.FC = () => {
                 type="button"
                 onClick={() => setRangeId(candidate.id)}
                 aria-pressed={selected}
-                className={`h-8 px-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`-mb-px pb-2 text-[15px] font-medium border-b-2 transition-colors cursor-pointer ${
                   selected
-                    ? "bg-logo-primary/20 text-logo-primary hover:bg-logo-primary/30"
-                    : "bg-mid-gray/10 text-text/60 hover:bg-mid-gray/20"
+                    ? "border-accent text-text"
+                    : "border-transparent text-text/50 hover:text-text"
                 }`}
               >
                 {t(candidate.labelKey)}
@@ -171,12 +173,12 @@ export const StatsSettings: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-background border border-mid-gray/20 rounded-lg px-4 py-4 space-y-4">
+      <div className="bg-card rounded-2xl px-5 py-5 space-y-5">
         <div className="flex items-baseline justify-between gap-4">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-2xl font-semibold tracking-tight">
             {t("settings.stats.streak", { count: view.streaks.current })}
           </h2>
-          <p className="text-xs font-medium text-mid-gray uppercase tracking-wide">
+          <p className="text-[11px] font-medium text-text/70 uppercase tracking-[0.08em]">
             {t("settings.stats.longestStreak", {
               count: view.streaks.longest,
             })}
@@ -184,7 +186,7 @@ export const StatsSettings: React.FC = () => {
         </div>
 
         <div
-          className="grid gap-1 text-[10px] text-mid-gray leading-none"
+          className="grid gap-1 text-[10px] text-text/50 leading-none"
           style={{
             gridTemplateColumns: `auto repeat(${HEATMAP_WEEKS}, minmax(0, 1fr))`,
           }}
@@ -208,7 +210,7 @@ export const StatsSettings: React.FC = () => {
                 return (
                   <div
                     key={weekIndex}
-                    className={`aspect-square rounded-sm ${
+                    className={`aspect-square rounded-[3px] ${
                       LEVEL_CLASSES[intensityLevel(cell.words, view.maxWords)]
                     }`}
                     title={t("settings.stats.dayTooltip", {
@@ -223,12 +225,12 @@ export const StatsSettings: React.FC = () => {
           ))}
         </div>
 
-        <div className="flex items-center justify-end gap-1 text-xs text-mid-gray">
+        <div className="flex items-center justify-end gap-1 text-xs text-text/50">
           <span className="me-1">{t("settings.stats.less")}</span>
           {LEVEL_CLASSES.map((className) => (
             <div
               key={className}
-              className={`w-3 h-3 rounded-sm ${className}`}
+              className={`w-3 h-3 rounded-[3px] ${className}`}
             />
           ))}
           <span className="ms-1">{t("settings.stats.more")}</span>

@@ -39,9 +39,9 @@ export const AboutSettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("settings.about.title")}>
-        <AppLanguageSelector descriptionMode="tooltip" grouped={true} />
-        <ThemeSelector descriptionMode="tooltip" grouped={true} />
+      <SettingsGroup>
+        <AppLanguageSelector descriptionMode="inline" grouped={true} />
+        <ThemeSelector descriptionMode="inline" grouped={true} />
         <SettingContainer
           title={t("settings.about.version.title")}
           description={t("settings.about.version.description")}
@@ -51,7 +51,7 @@ export const AboutSettings: React.FC = () => {
           <span className="text-sm font-mono">v{version}</span>
         </SettingContainer>
 
-        <ShowWhatsNewOnUpdate descriptionMode="tooltip" grouped={true} />
+        <ShowWhatsNewOnUpdate descriptionMode="inline" grouped={true} />
 
         <SettingContainer
           title={t("settings.about.supportDevelopment.title")}
@@ -77,7 +77,7 @@ export const AboutSettings: React.FC = () => {
           </Button>
         </SettingContainer>
 
-        <AppDataDirectory descriptionMode="tooltip" grouped={true} />
+        <AppDataDirectory descriptionMode="inline" grouped={true} />
         <LogDirectory grouped={true} />
       </SettingsGroup>
 

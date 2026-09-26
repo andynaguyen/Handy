@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ChartColumn,
@@ -11,7 +11,10 @@ import {
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
+import ModelSelector from "./model-selector";
+import UpdateChecker from "./update-checker";
 import { useSettings } from "../hooks/useSettings";
+import { getVersion } from "@tauri-apps/api/app";
 import {
   GeneralSettings,
   AdvancedSettings,
@@ -38,6 +41,8 @@ interface SectionConfig {
   icon: React.ComponentType<IconProps>;
   component: React.ComponentType;
   enabled: (settings: any) => boolean;
+  // Secondary sections sit in the bottom group, below a divider.
+  secondary?: boolean;
 }
 
 export const SECTIONS_CONFIG = {
@@ -82,12 +87,14 @@ export const SECTIONS_CONFIG = {
     icon: FlaskConical,
     component: DebugSettings,
     enabled: (settings) => settings?.debug_mode ?? false,
+    secondary: true,
   },
   about: {
     labelKey: "sidebar.about",
     icon: Info,
     component: AboutSettings,
     enabled: () => true,
+    secondary: true,
   },
 } as const satisfies Record<string, SectionConfig>;
 
@@ -96,46 +103,81 @@ interface SidebarProps {
   onSectionChange: (section: SidebarSection) => void;
 }
 
+type AvailableSection = SectionConfig & { id: SidebarSection };
+
+const NavItem: React.FC<{
+  section: AvailableSection;
+  active: boolean;
+  onSelect: (section: SidebarSection) => void;
+}> = ({ section, active, onSelect }) => {
+  const { t } = useTranslation();
+  const Icon = section.icon;
+  const label = t(section.labelKey);
+  return (
+    <button
+      type="button"
+      className={`flex gap-3 items-center px-3 py-2 w-full rounded-lg cursor-pointer transition-colors text-start ${
+        active
+          ? "bg-mid-gray/15 text-text"
+          : "text-text/75 hover:bg-mid-gray/10 hover:text-text"
+      }`}
+      onClick={() => onSelect(section.id)}
+      aria-current={active ? "page" : undefined}
+    >
+      <Icon width={20} height={20} strokeWidth={1.75} className="shrink-0" />
+      <span className="text-[15px] font-medium truncate" title={label}>
+        {label}
+      </span>
+    </button>
+  );
+};
+
 export const Sidebar: React.FC<SidebarProps> = ({
   activeSection,
   onSectionChange,
 }) => {
-  const { t } = useTranslation();
   const { settings } = useSettings();
+  const [version, setVersion] = useState("");
+
+  useEffect(() => {
+    getVersion()
+      .then(setVersion)
+      .catch((error) => console.error("Failed to get app version:", error));
+  }, []);
 
   const availableSections = Object.entries(SECTIONS_CONFIG)
     .filter(([_, config]) => config.enabled(settings))
-    .map(([id, config]) => ({ id: id as SidebarSection, ...config }));
+    .map(([id, config]) => ({
+      id: id as SidebarSection,
+      ...(config as SectionConfig),
+    }));
+  const renderItems = (secondary: boolean) =>
+    availableSections
+      .filter((section) => (section.secondary ?? false) === secondary)
+      .map((section) => (
+        <NavItem
+          key={section.id}
+          section={section}
+          active={activeSection === section.id}
+          onSelect={onSectionChange}
+        />
+      ));
 
   return (
-    <div className="flex flex-col w-40 h-full border-e border-mid-gray/20 items-center px-2">
-      <HandyTextLogo width={120} className="m-4" />
-      <div className="flex flex-col w-full items-center gap-1 pt-2 border-t border-mid-gray/20">
-        {availableSections.map((section) => {
-          const Icon = section.icon;
-          const isActive = activeSection === section.id;
-
-          return (
-            <div
-              key={section.id}
-              className={`flex gap-2 items-center p-2 w-full rounded-lg cursor-pointer transition-colors ${
-                isActive
-                  ? "bg-logo-primary/80"
-                  : "hover:bg-mid-gray/20 hover:opacity-100 opacity-85"
-              }`}
-              onClick={() => onSectionChange(section.id)}
-            >
-              <Icon width={24} height={24} className="shrink-0" />
-              <p
-                className="text-sm font-medium truncate"
-                title={t(section.labelKey)}
-              >
-                {t(section.labelKey)}
-              </p>
-            </div>
-          );
-        })}
+    <nav className="flex flex-col w-52 h-full px-2 pb-3 shrink-0">
+      <HandyTextLogo width={96} className="mx-3 mt-4 mb-6" />
+      <div className="flex flex-col gap-1">{renderItems(false)}</div>
+      <div className="mt-auto flex flex-col gap-1 pt-3 border-t border-mid-gray/15">
+        {renderItems(true)}
+        <div className="flex flex-col gap-1.5 px-3 pt-3 text-xs text-text/60">
+          <ModelSelector />
+          <div className="flex flex-wrap items-center gap-x-1.5 whitespace-nowrap">
+            <UpdateChecker />
+            {/* eslint-disable-next-line i18next/no-literal-string */}
+            {version && <span className="text-text/40">v{version}</span>}
+          </div>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 };

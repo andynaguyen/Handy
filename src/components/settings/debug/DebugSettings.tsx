@@ -30,37 +30,37 @@ export const DebugSettings: React.FC<DebugSettingsProps> = ({
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("settings.debug.title")}>
+      <SettingsGroup>
         <LogLevelSelector grouped={true} />
-        <WhatsNewPreview descriptionMode="tooltip" grouped={true} />
+        <WhatsNewPreview descriptionMode="inline" grouped={true} />
         {onPreviewOnboarding && (
           <OnboardingPreview
             onPreview={onPreviewOnboarding}
-            descriptionMode="tooltip"
+            descriptionMode="inline"
             grouped={true}
           />
         )}
-        <UpdateChecksToggle descriptionMode="tooltip" grouped={true} />
+        <UpdateChecksToggle descriptionMode="inline" grouped={true} />
         <SoundPicker
           label={t("settings.debug.soundTheme.label")}
           description={t("settings.debug.soundTheme.description")}
         />
-        <WordCorrectionThreshold descriptionMode="tooltip" grouped={true} />
-        <PasteDelay descriptionMode="tooltip" grouped={true} />
+        <WordCorrectionThreshold descriptionMode="inline" grouped={true} />
+        <PasteDelay descriptionMode="inline" grouped={true} />
         <PasteDelay
-          descriptionMode="tooltip"
+          descriptionMode="inline"
           grouped={true}
           settingKey="paste_delay_after_ms"
           labelKey="settings.debug.pasteDelayAfter.title"
           descriptionKey="settings.debug.pasteDelayAfter.description"
         />
-        <ReliablePasteToggle descriptionMode="tooltip" grouped={true} />
-        <HoldThreshold descriptionMode="tooltip" grouped={true} />
-        <RecordingBuffer descriptionMode="tooltip" grouped={true} />
-        <AlwaysOnMicrophone descriptionMode="tooltip" grouped={true} />
-        <ClamshellMicrophoneSelector descriptionMode="tooltip" grouped={true} />
+        <ReliablePasteToggle descriptionMode="inline" grouped={true} />
+        <HoldThreshold descriptionMode="inline" grouped={true} />
+        <RecordingBuffer descriptionMode="inline" grouped={true} />
+        <AlwaysOnMicrophone descriptionMode="inline" grouped={true} />
+        <ClamshellMicrophoneSelector descriptionMode="inline" grouped={true} />
         <KeyboardDiagnostic />
-        <LiveLogViewer descriptionMode="tooltip" grouped={true} />
+        <LiveLogViewer descriptionMode="inline" grouped={true} />
       </SettingsGroup>
     </div>
   );

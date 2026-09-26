@@ -21,7 +21,7 @@ interface GlobalShortcutInputProps {
 }
 
 export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
-  descriptionMode = "tooltip",
+  descriptionMode = "inline",
   grouped = false,
   shortcutId,
   disabled = false,
@@ -288,13 +288,13 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
         {editingShortcutId === shortcutId ? (
           <div
             ref={(ref) => setShortcutRef(shortcutId, ref)}
-            className="px-2 py-1 text-sm font-semibold border border-logo-primary bg-logo-primary/30 rounded-md"
+            className="px-2.5 py-1 text-sm font-medium whitespace-nowrap border border-accent bg-background ring-2 ring-accent/15 rounded-lg"
           >
             {formatCurrentKeys()}
           </div>
         ) : (
           <div
-            className="px-2 py-1 text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 hover:bg-logo-primary/10 rounded-md cursor-pointer hover:border-logo-primary"
+            className="px-2.5 py-1 text-sm font-medium whitespace-nowrap bg-background border border-mid-gray/25 shadow-[0_1px_1px_rgba(0,0,0,0.03)] hover:border-mid-gray/50 rounded-lg cursor-pointer"
             onClick={() => startRecording(shortcutId)}
           >
             {formatKeyCombination(binding.current_binding, osType)}

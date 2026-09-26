@@ -112,22 +112,22 @@ const ModelCard: React.FC<ModelCardProps> = ({
   );
 
   const baseClasses =
-    "flex flex-col rounded-xl px-4 py-3 gap-2 text-left transition-all duration-200";
+    "flex flex-col rounded-2xl px-5 py-4 gap-2 text-left transition-colors duration-200";
 
   const getVariantClasses = () => {
     if (status === "active") {
-      return "border-2 border-logo-primary/50 bg-logo-primary/10";
+      return "border border-accent/60 bg-card";
     }
     if (isFeatured) {
-      return "border-2 border-logo-primary/25 bg-logo-primary/5";
+      return "border border-mid-gray/30 bg-card";
     }
-    return "border-2 border-mid-gray/20";
+    return "border border-mid-gray/20";
   };
 
   const getInteractiveClasses = () => {
     if (!isClickable) return "";
     if (disabled) return "opacity-50 cursor-not-allowed";
-    return "cursor-pointer hover:border-logo-primary/50 hover:bg-logo-primary/5 hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] group";
+    return "cursor-pointer hover:border-mid-gray/40 hover:bg-card group";
   };
 
   const handleClick = () => {
@@ -166,7 +166,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         <div className="flex flex-col items-start flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
             <h3
-              className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-logo-primary" : ""} transition-colors`}
+              className={`text-base font-semibold text-text ${isClickable ? "group-hover:text-accent" : ""} transition-colors`}
             >
               {displayName}
             </h3>
@@ -205,7 +205,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                 </p>
                 <div className="w-16 h-1.5 bg-mid-gray/20 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-logo-primary rounded-full"
+                    className="h-full bg-data rounded-full"
                     style={{ width: `${model.accuracy_score * 100}%` }}
                   />
                 </div>
@@ -216,7 +216,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
                 </p>
                 <div className="w-16 h-1.5 bg-mid-gray/20 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-logo-primary rounded-full"
+                    className="h-full bg-data rounded-full"
                     style={{ width: `${model.speed_score * 100}%` }}
                   />
                 </div>
@@ -280,7 +280,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
             size="sm"
             onClick={handleDelete}
             title={t("modelSelector.deleteModel", { modelName: displayName })}
-            className="flex items-center gap-1.5 text-logo-primary/85 hover:text-logo-primary hover:bg-logo-primary/10"
+            className="flex items-center gap-1.5 text-accent/85 hover:text-accent hover:bg-mid-gray/10"
           >
             <Trash2 className="w-3.5 h-3.5" />
             <span>{t("common.delete")}</span>
@@ -293,7 +293,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         <div className="w-full mt-3">
           <div className="w-full h-1.5 bg-mid-gray/20 rounded-full overflow-hidden">
             <div
-              className="h-full bg-logo-primary rounded-full transition-all duration-300"
+              className="h-full bg-accent rounded-full transition-all duration-300"
               style={{ width: `${downloadProgress}%` }}
             />
           </div>
@@ -332,7 +332,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
       {status === "verifying" && (
         <div className="w-full mt-3">
           <div className="w-full h-1.5 bg-mid-gray/20 rounded-full overflow-hidden">
-            <div className="h-full bg-logo-primary rounded-full animate-pulse w-full" />
+            <div className="h-full bg-accent rounded-full animate-pulse w-full" />
           </div>
           <p className="text-xs text-text/50 mt-1">
             {t("modelSelector.verifyingGeneric")}
@@ -342,7 +342,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
       {status === "extracting" && (
         <div className="w-full mt-3">
           <div className="w-full h-1.5 bg-mid-gray/20 rounded-full overflow-hidden">
-            <div className="h-full bg-logo-primary rounded-full animate-pulse w-full" />
+            <div className="h-full bg-accent rounded-full animate-pulse w-full" />
           </div>
           <p className="text-xs text-text/50 mt-1">
             {t("modelSelector.extractingGeneric")}

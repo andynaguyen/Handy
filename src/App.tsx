@@ -17,7 +17,6 @@ import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
 import SecureInputWarning from "./components/SecureInputWarning";
-import Footer from "./components/footer";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
 import {
   DebugSettings,
@@ -304,11 +303,11 @@ function App() {
         unstyled: true,
         classNames: {
           toast:
-            "bg-background border border-mid-gray/20 rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
+            "bg-background border border-mid-gray/20 rounded-xl shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
           title: "font-medium",
           description: "text-mid-gray",
           actionButton:
-            "px-2 py-1 text-xs font-medium rounded-lg border bg-mid-gray/10 border-mid-gray/20 hover:bg-background-ui/30 hover:border-logo-primary cursor-pointer whitespace-nowrap",
+            "px-2 py-1 text-xs font-medium rounded-lg border bg-mid-gray/10 border-mid-gray/20 hover:bg-mid-gray/20 cursor-pointer whitespace-nowrap",
         },
       }}
     />
@@ -337,7 +336,7 @@ function App() {
         <button
           type="button"
           onClick={() => setOnboardingPreview(null)}
-          className="fixed top-4 end-4 z-50 rounded-lg border border-mid-gray/20 bg-background px-4 py-2 text-sm font-medium text-text shadow-lg hover:bg-background-ui/30 cursor-pointer"
+          className="fixed top-4 end-4 z-50 rounded-lg border border-mid-gray/20 bg-background px-4 py-2 text-sm font-medium text-text shadow-lg hover:bg-mid-gray/10 cursor-pointer"
         >
           {t("settings.debug.onboardingPreview.exitButton")}
         </button>
@@ -358,25 +357,25 @@ function App() {
         <ErrorBoundary context="What's New">
           <WhatsNewGate />
         </ErrorBoundary>
-        {/* Main content area that takes remaining space */}
         <div className="flex-1 flex overflow-hidden">
           <Sidebar
             activeSection={currentSection}
             onSectionChange={setCurrentSection}
           />
-          {/* Scrollable content area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Content panel, raised off the window shell */}
+          <main className="flex-1 flex flex-col overflow-hidden my-2 me-2 rounded-2xl border border-mid-gray/15 bg-background shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
             <div ref={settingsScrollRef} className="flex-1 overflow-y-auto">
-              <div className="flex flex-col items-center p-4 gap-4">
+              <div className="flex flex-col items-center px-7 pt-7 pb-8 gap-5">
+                <h1 className="max-w-3xl w-full font-serif text-[28px] leading-tight tracking-tight">
+                  {t(SECTIONS_CONFIG[currentSection].labelKey)}
+                </h1>
                 <AccessibilityPermissions />
                 <SecureInputWarning />
                 {renderSettingsContent(currentSection, setOnboardingPreview)}
               </div>
             </div>
-          </div>
+          </main>
         </div>
-        {/* Fixed footer at bottom */}
-        <Footer />
       </div>
     );
   }

@@ -79,7 +79,7 @@ interface LiveLogViewerProps {
 }
 
 export const LiveLogViewer: React.FC<LiveLogViewerProps> = ({
-  descriptionMode = "tooltip",
+  descriptionMode = "inline",
   grouped = false,
 }) => {
   const { t } = useTranslation();

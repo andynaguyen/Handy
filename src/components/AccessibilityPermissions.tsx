@@ -72,12 +72,12 @@ const AccessibilityPermissions: React.FC = () => {
     request: {
       text: t("accessibility.openSettings"),
       className:
-        "px-2 py-1 text-sm font-semibold bg-mid-gray/10 border  border-mid-gray/80 hover:bg-logo-primary/10 rounded cursor-pointer hover:border-logo-primary",
+        "px-3 py-1.5 text-sm font-medium bg-mid-gray/15 hover:bg-mid-gray/25 rounded-lg cursor-pointer whitespace-nowrap flex items-center justify-center",
     },
     verify: {
       text: t("accessibility.openSettings"),
       className:
-        "bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-1 px-3 rounded-md text-sm flex items-center justify-center cursor-pointer",
+        "px-3 py-1.5 text-sm font-medium bg-mid-gray/15 hover:bg-mid-gray/25 rounded-lg cursor-pointer whitespace-nowrap flex items-center justify-center",
     },
     granted: null,
   };
@@ -85,7 +85,7 @@ const AccessibilityPermissions: React.FC = () => {
   const config = buttonConfig[permissionState] as ButtonConfig;
 
   return (
-    <div className="p-4 w-full rounded-lg border border-mid-gray">
+    <div className="max-w-3xl px-5 py-4 w-full rounded-2xl bg-card">
       <div className="flex justify-between items-center gap-2">
         <div className="">
           <p className="text-sm font-medium">
