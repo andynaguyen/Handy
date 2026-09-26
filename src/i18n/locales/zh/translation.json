@@ -477,8 +477,11 @@
       "streak_other": "连续 {{count}} 天",
       "longestStreak_one": "最长连续：{{count}} 天",
       "longestStreak_other": "最长连续：{{count}} 天",
-      "dayTooltip_one": "{{date}}：{{formattedCount}} 字",
-      "dayTooltip_other": "{{date}}：{{formattedCount}} 字",
+      "dayPopover": {
+        "words": "总字数",
+        "appsUsed": "使用的应用数",
+        "topApp": "最常用应用"
+      },
       "less": "少",
       "more": "多"
     },

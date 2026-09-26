@@ -477,8 +477,11 @@
       "streak_other": "{{count}} Tage in Folge",
       "longestStreak_one": "Längste Serie: {{count}} Tag",
       "longestStreak_other": "Längste Serie: {{count}} Tage",
-      "dayTooltip_one": "{{formattedCount}} Wort am {{date}}",
-      "dayTooltip_other": "{{formattedCount}} Wörter am {{date}}",
+      "dayPopover": {
+        "words": "Wörter gesamt",
+        "appsUsed": "Genutzte Apps",
+        "topApp": "Meistgenutzte App"
+      },
       "less": "Weniger",
       "more": "Mehr"
     },

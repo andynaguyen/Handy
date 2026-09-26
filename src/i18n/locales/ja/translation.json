@@ -477,8 +477,11 @@
       "streak_other": "{{count}}日連続",
       "longestStreak_one": "最長連続記録: {{count}}日",
       "longestStreak_other": "最長連続記録: {{count}}日",
-      "dayTooltip_one": "{{date}}: {{formattedCount}}語",
-      "dayTooltip_other": "{{date}}: {{formattedCount}}語",
+      "dayPopover": {
+        "words": "合計単語数",
+        "appsUsed": "使用したアプリ数",
+        "topApp": "最も使ったアプリ"
+      },
       "less": "少ない",
       "more": "多い"
     },

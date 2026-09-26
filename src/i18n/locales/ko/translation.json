@@ -477,8 +477,11 @@
       "streak_other": "{{count}}일 연속",
       "longestStreak_one": "최장 연속 기록: {{count}}일",
       "longestStreak_other": "최장 연속 기록: {{count}}일",
-      "dayTooltip_one": "{{date}}: {{formattedCount}}단어",
-      "dayTooltip_other": "{{date}}: {{formattedCount}}단어",
+      "dayPopover": {
+        "words": "총 단어 수",
+        "appsUsed": "사용한 앱 수",
+        "topApp": "가장 많이 쓴 앱"
+      },
       "less": "적음",
       "more": "많음"
     },

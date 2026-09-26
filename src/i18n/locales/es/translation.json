@@ -479,9 +479,11 @@
       "longestStreak_one": "Racha más larga: {{count}} día",
       "longestStreak_many": "Racha más larga: {{count}} de días",
       "longestStreak_other": "Racha más larga: {{count}} días",
-      "dayTooltip_one": "{{formattedCount}} palabra el {{date}}",
-      "dayTooltip_many": "{{formattedCount}} de palabras el {{date}}",
-      "dayTooltip_other": "{{formattedCount}} palabras el {{date}}",
+      "dayPopover": {
+        "words": "Palabras totales",
+        "appsUsed": "Apps usadas",
+        "topApp": "App principal"
+      },
       "less": "Menos",
       "more": "Más"
     },

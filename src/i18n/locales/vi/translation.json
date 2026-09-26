@@ -477,8 +477,11 @@
       "streak_other": "Chuỗi {{count}} ngày",
       "longestStreak_one": "Chuỗi dài nhất: {{count}} ngày",
       "longestStreak_other": "Chuỗi dài nhất: {{count}} ngày",
-      "dayTooltip_one": "{{formattedCount}} từ vào {{date}}",
-      "dayTooltip_other": "{{formattedCount}} từ vào {{date}}",
+      "dayPopover": {
+        "words": "Tổng số từ",
+        "appsUsed": "Số ứng dụng đã dùng",
+        "topApp": "Ứng dụng dùng nhiều nhất"
+      },
       "less": "Ít",
       "more": "Nhiều"
     },

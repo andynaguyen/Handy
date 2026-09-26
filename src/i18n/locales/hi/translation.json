@@ -477,8 +477,11 @@
       "streak_other": "लगातार {{count}} दिन",
       "longestStreak_one": "सबसे लंबा सिलसिला: {{count}} दिन",
       "longestStreak_other": "सबसे लंबा सिलसिला: {{count}} दिन",
-      "dayTooltip_one": "{{date}} को {{formattedCount}} शब्द",
-      "dayTooltip_other": "{{date}} को {{formattedCount}} शब्द",
+      "dayPopover": {
+        "words": "कुल शब्द",
+        "appsUsed": "उपयोग किए गए ऐप",
+        "topApp": "शीर्ष ऐप"
+      },
       "less": "कम",
       "more": "ज़्यादा"
     },

@@ -479,9 +479,11 @@
       "longestStreak_one": "Ratxa més llarga: {{count}} dia",
       "longestStreak_many": "Ratxa més llarga: {{count}} de dies",
       "longestStreak_other": "Ratxa més llarga: {{count}} dies",
-      "dayTooltip_one": "{{formattedCount}} paraula el {{date}}",
-      "dayTooltip_many": "{{formattedCount}} de paraules el {{date}}",
-      "dayTooltip_other": "{{formattedCount}} paraules el {{date}}",
+      "dayPopover": {
+        "words": "Paraules totals",
+        "appsUsed": "Aplicacions utilitzades",
+        "topApp": "Aplicació principal"
+      },
       "less": "Menys",
       "more": "Més"
     },

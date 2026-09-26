@@ -5,6 +5,7 @@ use rusqlite::{params, Connection, OptionalExtension, Transaction};
 use rusqlite_migration::{HookResult, Migrations, M};
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use std::collections::HashMap;
 use std::fs;
 use std::path::PathBuf;
 use tauri::AppHandle;
@@ -42,6 +43,8 @@ fn migrations() -> Migrations<'static> {
         );",
         backfill_usage_stats,
     ),
+    // Null for backfilled rows and platforms that can't detect the focused app.
+    M::up("ALTER TABLE usage_stats ADD COLUMN app_name TEXT;"),
     ])
 }
 
@@ -115,6 +118,10 @@ pub struct DailyUsage {
     /// from history have none, so words per minute uses this instead of `words`.
     pub timed_words: i64,
     pub duration_ms: i64,
+    /// Distinct apps dictated into. 0 when no dictation recorded an app.
+    pub apps_used: i64,
+    /// App that received the most words, or None when no app was recorded.
+    pub top_app: Option<String>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type, tauri_specta::Event)]
@@ -631,10 +638,11 @@ impl HistoryManager {
         Ok(entry)
     }
 
-    /// Record one completed transcription for the stats page.
-    pub fn record_usage(&self, text: &str, duration_ms: i64) -> Result<()> {
+    /// Record one completed transcription for the stats page. `app_name` is
+    /// the app the text is pasted into, when the platform can tell.
+    pub fn record_usage(&self, text: &str, duration_ms: i64, app_name: Option<&str>) -> Result<()> {
         let conn = self.get_connection()?;
-        Self::record_usage_with_conn(&conn, Utc::now().timestamp(), text, duration_ms)
+        Self::record_usage_with_conn(&conn, Utc::now().timestamp(), text, duration_ms, app_name)
     }
 
     fn record_usage_with_conn(
@@ -642,14 +650,16 @@ impl HistoryManager {
         timestamp: i64,
         text: &str,
         duration_ms: i64,
+        app_name: Option<&str>,
     ) -> Result<()> {
         let word_count = count_words(text);
         if word_count == 0 {
             return Ok(());
         }
         conn.execute(
-            "INSERT INTO usage_stats (timestamp, word_count, duration_ms) VALUES (?1, ?2, ?3)",
-            params![timestamp, word_count, duration_ms],
+            "INSERT INTO usage_stats (timestamp, word_count, duration_ms, app_name)
+             VALUES (?1, ?2, ?3, ?4)",
+            params![timestamp, word_count, duration_ms, app_name],
         )?;
         Ok(())
     }
@@ -667,12 +677,13 @@ impl HistoryManager {
                 SUM(word_count),
                 COUNT(*),
                 SUM(CASE WHEN duration_ms > 0 THEN word_count ELSE 0 END),
-                SUM(duration_ms)
+                SUM(duration_ms),
+                COUNT(DISTINCT app_name)
              FROM usage_stats
              GROUP BY day
              ORDER BY day",
         )?;
-        let days = stmt
+        let mut days = stmt
             .query_map([], |row| {
                 Ok(DailyUsage {
                     date: row.get(0)?,
@@ -680,9 +691,30 @@ impl HistoryManager {
                     transcriptions: row.get(2)?,
                     timed_words: row.get(3)?,
                     duration_ms: row.get(4)?,
+                    apps_used: row.get(5)?,
+                    top_app: None,
                 })
             })?
             .collect::<rusqlite::Result<Vec<_>>>()?;
+
+        // Each day's apps, most words first, so the first row per day is its top app.
+        let mut stmt = conn.prepare(
+            "SELECT
+                date(timestamp, 'unixepoch', 'localtime') AS day,
+                app_name
+             FROM usage_stats
+             WHERE app_name IS NOT NULL
+             GROUP BY day, app_name
+             ORDER BY day, SUM(word_count) DESC, app_name",
+        )?;
+        let mut top_apps: HashMap<String, String> = HashMap::new();
+        let mut rows = stmt.query([])?;
+        while let Some(row) = rows.next()? {
+            top_apps.entry(row.get(0)?).or_insert(row.get(1)?);
+        }
+        for day in &mut days {
+            day.top_app = top_apps.remove(&day.date);
+        }
         Ok(days)
     }
 
@@ -849,9 +881,10 @@ mod tests {
         insert_entry(&conn, 200, "", None);
         migrations.to_latest(&mut conn).expect("migrate to latest");
 
-        HistoryManager::record_usage_with_conn(&conn, 300, "four five six seven", 2_000)
+        HistoryManager::record_usage_with_conn(&conn, 300, "four five six seven", 2_000, None)
             .expect("record usage");
-        HistoryManager::record_usage_with_conn(&conn, 400, "  ", 1_000).expect("record usage");
+        HistoryManager::record_usage_with_conn(&conn, 400, "  ", 1_000, None)
+            .expect("record usage");
 
         let days = HistoryManager::get_daily_usage_with_conn(&conn).expect("daily usage");
         let sum = |field: fn(&DailyUsage) -> i64| days.iter().map(field).sum::<i64>();
@@ -860,6 +893,33 @@ mod tests {
         // Only the recorded dictation has a duration.
         assert_eq!(sum(|d| d.timed_words), 4);
         assert_eq!(sum(|d| d.duration_ms), 2_000);
+    }
+
+    #[test]
+    fn daily_usage_counts_apps_and_picks_top_app_by_words() {
+        let mut conn = Connection::open_in_memory().expect("open in-memory db");
+        migrations()
+            .to_latest(&mut conn)
+            .expect("migrate to latest");
+        let day = 1_788_264_000; // Noon UTC, so every timezone sees the same date.
+        let next_day = day + 2 * 86_400;
+        let record = |timestamp, text, app| {
+            HistoryManager::record_usage_with_conn(&conn, timestamp, text, 1_000, app)
+                .expect("record usage");
+        };
+        record(day, "one two", Some("Slack"));
+        record(day + 60, "one two three", Some("Codex"));
+        record(day + 120, "one two", Some("Slack"));
+        record(day + 180, "one two three four five", None);
+        record(next_day, "one two three", None);
+
+        let days = HistoryManager::get_daily_usage_with_conn(&conn).expect("daily usage");
+        assert_eq!(days.len(), 2);
+        // Slack's 4 words beat Codex's 3; the untracked dictation counts toward neither.
+        assert_eq!(days[0].apps_used, 2);
+        assert_eq!(days[0].top_app.as_deref(), Some("Slack"));
+        assert_eq!(days[1].apps_used, 0);
+        assert_eq!(days[1].top_app, None);
     }
 
     #[test]

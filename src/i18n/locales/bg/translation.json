@@ -477,8 +477,11 @@
       "streak_other": "{{count}} дни поред",
       "longestStreak_one": "Най-дълга серия: {{count}} ден",
       "longestStreak_other": "Най-дълга серия: {{count}} дни",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} дума",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} думи",
+      "dayPopover": {
+        "words": "Общо думи",
+        "appsUsed": "Използвани приложения",
+        "topApp": "Най-използвано приложение"
+      },
       "less": "По-малко",
       "more": "Повече"
     },

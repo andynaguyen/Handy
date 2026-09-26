@@ -479,9 +479,11 @@
       "longestStreak_one": "הרצף הארוך ביותר: {{count}} יום",
       "longestStreak_two": "הרצף הארוך ביותר: יומיים",
       "longestStreak_other": "הרצף הארוך ביותר: {{count}} ימים",
-      "dayTooltip_one": "{{formattedCount}} מילה ב-{{date}}",
-      "dayTooltip_two": "{{formattedCount}} מילים ב-{{date}}",
-      "dayTooltip_other": "{{formattedCount}} מילים ב-{{date}}",
+      "dayPopover": {
+        "words": "סך המילים",
+        "appsUsed": "אפליקציות בשימוש",
+        "topApp": "האפליקציה המובילה"
+      },
       "less": "פחות",
       "more": "יותר"
     },

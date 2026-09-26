@@ -477,8 +477,11 @@
       "streak_other": "{{count}} hari berturut-turut",
       "longestStreak_one": "Rekor: {{count}} hari berturut-turut",
       "longestStreak_other": "Rekor: {{count}} hari berturut-turut",
-      "dayTooltip_one": "{{formattedCount}} kata pada {{date}}",
-      "dayTooltip_other": "{{formattedCount}} kata pada {{date}}",
+      "dayPopover": {
+        "words": "Total kata",
+        "appsUsed": "Aplikasi digunakan",
+        "topApp": "Aplikasi teratas"
+      },
       "less": "Lebih sedikit",
       "more": "Lebih banyak"
     },

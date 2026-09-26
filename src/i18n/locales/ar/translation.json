@@ -462,12 +462,11 @@
       "longestStreak_few": "أطول سلسلة: {{count}} أيام",
       "longestStreak_many": "أطول سلسلة: {{count}} يومًا",
       "longestStreak_other": "أطول سلسلة: {{count}} يوم",
-      "dayTooltip_zero": "لا توجد كلمات في {{date}}",
-      "dayTooltip_one": "{{formattedCount}} كلمة في {{date}}",
-      "dayTooltip_two": "كلمتان في {{date}}",
-      "dayTooltip_few": "{{formattedCount}} كلمات في {{date}}",
-      "dayTooltip_many": "{{formattedCount}} كلمةً في {{date}}",
-      "dayTooltip_other": "{{formattedCount}} كلمة في {{date}}",
+      "dayPopover": {
+        "words": "إجمالي الكلمات",
+        "appsUsed": "عدد التطبيقات المستخدمة",
+        "topApp": "التطبيق الأكثر استخدامًا"
+      },
       "less": "أقل",
       "more": "أكثر"
     },
