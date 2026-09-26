@@ -188,8 +188,9 @@ pub(crate) fn send_chord(
 /// Attempts the receipt-sequenced paste. Returns `Err` before anything has
 /// been published when the platform transaction cannot start, in which case
 /// the caller should fall back to the legacy paste path. On `Ok`, publishing
-/// and chord injection have completed and the guarded restore (plus
-/// auto-submit) finishes asynchronously.
+/// and chord injection have been attempted and the guarded restore (plus
+/// auto-submit) finishes asynchronously; the flag says whether the chord was
+/// actually sent.
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 pub(crate) fn try_reliable_paste(
     text: &str,
@@ -199,7 +200,7 @@ pub(crate) fn try_reliable_paste(
     auto_submit: bool,
     auto_submit_key: crate::settings::AutoSubmitKey,
     clipboard_handling: crate::settings::ClipboardHandling,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     platform::run(
         text,
         app_handle,

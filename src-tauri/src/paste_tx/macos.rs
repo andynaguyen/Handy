@@ -261,7 +261,7 @@ pub(super) fn run(
     auto_submit: bool,
     auto_submit_key: AutoSubmitKey,
     clipboard_handling: ClipboardHandling,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     // Settle any previous transaction first so the snapshot below captures the
     // user's original clipboard, not the previous transcript.
     flush_pending(app_handle, enigo);
@@ -301,9 +301,10 @@ pub(super) fn run(
     if let Ok(mut st) = state.lock() {
         st.injected_at = Some(Instant::now());
     }
-    match send_chord(enigo, paste_method) {
+    let chord_sent = match send_chord(enigo, paste_method) {
         Ok(()) => {
             info!("[reliable-paste] paste chord sent ({paste_method:?})");
+            true
         }
         Err(e) => {
             // Keep the transaction alive: the waiter restores the clipboard
@@ -312,8 +313,9 @@ pub(super) fn run(
                 st.injection_failed = true;
             }
             error!("[reliable-paste] failed to send paste chord: {e}");
+            false
         }
-    }
+    };
 
     let pending = Arc::new(Mutex::new(MacPending {
         state,
@@ -332,5 +334,5 @@ pub(super) fn run(
     }
     spawn_waiter(pending, app_handle.clone());
 
-    Ok(())
+    Ok(chord_sent)
 }
