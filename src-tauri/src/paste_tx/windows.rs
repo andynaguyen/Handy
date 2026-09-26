@@ -579,7 +579,7 @@ pub(super) fn run(
     auto_submit: bool,
     auto_submit_key: AutoSubmitKey,
     clipboard_handling: ClipboardHandling,
-) -> Result<(), String> {
+) -> Result<bool, String> {
     let shared = Arc::new(WinTxShared {
         state: Mutex::new(TxState::new()),
         text: text.to_string(),
@@ -608,17 +608,19 @@ pub(super) fn run(
     // Mark injection *before* sending: enigo holds the chord for ~100ms and a
     // fast target may legitimately read while the chord is still held.
     shared.state.lock().unwrap().injected_at = Some(Instant::now());
-    match send_chord(enigo, paste_method) {
+    let chord_sent = match send_chord(enigo, paste_method) {
         Ok(()) => {
             info!("[reliable-paste] paste chord sent ({paste_method:?})");
+            true
         }
         Err(e) => {
             // Keep the transaction alive: the worker restores the clipboard
             // after the short failed-injection timeout.
             shared.state.lock().unwrap().injection_failed = true;
             error!("[reliable-paste] failed to send paste chord: {e}");
+            false
         }
-    }
+    };
 
-    Ok(())
+    Ok(chord_sent)
 }

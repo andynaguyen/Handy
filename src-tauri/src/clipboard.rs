@@ -767,6 +767,19 @@ pub(crate) fn send_return_key(enigo: &mut Enigo, key_type: AutoSubmitKey) -> Res
     Ok(())
 }
 
+/// Types a space after a clipboard paste. Keystrokes reach the target in
+/// order, so it lands after the pasted text. A failure only costs the space,
+/// so it is logged instead of failing the paste.
+fn send_trailing_space(app_handle: &AppHandle) {
+    if let Err(error) = with_enigo(app_handle, |enigo| {
+        enigo
+            .key(Key::Space, Direction::Click)
+            .map_err(|e| format!("Failed to type trailing space: {}", e))
+    }) {
+        log::warn!("Paste succeeded, but the trailing space failed: {error}");
+    }
+}
+
 fn should_send_auto_submit(auto_submit: bool, paste_method: PasteMethod) -> bool {
     auto_submit && paste_method != PasteMethod::None
 }
@@ -780,8 +793,17 @@ pub fn paste(text: String, app_handle: AppHandle, force_submit: bool) -> Result<
     let paste_delay_ms = settings.paste_delay_ms;
     let paste_delay_after_ms = settings.paste_delay_after_ms;
 
-    // Append trailing space if setting is enabled
-    let text = if settings.append_trailing_space {
+    // Rich-text editors (Slack, Gmail) trim trailing whitespace from pasted
+    // text, so clipboard pastes type the space as a keystroke afterwards.
+    // Linux keeps it in the pasted text: its paste chord often goes through
+    // wtype/xdotool/ydotool, and enigo can't be trusted to type there.
+    let clipboard_paste = matches!(
+        paste_method,
+        PasteMethod::CtrlV | PasteMethod::CtrlShiftV | PasteMethod::ShiftInsert
+    );
+    let type_trailing_space =
+        settings.append_trailing_space && clipboard_paste && cfg!(not(target_os = "linux"));
+    let text = if settings.append_trailing_space && !type_trailing_space {
         format!("{} ", text)
     } else {
         text
@@ -825,7 +847,14 @@ pub fn paste(text: String, app_handle: AppHandle, force_submit: bool) -> Result<
                     )
                 });
                 match reliable_result {
-                    Ok(()) => return Ok(()),
+                    Ok(chord_sent) => {
+                        // Auto-submit waits for the target to read the
+                        // clipboard, so this space still lands before Enter.
+                        if type_trailing_space && chord_sent {
+                            send_trailing_space(&app_handle);
+                        }
+                        return Ok(());
+                    }
                     Err(e) => {
                         log::warn!("Reliable paste unavailable ({e}); falling back to legacy paste")
                     }
@@ -837,7 +866,10 @@ pub fn paste(text: String, app_handle: AppHandle, force_submit: bool) -> Result<
                 &paste_method,
                 paste_delay_ms,
                 paste_delay_after_ms,
-            )?
+            )?;
+            if type_trailing_space {
+                send_trailing_space(&app_handle);
+            }
         }
         PasteMethod::ExternalScript => {
             let script_path = settings
