@@ -2,7 +2,6 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { ShowOverlay } from "../ShowOverlay";
 import { ModelUnloadTimeoutSetting } from "../ModelUnloadTimeout";
-import { CustomWords } from "../CustomWords";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { StartHidden } from "../StartHidden";
 import { AutostartToggle } from "../AutostartToggle";
@@ -52,7 +51,6 @@ export const AdvancedSettings: React.FC = () => {
       <SettingsGroup title={t("settings.advanced.groups.transcription")}>
         <VoiceActivityDetection descriptionMode="inline" grouped={true} />
         <FillerWordRemoval descriptionMode="inline" grouped={true} />
-        <CustomWords descriptionMode="inline" grouped />
         <AppendTrailingSpace descriptionMode="inline" grouped={true} />
       </SettingsGroup>
 

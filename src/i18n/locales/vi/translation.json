@@ -16,6 +16,7 @@
     "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "stats": "Thống kê",
+    "dictionary": "Từ điển",
     "debug": "Gỡ lỗi",
     "about": "Giới thiệu"
   },
@@ -389,14 +390,6 @@
           "sec15": "Sau 15 giây (Gỡ lỗi)"
         }
       },
-      "customWords": {
-        "title": "Từ tùy chỉnh",
-        "description": "Giúp các mô hình được hỗ trợ nhận dạng tên và thuật ngữ chuyên ngành. Tính năng sửa gần đúng hiện chỉ áp dụng cho các từ sử dụng chữ cái A–Z và chữ số.",
-        "placeholder": "Thêm một từ",
-        "add": "Thêm",
-        "remove": "Xóa {{word}}",
-        "duplicate": "\"{{word}}\" đã tồn tại"
-      },
       "voiceActivityDetection": {
         "title": "Phát hiện hoạt động giọng nói",
         "description": "Lọc bỏ khoảng lặng khỏi bản ghi. Các mô hình hỗ trợ truyền trực tiếp dùng đuôi VAD dài hơn; tắt VAD sẽ ghi âm thanh thô."
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{formattedCount}} từ vào {{date}}",
       "less": "Ít",
       "more": "Nhiều"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Từ điển",
+        "snippets": "Đoạn mẫu"
+      },
+      "addNew": "Thêm mới",
+      "searchPlaceholder": "Tìm kiếm",
+      "empty": "Chưa có từ nào. Hãy thêm tên, từ viết tắt và thuật ngữ mà Handy hay nhận sai.",
+      "noMatches": "Không có từ nào khớp với \"{{query}}\"",
+      "dialogTitle": "Thêm vào từ điển",
+      "placeholder": "Thêm một từ",
+      "add": "Thêm",
+      "cancel": "Hủy",
+      "remove": "Xóa {{word}}",
+      "duplicate": "\"{{word}}\" đã tồn tại",
+      "snippets": {
+        "empty": "Chưa có đoạn mẫu nào. Lưu văn bản bạn hay gõ, như địa chỉ email hoặc prompt, rồi nói cụm từ kích hoạt để dán nó.",
+        "noMatches": "Không có đoạn mẫu nào khớp với \"{{query}}\"",
+        "addTitle": "Thêm đoạn mẫu",
+        "editTitle": "Sửa đoạn mẫu",
+        "triggerPlaceholder": "Cụm từ kích hoạt, ví dụ \"email của tôi\"",
+        "textPlaceholder": "Văn bản cần dán",
+        "add": "Thêm đoạn mẫu",
+        "save": "Lưu",
+        "duplicate": "Đã có đoạn mẫu cho \"{{trigger}}\"",
+        "remove": "Xóa {{trigger}}"
+      }
     },
     "history": {
       "title": "Lịch sử",

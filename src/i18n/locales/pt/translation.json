@@ -16,6 +16,7 @@
     "postProcessing": "Pós-Processamento",
     "history": "Histórico",
     "stats": "Estatísticas",
+    "dictionary": "Dicionário",
     "debug": "Depuração",
     "about": "Sobre"
   },
@@ -389,14 +390,6 @@
           "sec15": "Após 15 segundos (Depuração)"
         }
       },
-      "customWords": {
-        "title": "Palavras Personalizadas",
-        "description": "Ajude os modelos compatíveis a reconhecer nomes e termos especializados. A correção aproximada está atualmente limitada a palavras que usam letras de A–Z e números.",
-        "placeholder": "Adicionar uma palavra",
-        "add": "Adicionar",
-        "remove": "Remover {{word}}",
-        "duplicate": "\"{{word}}\" já existe"
-      },
       "voiceActivityDetection": {
         "title": "Detecção de atividade de voz",
         "description": "Filtra o silêncio das gravações. Modelos com suporte a streaming usam uma cauda de VAD mais longa; desativar o VAD grava o áudio bruto."
@@ -491,6 +484,34 @@
       "dayTooltip_other": "{{formattedCount}} palavras em {{date}}",
       "less": "Menos",
       "more": "Mais"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Dicionário",
+        "snippets": "Trechos"
+      },
+      "addNew": "Adicionar",
+      "searchPlaceholder": "Pesquisar",
+      "empty": "Nenhuma palavra ainda. Adicione nomes, siglas e termos que o Handy transcreve errado.",
+      "noMatches": "Nenhuma palavra corresponde a \"{{query}}\"",
+      "dialogTitle": "Adicionar ao dicionário",
+      "placeholder": "Adicionar uma palavra",
+      "add": "Adicionar",
+      "cancel": "Cancelar",
+      "remove": "Remover {{word}}",
+      "duplicate": "\"{{word}}\" já existe",
+      "snippets": {
+        "empty": "Nenhum trecho ainda. Salve um texto que você digita com frequência, como um e-mail ou um prompt, e depois diga a frase de ativação para colá-lo.",
+        "noMatches": "Nenhum trecho corresponde a \"{{query}}\"",
+        "addTitle": "Adicionar trecho",
+        "editTitle": "Editar trecho",
+        "triggerPlaceholder": "Frase de ativação, como \"meu e-mail\"",
+        "textPlaceholder": "Texto para colar",
+        "add": "Adicionar trecho",
+        "save": "Salvar",
+        "duplicate": "Já existe um trecho para \"{{trigger}}\"",
+        "remove": "Remover {{trigger}}"
+      }
     },
     "history": {
       "title": "Histórico",

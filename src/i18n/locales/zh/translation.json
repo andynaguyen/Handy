@@ -16,6 +16,7 @@
     "postProcessing": "后处理",
     "history": "历史记录",
     "stats": "统计",
+    "dictionary": "词典",
     "debug": "调试",
     "about": "关于"
   },
@@ -389,14 +390,6 @@
           "sec15": "15 秒后（调试）"
         }
       },
-      "customWords": {
-        "title": "自定义词汇",
-        "description": "帮助受支持的模型识别名称和专业术语。目前，模糊纠错仅适用于使用 A–Z 字母和数字的词语。",
-        "placeholder": "添加词汇",
-        "add": "添加",
-        "remove": "删除 {{word}}",
-        "duplicate": "\"{{word}}\" 已存在"
-      },
       "voiceActivityDetection": {
         "title": "语音活动检测",
         "description": "过滤录音中的静音。支持流式的模型会使用更长的 VAD 尾段；停用 VAD 则会录制原始音频。"
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{date}}：{{formattedCount}} 字",
       "less": "少",
       "more": "多"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "词典",
+        "snippets": "片段"
+      },
+      "addNew": "新增",
+      "searchPlaceholder": "搜索",
+      "empty": "还没有词汇。添加 Handy 经常识别错误的人名、缩写和术语。",
+      "noMatches": "没有与\"{{query}}\"匹配的词汇",
+      "dialogTitle": "添加到词典",
+      "placeholder": "添加词汇",
+      "add": "添加",
+      "cancel": "取消",
+      "remove": "删除 {{word}}",
+      "duplicate": "\"{{word}}\" 已存在",
+      "snippets": {
+        "empty": "还没有片段。保存你经常输入的文字，比如邮箱地址或提示词，然后说出触发短语即可粘贴。",
+        "noMatches": "没有与\"{{query}}\"匹配的片段",
+        "addTitle": "添加片段",
+        "editTitle": "编辑片段",
+        "triggerPlaceholder": "触发短语，例如\"我的邮箱\"",
+        "textPlaceholder": "要粘贴的文字",
+        "add": "添加片段",
+        "save": "保存",
+        "duplicate": "\"{{trigger}}\"的片段已存在",
+        "remove": "删除 {{trigger}}"
+      }
     },
     "history": {
       "title": "历史记录",

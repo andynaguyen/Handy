@@ -16,6 +16,7 @@
     "postProcessing": "Post proceso",
     "history": "Historial",
     "stats": "Estadísticas",
+    "dictionary": "Diccionario",
     "debug": "Depuración",
     "about": "Acerca de"
   },
@@ -389,14 +390,6 @@
           "sec15": "Después de 15 segundos (Depuración)"
         }
       },
-      "customWords": {
-        "title": "Palabras personalizadas",
-        "description": "Ayuda a los modelos compatibles a reconocer nombres y términos especializados. Actualmente, la corrección aproximada se limita a palabras que usan letras de la A a la Z y números.",
-        "placeholder": "Agregar una palabra",
-        "add": "Agregar",
-        "remove": "Eliminar {{word}}",
-        "duplicate": "\"{{word}}\" ya existe"
-      },
       "voiceActivityDetection": {
         "title": "Detección de actividad de voz",
         "description": "Filtra el silencio de las grabaciones. Los modelos compatibles con streaming usan una cola de VAD más larga; desactivar el VAD graba audio sin procesar."
@@ -491,6 +484,34 @@
       "dayTooltip_other": "{{formattedCount}} palabras el {{date}}",
       "less": "Menos",
       "more": "Más"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Diccionario",
+        "snippets": "Fragmentos"
+      },
+      "addNew": "Agregar",
+      "searchPlaceholder": "Buscar",
+      "empty": "Aún no hay palabras. Agrega nombres, siglas y términos que Handy transcribe mal.",
+      "noMatches": "Ninguna palabra coincide con \"{{query}}\"",
+      "dialogTitle": "Agregar al diccionario",
+      "placeholder": "Agregar una palabra",
+      "add": "Agregar",
+      "cancel": "Cancelar",
+      "remove": "Eliminar {{word}}",
+      "duplicate": "\"{{word}}\" ya existe",
+      "snippets": {
+        "empty": "Aún no hay fragmentos. Guarda texto que escribes a menudo, como un correo o un prompt, y luego di su frase de activación para pegarlo.",
+        "noMatches": "Ningún fragmento coincide con \"{{query}}\"",
+        "addTitle": "Agregar fragmento",
+        "editTitle": "Editar fragmento",
+        "triggerPlaceholder": "Frase de activación, como \"mi correo\"",
+        "textPlaceholder": "Texto para pegar",
+        "add": "Agregar fragmento",
+        "save": "Guardar",
+        "duplicate": "Ya existe un fragmento para \"{{trigger}}\"",
+        "remove": "Quitar {{trigger}}"
+      }
     },
     "history": {
       "title": "Historial",

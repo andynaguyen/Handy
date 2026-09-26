@@ -16,6 +16,7 @@
     "postProcessing": "Pascaproses",
     "history": "Riwayat",
     "stats": "Statistik",
+    "dictionary": "Kamus",
     "debug": "Debug",
     "about": "Tentang"
   },
@@ -389,14 +390,6 @@
           "sec15": "Setelah 15 detik (Debug)"
         }
       },
-      "customWords": {
-        "title": "Kata Khusus",
-        "description": "Bantu model yang didukung mengenali nama dan istilah khusus. Koreksi fuzzy saat ini terbatas pada kata yang menggunakan huruf A–Z dan angka.",
-        "placeholder": "Tambahkan kata",
-        "add": "Tambah",
-        "remove": "Hapus {{word}}",
-        "duplicate": "\"{{word}}\" sudah ada"
-      },
       "voiceActivityDetection": {
         "title": "Deteksi Aktivitas Suara",
         "description": "Saring keheningan dari rekaman. Model yang mendukung streaming menggunakan ekor VAD yang lebih panjang; menonaktifkan VAD akan merekam audio mentah."
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{formattedCount}} kata pada {{date}}",
       "less": "Lebih sedikit",
       "more": "Lebih banyak"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Kamus",
+        "snippets": "Cuplikan"
+      },
+      "addNew": "Tambah",
+      "searchPlaceholder": "Cari",
+      "empty": "Belum ada kata. Tambahkan nama, singkatan, dan istilah yang sering salah ditulis Handy.",
+      "noMatches": "Tidak ada kata yang cocok dengan \"{{query}}\"",
+      "dialogTitle": "Tambahkan ke kamus",
+      "placeholder": "Tambahkan kata",
+      "add": "Tambah",
+      "cancel": "Batal",
+      "remove": "Hapus {{word}}",
+      "duplicate": "\"{{word}}\" sudah ada",
+      "snippets": {
+        "empty": "Belum ada cuplikan. Simpan teks yang sering Anda ketik, seperti alamat email atau prompt, lalu ucapkan frasa pemicunya untuk menempelkannya.",
+        "noMatches": "Tidak ada cuplikan yang cocok dengan \"{{query}}\"",
+        "addTitle": "Tambah cuplikan",
+        "editTitle": "Edit cuplikan",
+        "triggerPlaceholder": "Frasa pemicu, seperti \"email saya\"",
+        "textPlaceholder": "Teks yang akan ditempel",
+        "add": "Tambah cuplikan",
+        "save": "Simpan",
+        "duplicate": "Cuplikan untuk \"{{trigger}}\" sudah ada",
+        "remove": "Hapus {{trigger}}"
+      }
     },
     "history": {
       "title": "Riwayat",

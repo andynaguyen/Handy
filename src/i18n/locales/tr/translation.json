@@ -16,6 +16,7 @@
     "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "stats": "İstatistikler",
+    "dictionary": "Sözlük",
     "debug": "Hata Ayıklama",
     "about": "Hakkında"
   },
@@ -389,14 +390,6 @@
           "sec15": "15 saniye sonra (Debug)"
         }
       },
-      "customWords": {
-        "title": "Özel Kelimeler",
-        "description": "Desteklenen modellerin adları ve özel terimleri tanımasına yardımcı olun. Bulanık düzeltme şu anda A–Z harflerini ve rakamları kullanan sözcüklerle sınırlıdır.",
-        "placeholder": "Kelime ekle",
-        "add": "Ekle",
-        "remove": "{{word}} Kaldır",
-        "duplicate": "\"{{word}}\" zaten mevcut"
-      },
       "voiceActivityDetection": {
         "title": "Ses Etkinliği Algılama",
         "description": "Kayıtlardaki sessizliği filtreler. Akış destekli modeller daha uzun bir VAD kuyruğu kullanır; VAD devre dışı bırakıldığında ham ses kaydedilir."
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{date}}: {{formattedCount}} kelime",
       "less": "Az",
       "more": "Çok"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Sözlük",
+        "snippets": "Parçacıklar"
+      },
+      "addNew": "Yeni ekle",
+      "searchPlaceholder": "Ara",
+      "empty": "Henüz kelime yok. Handy'nin yanlış yazdığı adları, kısaltmaları ve terimleri ekleyin.",
+      "noMatches": "\"{{query}}\" ile eşleşen kelime yok",
+      "dialogTitle": "Sözlüğe ekle",
+      "placeholder": "Kelime ekle",
+      "add": "Ekle",
+      "cancel": "İptal",
+      "remove": "{{word}} Kaldır",
+      "duplicate": "\"{{word}}\" zaten mevcut",
+      "snippets": {
+        "empty": "Henüz parçacık yok. E-posta adresi veya istem gibi sık yazdığınız bir metni kaydedin, sonra yapıştırmak için tetikleyici ifadesini söyleyin.",
+        "noMatches": "\"{{query}}\" ile eşleşen parçacık yok",
+        "addTitle": "Parçacık ekle",
+        "editTitle": "Parçacığı düzenle",
+        "triggerPlaceholder": "Tetikleyici ifade, örn. \"e-postam\"",
+        "textPlaceholder": "Yapıştırılacak metin",
+        "add": "Parçacık ekle",
+        "save": "Kaydet",
+        "duplicate": "\"{{trigger}}\" için zaten bir parçacık var",
+        "remove": "{{trigger}} öğesini kaldır"
+      }
     },
     "history": {
       "title": "Geçmiş",

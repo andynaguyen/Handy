@@ -16,6 +16,7 @@
     "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
     "stats": "Statistik",
+    "dictionary": "Wörterbuch",
     "debug": "Debug",
     "about": "Info"
   },
@@ -389,14 +390,6 @@
           "sec15": "Nach 15 Sekunden (Debug)"
         }
       },
-      "customWords": {
-        "title": "Benutzerdefinierte Wörter",
-        "description": "Hilf unterstützten Modellen, Namen und Fachbegriffe zu erkennen. Die unscharfe Korrektur ist derzeit auf Wörter mit den Buchstaben A–Z und Zahlen beschränkt.",
-        "placeholder": "Wort hinzufügen",
-        "add": "Hinzufügen",
-        "remove": "{{word}} entfernen",
-        "duplicate": "\"{{word}}\" existiert bereits"
-      },
       "voiceActivityDetection": {
         "title": "Sprachaktivitätserkennung (VAD)",
         "description": "Filtert Stille aus Aufnahmen. Streamingfähige Modelle verwenden ein längeres VAD-Ende; das Deaktivieren von VAD nimmt Rohaudio auf."
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{formattedCount}} Wörter am {{date}}",
       "less": "Weniger",
       "more": "Mehr"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Wörterbuch",
+        "snippets": "Textbausteine"
+      },
+      "addNew": "Hinzufügen",
+      "searchPlaceholder": "Suchen",
+      "empty": "Noch keine Wörter. Füge Namen, Abkürzungen und Fachbegriffe hinzu, die Handy falsch erkennt.",
+      "noMatches": "Keine Wörter passen zu \"{{query}}\"",
+      "dialogTitle": "Zum Wörterbuch hinzufügen",
+      "placeholder": "Wort hinzufügen",
+      "add": "Hinzufügen",
+      "cancel": "Abbrechen",
+      "remove": "{{word}} entfernen",
+      "duplicate": "\"{{word}}\" existiert bereits",
+      "snippets": {
+        "empty": "Noch keine Textbausteine. Speichere Text, den du oft tippst, etwa eine E-Mail-Adresse oder einen Prompt, und sag dann seine Auslösephrase, um ihn einzufügen.",
+        "noMatches": "Keine Textbausteine passen zu \"{{query}}\"",
+        "addTitle": "Textbaustein hinzufügen",
+        "editTitle": "Textbaustein bearbeiten",
+        "triggerPlaceholder": "Auslösephrase, z. B. \"meine E-Mail\"",
+        "textPlaceholder": "Einzufügender Text",
+        "add": "Textbaustein hinzufügen",
+        "save": "Speichern",
+        "duplicate": "Für \"{{trigger}}\" gibt es bereits einen Textbaustein",
+        "remove": "{{trigger}} entfernen"
+      }
     },
     "history": {
       "title": "Verlauf",

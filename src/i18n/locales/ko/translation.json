@@ -16,6 +16,7 @@
     "postProcessing": "후처리",
     "history": "히스토리",
     "stats": "통계",
+    "dictionary": "사전",
     "debug": "디버그",
     "about": "정보"
   },
@@ -389,14 +390,6 @@
           "sec15": "15초 후 (디버그)"
         }
       },
-      "customWords": {
-        "title": "사용자 정의 단어",
-        "description": "지원되는 모델이 이름과 전문 용어를 인식하도록 도와줍니다. 퍼지 교정은 현재 A–Z 문자와 숫자를 사용하는 단어로 제한됩니다.",
-        "placeholder": "단어 추가",
-        "add": "추가",
-        "remove": "{{word}} 제거",
-        "duplicate": "\"{{word}}\"이(가) 이미 존재합니다"
-      },
       "voiceActivityDetection": {
         "title": "음성 활동 감지",
         "description": "녹음에서 무음 구간을 걸러냅니다. 스트리밍 지원 모델은 더 긴 VAD 테일을 사용하며, VAD를 끄면 원본 오디오가 그대로 녹음됩니다."
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{date}}: {{formattedCount}}단어",
       "less": "적음",
       "more": "많음"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "사전",
+        "snippets": "스니펫"
+      },
+      "addNew": "새로 추가",
+      "searchPlaceholder": "검색",
+      "empty": "아직 단어가 없습니다. Handy가 잘못 인식하는 이름, 약어, 전문 용어를 추가하세요.",
+      "noMatches": "\"{{query}}\"와(과) 일치하는 단어가 없습니다",
+      "dialogTitle": "사전에 추가",
+      "placeholder": "단어 추가",
+      "add": "추가",
+      "cancel": "취소",
+      "remove": "{{word}} 제거",
+      "duplicate": "\"{{word}}\"이(가) 이미 존재합니다",
+      "snippets": {
+        "empty": "아직 스니펫이 없습니다. 이메일 주소나 프롬프트처럼 자주 입력하는 텍스트를 저장한 뒤, 트리거 문구를 말하면 붙여넣습니다.",
+        "noMatches": "\"{{query}}\"와(과) 일치하는 스니펫이 없습니다",
+        "addTitle": "스니펫 추가",
+        "editTitle": "스니펫 편집",
+        "triggerPlaceholder": "트리거 문구 (예: \"내 이메일\")",
+        "textPlaceholder": "붙여넣을 텍스트",
+        "add": "스니펫 추가",
+        "save": "저장",
+        "duplicate": "\"{{trigger}}\"에 대한 스니펫이 이미 있습니다",
+        "remove": "{{trigger}} 삭제"
+      }
     },
     "history": {
       "title": "히스토리",

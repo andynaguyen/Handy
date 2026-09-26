@@ -16,6 +16,7 @@
     "postProcessing": "後処理",
     "history": "履歴",
     "stats": "統計",
+    "dictionary": "辞書",
     "debug": "デバッグ",
     "about": "概要"
   },
@@ -389,14 +390,6 @@
           "sec15": "15秒後 (デバッグ)"
         }
       },
-      "customWords": {
-        "title": "カスタム単語",
-        "description": "対応モデルが名前や専門用語を認識しやすくします。あいまい補正は現在、A～Zの英字と数字を使用する単語に限定されています。",
-        "placeholder": "単語を追加",
-        "add": "追加",
-        "remove": "{{word}}を削除",
-        "duplicate": "「{{word}}」は既に存在します"
-      },
       "voiceActivityDetection": {
         "title": "音声区間検出 (VAD)",
         "description": "録音から無音部分を除去します。ストリーミング対応モデルはより長い音声検出区間を使用します。VAD を無効にすると音声をそのまま録音します。"
@@ -488,6 +481,34 @@
       "dayTooltip_other": "{{date}}: {{formattedCount}}語",
       "less": "少ない",
       "more": "多い"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "辞書",
+        "snippets": "スニペット"
+      },
+      "addNew": "新規追加",
+      "searchPlaceholder": "検索",
+      "empty": "まだ単語がありません。Handy が聞き間違える名前、略語、専門用語を追加してください。",
+      "noMatches": "「{{query}}」に一致する単語はありません",
+      "dialogTitle": "辞書に追加",
+      "placeholder": "単語を追加",
+      "add": "追加",
+      "cancel": "キャンセル",
+      "remove": "{{word}}を削除",
+      "duplicate": "「{{word}}」は既に存在します",
+      "snippets": {
+        "empty": "まだスニペットがありません。メールアドレスやプロンプトなど、よく入力するテキストを保存し、トリガーフレーズを話すと貼り付けられます。",
+        "noMatches": "「{{query}}」に一致するスニペットはありません",
+        "addTitle": "スニペットを追加",
+        "editTitle": "スニペットを編集",
+        "triggerPlaceholder": "トリガーフレーズ(例: 「my email」)",
+        "textPlaceholder": "貼り付けるテキスト",
+        "add": "スニペットを追加",
+        "save": "保存",
+        "duplicate": "「{{trigger}}」のスニペットはすでに存在します",
+        "remove": "{{trigger}} を削除"
+      }
     },
     "history": {
       "title": "履歴",

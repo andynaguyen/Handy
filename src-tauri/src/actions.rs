@@ -1,7 +1,9 @@
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 use crate::apple_intelligence;
 use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, SoundType};
-use crate::audio_toolkit::{is_microphone_access_denied, is_no_input_device_error, VadPolicy};
+use crate::audio_toolkit::{
+    expand_snippets, is_microphone_access_denied, is_no_input_device_error, VadPolicy,
+};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::HistoryManager;
 use crate::managers::model::ModelManager;
@@ -457,6 +459,19 @@ pub(crate) async fn process_transcription_output(
             }
         }
     } else if final_text != transcription {
+        post_processed_text = Some(final_text.clone());
+    }
+
+    // Last, so post-processing can't rewrite the snippet text
+    let expanded = expand_snippets(
+        &final_text,
+        settings
+            .snippets
+            .iter()
+            .map(|snippet| (snippet.trigger.as_str(), snippet.text.as_str())),
+    );
+    if expanded != final_text {
+        final_text = expanded;
         post_processed_text = Some(final_text.clone());
     }
 

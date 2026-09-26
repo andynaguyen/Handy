@@ -16,6 +16,7 @@
     "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
     "stats": "Statistiche",
+    "dictionary": "Dizionario",
     "debug": "Debug",
     "about": "Informazioni"
   },
@@ -389,14 +390,6 @@
           "sec15": "Dopo 15 secondi (Debug)"
         }
       },
-      "customWords": {
-        "title": "Parole personalizzate",
-        "description": "Aiuta i modelli supportati a riconoscere nomi e termini specialistici. La correzione approssimativa è attualmente limitata alle parole che usano le lettere A–Z e i numeri.",
-        "placeholder": "Aggiungi una parola",
-        "add": "Aggiungi",
-        "remove": "Rimuovi {{word}}",
-        "duplicate": "\"{{word}}\" esiste già"
-      },
       "voiceActivityDetection": {
         "title": "Rilevamento dell'attività vocale",
         "description": "Filtra il silenzio dalle registrazioni. I modelli che supportano lo streaming utilizzano una coda VAD più lunga; disabilitando la VAD si registra l'audio grezzo."
@@ -491,6 +484,34 @@
       "dayTooltip_other": "{{formattedCount}} parole il {{date}}",
       "less": "Meno",
       "more": "Più"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Dizionario",
+        "snippets": "Frammenti"
+      },
+      "addNew": "Aggiungi",
+      "searchPlaceholder": "Cerca",
+      "empty": "Nessuna parola. Aggiungi nomi, sigle e termini che Handy trascrive male.",
+      "noMatches": "Nessuna parola corrisponde a \"{{query}}\"",
+      "dialogTitle": "Aggiungi al dizionario",
+      "placeholder": "Aggiungi una parola",
+      "add": "Aggiungi",
+      "cancel": "Annulla",
+      "remove": "Rimuovi {{word}}",
+      "duplicate": "\"{{word}}\" esiste già",
+      "snippets": {
+        "empty": "Nessun frammento. Salva un testo che scrivi spesso, come un indirizzo email o un prompt, poi pronuncia la sua frase di attivazione per incollarlo.",
+        "noMatches": "Nessun frammento corrisponde a \"{{query}}\"",
+        "addTitle": "Aggiungi frammento",
+        "editTitle": "Modifica frammento",
+        "triggerPlaceholder": "Frase di attivazione, ad es. \"la mia email\"",
+        "textPlaceholder": "Testo da incollare",
+        "add": "Aggiungi frammento",
+        "save": "Salva",
+        "duplicate": "Esiste già un frammento per \"{{trigger}}\"",
+        "remove": "Rimuovi {{trigger}}"
+      }
     },
     "history": {
       "title": "Cronologia",

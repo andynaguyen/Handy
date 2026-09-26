@@ -16,6 +16,7 @@
     "postProcessing": "Post-traitement",
     "history": "Historique",
     "stats": "Statistiques",
+    "dictionary": "Dictionnaire",
     "debug": "Débogage",
     "about": "À propos"
   },
@@ -389,14 +390,6 @@
           "sec15": "Après 15 secondes (Débogage)"
         }
       },
-      "customWords": {
-        "title": "Mots personnalisés",
-        "description": "Aidez les modèles compatibles à reconnaître les noms et les termes spécialisés. La correction approximative est actuellement limitée aux mots utilisant les lettres A à Z et des chiffres.",
-        "placeholder": "Ajouter un mot",
-        "add": "Ajouter",
-        "remove": "Supprimer {{word}}",
-        "duplicate": "\"{{word}}\" existe déjà"
-      },
       "voiceActivityDetection": {
         "title": "Détection d'activité vocale (VAD)",
         "description": "Filtre le silence des enregistrements. Les modèles compatibles avec le streaming utilisent une marge de détection VAD plus longue ; désactiver le VAD enregistre l'audio brut."
@@ -491,6 +484,34 @@
       "dayTooltip_other": "{{formattedCount}} mots le {{date}}",
       "less": "Moins",
       "more": "Plus"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Dictionnaire",
+        "snippets": "Extraits"
+      },
+      "addNew": "Ajouter",
+      "searchPlaceholder": "Rechercher",
+      "empty": "Aucun mot pour l'instant. Ajoutez les noms, sigles et termes que Handy transcrit mal.",
+      "noMatches": "Aucun mot ne correspond à \"{{query}}\"",
+      "dialogTitle": "Ajouter au dictionnaire",
+      "placeholder": "Ajouter un mot",
+      "add": "Ajouter",
+      "cancel": "Annuler",
+      "remove": "Supprimer {{word}}",
+      "duplicate": "\"{{word}}\" existe déjà",
+      "snippets": {
+        "empty": "Aucun extrait pour l'instant. Enregistrez un texte que vous tapez souvent, comme une adresse e-mail ou un prompt, puis dites sa phrase de déclenchement pour le coller.",
+        "noMatches": "Aucun extrait ne correspond à \"{{query}}\"",
+        "addTitle": "Ajouter un extrait",
+        "editTitle": "Modifier l'extrait",
+        "triggerPlaceholder": "Phrase de déclenchement, par ex. \"mon e-mail\"",
+        "textPlaceholder": "Texte à coller",
+        "add": "Ajouter l'extrait",
+        "save": "Enregistrer",
+        "duplicate": "Un extrait existe déjà pour \"{{trigger}}\"",
+        "remove": "Supprimer {{trigger}}"
+      }
     },
     "history": {
       "title": "Historique",

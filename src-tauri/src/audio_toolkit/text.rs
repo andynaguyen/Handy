@@ -469,9 +469,116 @@ pub fn strip_trailing_keyword(text: &str, keyword: &str) -> Option<String> {
     Some(rest.to_string())
 }
 
+/// Replaces each spoken snippet trigger in `text` with its expansion. Triggers
+/// match whole words case-insensitively on their letters and digits, like the
+/// voice-submit keyword, so "My email." matches the trigger "my email" but
+/// "my emails" does not. Punctuation around the matched words is kept, and
+/// when two triggers overlap the longer one wins.
+pub fn expand_snippets<'a>(
+    text: &str,
+    snippets: impl IntoIterator<Item = (&'a str, &'a str)>,
+) -> String {
+    let mut triggers: Vec<(Vec<String>, &str)> = snippets
+        .into_iter()
+        .map(|(trigger, expansion)| {
+            let keys: Vec<String> = trigger.split_whitespace().map(build_match_key).collect();
+            (keys, expansion)
+        })
+        .filter(|(keys, _)| !keys.is_empty() && keys.iter().all(|key| !key.is_empty()))
+        .collect();
+    if triggers.is_empty() {
+        return text.to_string();
+    }
+    triggers.sort_by_key(|(keys, _)| std::cmp::Reverse(keys.len()));
+
+    let tokens: Vec<&str> = text.split_whitespace().collect();
+    let keys: Vec<String> = tokens.iter().map(|token| build_match_key(token)).collect();
+    // `split_whitespace` yields subslices of `text`, so pointer math gives offsets.
+    let offset = |token: &str| token.as_ptr() as usize - text.as_ptr() as usize;
+
+    let mut expanded = String::with_capacity(text.len());
+    let mut copied = 0;
+    let mut i = 0;
+    while i < tokens.len() {
+        let hit = triggers
+            .iter()
+            .find(|(trigger, _)| keys.get(i..i + trigger.len()) == Some(trigger.as_slice()));
+        let Some((trigger, expansion)) = hit else {
+            i += 1;
+            continue;
+        };
+        let first = tokens[i];
+        let last = tokens[i + trigger.len() - 1];
+        let lead_end = first.find(char::is_alphanumeric).unwrap_or(0);
+        let trail_start = last
+            .char_indices()
+            .rev()
+            .find(|(_, c)| c.is_alphanumeric())
+            .map_or(last.len(), |(index, c)| index + c.len_utf8());
+
+        expanded.push_str(&text[copied..offset(first)]);
+        expanded.push_str(&first[..lead_end]);
+        expanded.push_str(expansion);
+        expanded.push_str(&last[trail_start..]);
+        copied = offset(last) + last.len();
+        i += trigger.len();
+    }
+    expanded.push_str(&text[copied..]);
+    expanded
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn expand_snippets_replaces_a_trigger_and_keeps_punctuation() {
+        let snippets = [("my email", "andy@example.com")];
+        assert_eq!(
+            expand_snippets("Send it to My email.", snippets),
+            "Send it to andy@example.com."
+        );
+        assert_eq!(
+            expand_snippets("(my, email) twice: my email", snippets),
+            "(andy@example.com) twice: andy@example.com"
+        );
+    }
+
+    #[test]
+    fn expand_snippets_matches_whole_words_only() {
+        let snippets = [("my email", "andy@example.com")];
+        assert_eq!(
+            expand_snippets("check my emails", snippets),
+            "check my emails"
+        );
+    }
+
+    #[test]
+    fn expand_snippets_prefers_the_longer_trigger() {
+        let snippets = [
+            ("my email", "short"),
+            ("my email address", "andy@example.com"),
+        ];
+        assert_eq!(
+            expand_snippets("it's my email address", snippets),
+            "it's andy@example.com"
+        );
+    }
+
+    #[test]
+    fn expand_snippets_keeps_multiline_expansions() {
+        let snippets = [("sign off", "Thanks,\nAndy")];
+        assert_eq!(
+            expand_snippets("see you. Sign off", snippets),
+            "see you. Thanks,\nAndy"
+        );
+    }
+
+    #[test]
+    fn expand_snippets_ignores_triggers_without_letters_or_digits() {
+        let snippets = [("", "x"), ("--", "y")];
+        assert_eq!(expand_snippets("a -- b", snippets), "a -- b");
+    }
 
     #[test]
     fn strip_trailing_keyword_matches_the_final_word() {

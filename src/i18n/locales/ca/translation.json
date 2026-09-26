@@ -16,6 +16,7 @@
     "postProcessing": "Postprocessament",
     "history": "Historial",
     "stats": "Estadístiques",
+    "dictionary": "Diccionari",
     "debug": "Depuració",
     "about": "Quant a"
   },
@@ -389,14 +390,6 @@
           "sec15": "Al cap de 15 segons (depuració)"
         }
       },
-      "customWords": {
-        "title": "Paraules personalitzades",
-        "description": "Ajudeu els models compatibles a reconèixer noms i termes especialitzats. Actualment, la correcció per similitu es limita a paraules amb lletres de la A a la Z i números.",
-        "placeholder": "Afegiu una paraula",
-        "add": "Afegiu",
-        "remove": "Suprimiu {{word}}",
-        "duplicate": "«{{word}}» ja existeix"
-      },
       "voiceActivityDetection": {
         "title": "Detecció d'activitat de veu",
         "description": "Filtra els silencis dels enregistraments. Els models compatibles amb la transcripció en temps real utilitzen un marge final de detecció de veu més llarg; si desactiveu la detecció, s'enregistra l'àudio sense filtrar."
@@ -491,6 +484,34 @@
       "dayTooltip_other": "{{formattedCount}} paraules el {{date}}",
       "less": "Menys",
       "more": "Més"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Diccionari",
+        "snippets": "Fragments"
+      },
+      "addNew": "Afegeix",
+      "searchPlaceholder": "Cerca",
+      "empty": "Encara no hi ha paraules. Afegiu noms, sigles i termes que Handy transcriu malament.",
+      "noMatches": "Cap paraula coincideix amb \"{{query}}\"",
+      "dialogTitle": "Afegeix al diccionari",
+      "placeholder": "Afegiu una paraula",
+      "add": "Afegiu",
+      "cancel": "Cancel·la",
+      "remove": "Suprimiu {{word}}",
+      "duplicate": "«{{word}}» ja existeix",
+      "snippets": {
+        "empty": "Encara no hi ha fragments. Deseu text que escriviu sovint, com una adreça electrònica o una instrucció, i digueu la frase activadora per enganxar-lo.",
+        "noMatches": "Cap fragment coincideix amb \"{{query}}\"",
+        "addTitle": "Afegeix un fragment",
+        "editTitle": "Edita el fragment",
+        "triggerPlaceholder": "Frase activadora, com \"el meu correu\"",
+        "textPlaceholder": "Text per enganxar",
+        "add": "Afegeix el fragment",
+        "save": "Desa",
+        "duplicate": "Ja hi ha un fragment per a \"{{trigger}}\"",
+        "remove": "Elimina {{trigger}}"
+      }
     },
     "history": {
       "title": "Historial",

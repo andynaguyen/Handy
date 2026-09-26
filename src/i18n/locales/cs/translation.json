@@ -16,6 +16,7 @@
     "postProcessing": "Následné zpracování",
     "history": "Historie",
     "stats": "Statistiky",
+    "dictionary": "Slovník",
     "debug": "Ladění",
     "about": "O aplikaci"
   },
@@ -389,14 +390,6 @@
           "sec15": "Po 15 sekundách (Debug)"
         }
       },
-      "customWords": {
-        "title": "Vlastní slova",
-        "description": "Pomozte podporovaným modelům rozpoznávat jména a odborné termíny. Přibližné opravy jsou v současnosti omezeny na slova obsahující písmena A–Z a číslice.",
-        "placeholder": "Přidat slovo",
-        "add": "Přidat",
-        "remove": "Odebrat {{word}}",
-        "duplicate": "\"{{word}}\" již existuje"
-      },
       "voiceActivityDetection": {
         "title": "Detekce hlasové aktivity",
         "description": "Odfiltruje ticho z nahrávek. Modely podporující streaming používají delší doběh VAD; vypnutí VAD nahrává surový zvuk."
@@ -494,6 +487,34 @@
       "dayTooltip_other": "{{date}}: {{formattedCount}} slov",
       "less": "Méně",
       "more": "Více"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Slovník",
+        "snippets": "Úryvky"
+      },
+      "addNew": "Přidat",
+      "searchPlaceholder": "Hledat",
+      "empty": "Zatím žádná slova. Přidejte jména, zkratky a termíny, které Handy přepisuje špatně.",
+      "noMatches": "Žádná slova neodpovídají \"{{query}}\"",
+      "dialogTitle": "Přidat do slovníku",
+      "placeholder": "Přidat slovo",
+      "add": "Přidat",
+      "cancel": "Zrušit",
+      "remove": "Odebrat {{word}}",
+      "duplicate": "\"{{word}}\" již existuje",
+      "snippets": {
+        "empty": "Zatím žádné úryvky. Uložte si text, který často píšete, třeba e-mailovou adresu nebo prompt, a pak řekněte jeho spouštěcí frázi, abyste ho vložili.",
+        "noMatches": "Žádné úryvky neodpovídají \"{{query}}\"",
+        "addTitle": "Přidat úryvek",
+        "editTitle": "Upravit úryvek",
+        "triggerPlaceholder": "Spouštěcí fráze, např. \"můj e-mail\"",
+        "textPlaceholder": "Text k vložení",
+        "add": "Přidat úryvek",
+        "save": "Uložit",
+        "duplicate": "Úryvek pro \"{{trigger}}\" už existuje",
+        "remove": "Odebrat {{trigger}}"
+      }
     },
     "history": {
       "title": "Historie",

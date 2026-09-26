@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  BookA,
   ChartColumn,
   Cog,
   FlaskConical,
@@ -20,6 +21,7 @@ import {
   AdvancedSettings,
   HistorySettings,
   StatsSettings,
+  DictionarySettings,
   DebugSettings,
   AboutSettings,
   PostProcessingSettings,
@@ -62,6 +64,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.stats",
     icon: ChartColumn,
     component: StatsSettings,
+    enabled: () => true,
+  },
+  dictionary: {
+    labelKey: "sidebar.dictionary",
+    icon: BookA,
+    component: DictionarySettings,
     enabled: () => true,
   },
   models: {

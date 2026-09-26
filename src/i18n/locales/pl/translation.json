@@ -16,6 +16,7 @@
     "postProcessing": "Postproces",
     "history": "Historia",
     "stats": "Statystyki",
+    "dictionary": "Słownik",
     "debug": "Debugowanie",
     "about": "O programie"
   },
@@ -389,14 +390,6 @@
           "sec15": "Po 15 sekundach (Debug)"
         }
       },
-      "customWords": {
-        "title": "Własne słowa",
-        "description": "Pomóż obsługiwanym modelom rozpoznawać nazwy i specjalistyczne terminy. Korekta przybliżona jest obecnie ograniczona do słów używających liter A–Z i cyfr.",
-        "placeholder": "Dodaj słowo",
-        "add": "Dodaj",
-        "remove": "Usuń {{word}}",
-        "duplicate": "\"{{word}}\" już istnieje"
-      },
       "voiceActivityDetection": {
         "title": "Wykrywanie aktywności głosowej",
         "description": "Odfiltrowuje ciszę z nagrań. Modele obsługujące streaming używają dłuższego marginesu VAD; wyłączenie VAD nagrywa surowy dźwięk."
@@ -494,6 +487,34 @@
       "dayTooltip_other": "{{date}}: {{formattedCount}} słów",
       "less": "Mniej",
       "more": "Więcej"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Słownik",
+        "snippets": "Fragmenty"
+      },
+      "addNew": "Dodaj",
+      "searchPlaceholder": "Szukaj",
+      "empty": "Brak słów. Dodaj nazwy, skróty i terminy, które Handy rozpoznaje błędnie.",
+      "noMatches": "Brak słów pasujących do \"{{query}}\"",
+      "dialogTitle": "Dodaj do słownika",
+      "placeholder": "Dodaj słowo",
+      "add": "Dodaj",
+      "cancel": "Anuluj",
+      "remove": "Usuń {{word}}",
+      "duplicate": "\"{{word}}\" już istnieje",
+      "snippets": {
+        "empty": "Brak fragmentów. Zapisz tekst, który często wpisujesz, na przykład adres e-mail lub prompt, a potem wypowiedz jego frazę wyzwalającą, aby go wkleić.",
+        "noMatches": "Brak fragmentów pasujących do \"{{query}}\"",
+        "addTitle": "Dodaj fragment",
+        "editTitle": "Edytuj fragment",
+        "triggerPlaceholder": "Fraza wyzwalająca, np. \"mój e-mail\"",
+        "textPlaceholder": "Tekst do wklejenia",
+        "add": "Dodaj fragment",
+        "save": "Zapisz",
+        "duplicate": "Fragment dla \"{{trigger}}\" już istnieje",
+        "remove": "Usuń {{trigger}}"
+      }
     },
     "history": {
       "title": "Historia",

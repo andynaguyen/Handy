@@ -16,6 +16,7 @@
     "postProcessing": "Post Process",
     "history": "History",
     "stats": "Stats",
+    "dictionary": "Dictionary",
     "debug": "Debug",
     "about": "About"
   },
@@ -400,14 +401,6 @@
           "sec15": "After 15 seconds (Debug)"
         }
       },
-      "customWords": {
-        "title": "Custom Words",
-        "description": "Help supported models recognize names and specialized terms. Fuzzy correction is currently limited to words using A–Z and numbers.",
-        "placeholder": "Add a word",
-        "add": "Add",
-        "remove": "Remove {{word}}",
-        "duplicate": "\"{{word}}\" already exists"
-      },
       "voiceActivityDetection": {
         "title": "Voice Activity Detection",
         "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
@@ -499,6 +492,34 @@
       "dayTooltip_other": "{{formattedCount}} words on {{date}}",
       "less": "Less",
       "more": "More"
+    },
+    "dictionary": {
+      "tabs": {
+        "dictionary": "Dictionary",
+        "snippets": "Snippets"
+      },
+      "addNew": "Add new",
+      "searchPlaceholder": "Search",
+      "empty": "No words yet. Add names, acronyms, and jargon that Handy gets wrong.",
+      "noMatches": "No words match \"{{query}}\"",
+      "dialogTitle": "Add to dictionary",
+      "placeholder": "Add a word",
+      "add": "Add",
+      "cancel": "Cancel",
+      "remove": "Remove {{word}}",
+      "duplicate": "\"{{word}}\" already exists",
+      "snippets": {
+        "empty": "No snippets yet. Save text you type often, like an email address or a prompt, then say its trigger to paste it.",
+        "noMatches": "No snippets match \"{{query}}\"",
+        "addTitle": "Add snippet",
+        "editTitle": "Edit snippet",
+        "triggerPlaceholder": "Trigger phrase, like \"my email\"",
+        "textPlaceholder": "Text to paste",
+        "add": "Add snippet",
+        "save": "Save",
+        "duplicate": "A snippet for \"{{trigger}}\" already exists",
+        "remove": "Remove {{trigger}}"
+      }
     },
     "history": {
       "title": "History",
