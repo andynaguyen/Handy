@@ -20,6 +20,7 @@ pub struct SmoothedVad {
     hangover_counter: usize,
     onset_counter: usize,
     in_speech: bool,
+    last_voiced: Option<bool>,
 
     temp_out: Vec<f32>,
 }
@@ -40,6 +41,7 @@ impl SmoothedVad {
             hangover_counter: 0,
             onset_counter: 0,
             in_speech: false,
+            last_voiced: None,
             temp_out: Vec::new(),
         }
     }
@@ -65,6 +67,7 @@ impl VoiceActivityDetector for SmoothedVad {
 
         // 2. Delegate to the wrapped boolean VAD
         let is_voice = self.inner_vad.is_voice(frame)?;
+        self.last_voiced = Some(is_voice);
         if let Some(last) = self.frame_buffer.back_mut() {
             last.voiced = is_voice;
         }
@@ -123,6 +126,10 @@ impl VoiceActivityDetector for SmoothedVad {
         self.inner_vad.frame_samples()
     }
 
+    fn last_frame_voiced(&self) -> Option<bool> {
+        self.last_voiced
+    }
+
     fn set_hangover_frames(&mut self, frames: usize) {
         self.hangover_frames = frames;
     }
@@ -159,6 +166,7 @@ impl VoiceActivityDetector for SmoothedVad {
         self.hangover_counter = 0;
         self.onset_counter = 0;
         self.in_speech = false;
+        self.last_voiced = None;
         self.temp_out.clear();
     }
 }

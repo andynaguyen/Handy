@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Envio por voz",
+        "description": "Termine um ditado com sua palavra-chave e faça uma pausa. O Handy para a gravação, remove a palavra-chave, cola o texto e pressiona a tecla de envio.",
+        "keyword": {
+          "title": "Palavra-chave de envio",
+          "description": "Diga-a por último. Ela só conta no final exato do que você dita.",
+          "invalid": "Use uma palavra com letras ou números."
+        },
+        "key": {
+          "title": "Tecla de envio",
+          "description": "Pressionada após colar quando você termina com a palavra-chave, mesmo que o envio automático esteja desativado."
+        }
+      },
       "translateToEnglish": {
         "label": "Traduzir para Inglês",
         "description": "Traduzir automaticamente fala de outros idiomas para inglês durante a transcrição."

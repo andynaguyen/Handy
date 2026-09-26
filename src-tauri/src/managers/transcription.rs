@@ -1,6 +1,6 @@
 use crate::audio_toolkit::{
     apply_custom_words, detect_output_language, normalize_transcription_output,
-    remove_filler_words, OutputLanguageEvidence,
+    remove_filler_words, strip_trailing_keyword, OutputLanguageEvidence,
 };
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::model::{EngineType, ModelManager};
@@ -8,6 +8,7 @@ use crate::settings::{
     get_settings, AppSettings, ModelUnloadTimeout, OrtAcceleratorSetting,
     TranscribeAcceleratorSetting,
 };
+use crate::voice_submit::VoiceSubmit;
 use anyhow::Result;
 use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
@@ -104,7 +105,17 @@ enum StreamCmd {
     /// was ever active (caller should fall back to batch transcription).
     Finalize(mpsc::Sender<Option<FinalizedStreamText>>),
     Cancel,
+    /// Check whether the live transcript ends with the voice-submit keyword.
+    /// Queued behind the audio fed before the pause.
+    VoiceSubmitCheck {
+        session: u64,
+        revision: u64,
+    },
 }
+
+/// A voice-submit check waits until the stream has decoded all but this much
+/// of the fed audio, so the keyword is in the transcript before it is read.
+const VOICE_SUBMIT_MAX_BUFFERED_MS: i64 = 300;
 
 struct FinalizedStreamText {
     text: String,
@@ -167,6 +178,15 @@ impl StreamRouter {
         }
         if let Some(tx) = self.tx.lock().unwrap().as_ref() {
             let _ = tx.send(StreamCmd::Feed(frame.to_vec()));
+        }
+    }
+
+    fn send(&self, cmd: StreamCmd) {
+        if !self.open.load(Ordering::Relaxed) {
+            return;
+        }
+        if let Some(tx) = self.tx.lock().unwrap().as_ref() {
+            let _ = tx.send(cmd);
         }
     }
 
@@ -277,6 +297,34 @@ pub struct TranscriptionManager {
     /// `is_model_loaded()` consults this so the model still reports "loaded"
     /// while the worker holds it.
     active_engine_lease: Arc<AtomicU64>,
+    /// Serializes batch engine runs. Voice-submit probes run during recording
+    /// and must never take the engine out from under the final transcription.
+    inference_lock: Arc<Mutex<()>>,
+}
+
+/// Text from one recording, with the voice-submit keyword already removed.
+#[derive(Debug, Default)]
+pub struct RecordingTranscript {
+    pub text: String,
+    /// The recording ended with the voice-submit keyword.
+    pub submit: bool,
+}
+
+/// Raw engine output before custom-word correction and filler removal.
+struct RawTranscript {
+    text: String,
+    output_language: OutputLanguageEvidence,
+    model_languages: Vec<String>,
+    model_is_whisper: bool,
+}
+
+/// Strip the voice-submit keyword from raw engine text. Runs before custom-word
+/// correction and filler removal so neither can erase or invent the keyword.
+fn split_voice_submit(raw: String, keyword: Option<&str>) -> (String, bool) {
+    match keyword.and_then(|keyword| strip_trailing_keyword(&raw, keyword)) {
+        Some(rest) => (rest, true),
+        None => (raw, false),
+    }
 }
 
 impl TranscriptionManager {
@@ -297,6 +345,7 @@ impl TranscriptionManager {
             next_stream_worker_id: Arc::new(AtomicU64::new(1)),
             active_stream_worker: Arc::new(AtomicU64::new(0)),
             active_engine_lease: Arc::new(AtomicU64::new(0)),
+            inference_lock: Arc::new(Mutex::new(())),
         };
 
         // Start the idle watcher
@@ -384,7 +433,14 @@ impl TranscriptionManager {
     pub fn is_model_loaded(&self) -> bool {
         // The engine may be leased out to the streaming worker (taken out of
         // the mutex). It's still loaded, just in use, so report true.
-        self.lock_engine().is_some() || self.active_engine_lease.load(Ordering::Acquire) != 0
+        self.lock_engine().is_some()
+            || self.active_engine_lease.load(Ordering::Acquire) != 0
+            // A batch run (final transcription or voice-submit probe) has
+            // the engine out of the mutex while it holds this lock.
+            || matches!(
+                self.inference_lock.try_lock(),
+                Err(std::sync::TryLockError::WouldBlock)
+            )
     }
 
     /// Accelerator changes should not disturb the current transcription. Mark
@@ -984,14 +1040,20 @@ impl TranscriptionManager {
             );
 
             let mut perf = StreamPerf::new();
+            let mut last_buffered_ms: i64 = 0;
+            let mut pending_voice_submit: Option<(u64, u64)> = None;
             while let Ok(cmd) = rx.recv() {
                 match cmd {
+                    StreamCmd::VoiceSubmitCheck { session, revision } => {
+                        pending_voice_submit = Some((session, revision));
+                    }
                     StreamCmd::Feed(pcm) => {
                         self.touch_activity();
                         perf.record_feed(pcm.len());
                         let feed_start = Instant::now();
                         match stream.feed(&pcm) {
                             Ok(update) => {
+                                last_buffered_ms = update.buffered_ms;
                                 perf.record_compute(feed_start.elapsed());
                                 perf.record_update(
                                     update.revision,
@@ -1066,6 +1128,12 @@ impl TranscriptionManager {
                         break;
                     }
                 }
+
+                if last_buffered_ms <= VOICE_SUBMIT_MAX_BUFFERED_MS {
+                    if let Some((session, revision)) = pending_voice_submit.take() {
+                        self.check_stream_voice_submit(&stream.text().full, session, revision);
+                    }
+                }
             }
 
             true
@@ -1112,7 +1180,10 @@ impl TranscriptionManager {
     /// to batch transcription. `Err` means finalize itself failed or timed out.
     /// A timeout may still leave the worker holding the engine, so callers
     /// should surface it instead of immediately starting a batch fallback.
-    pub fn finalize_stream(&self) -> Result<Option<String>> {
+    pub fn finalize_stream(
+        &self,
+        voice_submit_keyword: Option<&str>,
+    ) -> Result<Option<RecordingTranscript>> {
         let Some(tx) = self.router.take() else {
             return Ok(None);
         };
@@ -1134,10 +1205,11 @@ impl TranscriptionManager {
         };
 
         let settings = get_settings(&self.app_handle);
+        let (text, submit) = split_voice_submit(finalized.text, voice_submit_keyword);
         // Streaming models do not receive a decode prompt, so custom words
         // always go through the shared fuzzy post-correction path.
         let filtered = post_process_transcription_text(
-            finalized.text,
+            text,
             &settings,
             false,
             &finalized.output_language,
@@ -1145,7 +1217,33 @@ impl TranscriptionManager {
         );
 
         self.maybe_unload_immediately("streaming transcription");
-        Ok(Some(filtered))
+        Ok(Some(RecordingTranscript {
+            text: filtered,
+            submit,
+        }))
+    }
+
+    /// Ask the live stream to check its transcript for the voice-submit
+    /// keyword. No-op when no stream is running.
+    pub fn request_voice_submit_check(&self, session: u64, revision: u64) {
+        if self.is_streaming() {
+            self.router
+                .send(StreamCmd::VoiceSubmitCheck { session, revision });
+        }
+    }
+
+    fn check_stream_voice_submit(&self, text: &str, session: u64, revision: u64) {
+        let Some(voice_submit) = self.app_handle.try_state::<Arc<VoiceSubmit>>() else {
+            return;
+        };
+        let Some(keyword) = voice_submit.keyword_for(session) else {
+            return;
+        };
+        let matched = strip_trailing_keyword(text, &keyword).is_some();
+        debug!("Voice submit check on live transcript: matched={matched}");
+        if matched {
+            voice_submit.request_stop(session, revision);
+        }
     }
 
     /// Abandon any active stream without producing text (e.g. on cancel).
@@ -1174,6 +1272,16 @@ impl TranscriptionManager {
     }
 
     pub fn transcribe(&self, audio: Vec<f32>) -> Result<String> {
+        self.transcribe_recording(audio, None).map(|t| t.text)
+    }
+
+    /// Batch-transcribe a recording. With a `voice_submit_keyword`, a trailing
+    /// keyword is removed from the text and reported in the result.
+    pub fn transcribe_recording(
+        &self,
+        audio: Vec<f32>,
+        voice_submit_keyword: Option<&str>,
+    ) -> Result<RecordingTranscript> {
         #[cfg(debug_assertions)]
         if std::env::var("HANDY_FORCE_TRANSCRIPTION_FAILURE").is_ok() {
             return Err(anyhow::anyhow!(
@@ -1192,9 +1300,96 @@ impl TranscriptionManager {
         if audio.is_empty() {
             debug!("Empty audio vector");
             self.maybe_unload_immediately("empty audio");
-            return Ok(String::new());
+            return Ok(RecordingTranscript::default());
         }
 
+        // Get current settings for configuration
+        let settings = get_settings(&self.app_handle);
+        let raw = self.run_engine(&audio, &settings)?;
+
+        // Apply fuzzy word correction if custom words are configured — UNLESS the
+        // words were already handed to the model as an initial prompt (whisper
+        // family). We don't pass a prompt to non-whisper models (it requires the
+        // whisper-kind run extension), so they still get fuzzy correction here,
+        // same as the ONNX engines.
+        let (text, submit) = split_voice_submit(raw.text, voice_submit_keyword);
+        let filtered_result = post_process_transcription_text(
+            text,
+            &settings,
+            raw.model_is_whisper,
+            &raw.output_language,
+            &raw.model_languages,
+        );
+
+        let et = std::time::Instant::now();
+        let translation_note = if settings.translate_to_english {
+            " (translated)"
+        } else {
+            ""
+        };
+        // Real-time factor. Input PCM is 16 kHz mono, so audio length in seconds
+        // is samples / 16000. `speedup` is audio_secs / elapsed_secs — e.g. 4.00x
+        // means transcribed 4x faster than real time
+        let elapsed_secs = (et - st).as_secs_f64();
+        let audio_secs = audio_len as f64 / 16_000.0;
+        let speedup = real_time_factor(audio_secs, elapsed_secs);
+        info!(
+            "Transcription completed in {:.2}s for {:.2}s of audio ({:.2}x real-time){}",
+            elapsed_secs, audio_secs, speedup, translation_note
+        );
+
+        let final_result = filtered_result;
+
+        if final_result.is_empty() {
+            info!("Transcription result is empty");
+        } else {
+            info!(
+                "Transcription result: {}",
+                crate::utils::redact_text(&final_result)
+            );
+        }
+
+        self.maybe_unload_immediately("transcription");
+
+        Ok(RecordingTranscript {
+            text: final_result,
+            submit,
+        })
+    }
+
+    /// Whether `audio` ends with the voice-submit `keyword`. Runs the loaded
+    /// engine without text cleanup or unloading, for checks during recording.
+    pub fn voice_submit_probe(&self, audio: Vec<f32>, keyword: &str) -> bool {
+        self.touch_activity();
+        let settings = get_settings(&self.app_handle);
+        let started = Instant::now();
+        match self.run_engine(&audio, &settings) {
+            Ok(raw) => {
+                let matched = strip_trailing_keyword(&raw.text, keyword).is_some();
+                debug!(
+                    "Voice submit probe on {:.2}s of audio took {:?}: matched={}",
+                    audio.len() as f64 / 16_000.0,
+                    started.elapsed(),
+                    matched
+                );
+                matched
+            }
+            Err(e) => {
+                debug!("Voice submit probe skipped: {}", e);
+                false
+            }
+        }
+    }
+
+    /// Run the loaded engine on `audio` and return its raw text. Waits for an
+    /// in-progress model load and for any other engine run to finish.
+    fn run_engine(&self, audio: &[f32], settings: &AppSettings) -> Result<RawTranscript> {
+        // Held for the whole run, including the loaded check: a probe that has
+        // the engine out of the mutex must finish before another run looks.
+        let _inference = self
+            .inference_lock
+            .lock()
+            .unwrap_or_else(|e| e.into_inner());
         // Check if model is loaded, if not try to load it
         {
             // If the model is loading, wait for it to complete.
@@ -1208,9 +1403,6 @@ impl TranscriptionManager {
                 return Err(anyhow::anyhow!("Model is not loaded for transcription."));
             }
         }
-
-        // Get current settings for configuration
-        let settings = get_settings(&self.app_handle);
 
         // Validate selected language against the model's supported languages.
         // If the language isn't supported, fall back to "auto" to prevent errors.
@@ -1226,7 +1418,7 @@ impl TranscriptionManager {
         // never receives "auto") and computed fresh here — it is never written
         // back to settings, so the intent survives switching models and back.
         let validated_language =
-            effective_language_for_model(&settings, self.model_manager.as_ref(), &active_model);
+            effective_language_for_model(settings, self.model_manager.as_ref(), &active_model);
         if validated_language != settings.selected_language {
             debug!(
                 "Language intent '{}' resolved to '{}' for model '{}'",
@@ -1341,7 +1533,7 @@ impl TranscriptionManager {
                         );
 
                         session
-                            .run(&audio, &run_options)
+                            .run(audio, &run_options)
                             .map(|t| {
                                 // Whisper's audio-based LID (auto mode only;
                                 // `None` when a language hint was passed).
@@ -1358,16 +1550,16 @@ impl TranscriptionManager {
                             ..Default::default()
                         };
                         parakeet_engine
-                            .transcribe_with(&audio, &params)
+                            .transcribe_with(audio, &params)
                             .map(|r| r.text)
                             .map_err(|e| anyhow::anyhow!("Parakeet transcription failed: {}", e))
                     }
                     LoadedEngine::Moonshine(moonshine_engine) => moonshine_engine
-                        .transcribe(&audio, &TranscribeOptions::default())
+                        .transcribe(audio, &TranscribeOptions::default())
                         .map(|r| r.text)
                         .map_err(|e| anyhow::anyhow!("Moonshine transcription failed: {}", e)),
                     LoadedEngine::MoonshineStreaming(streaming_engine) => streaming_engine
-                        .transcribe(&audio, &TranscribeOptions::default())
+                        .transcribe(audio, &TranscribeOptions::default())
                         .map(|r| r.text)
                         .map_err(|e| {
                             anyhow::anyhow!("Moonshine streaming transcription failed: {}", e)
@@ -1387,12 +1579,12 @@ impl TranscriptionManager {
                             use_itn: Some(true),
                         };
                         sense_voice_engine
-                            .transcribe_with(&audio, &params)
+                            .transcribe_with(audio, &params)
                             .map(|r| r.text)
                             .map_err(|e| anyhow::anyhow!("SenseVoice transcription failed: {}", e))
                     }
                     LoadedEngine::GigaAM(gigaam_engine) => gigaam_engine
-                        .transcribe(&audio, &TranscribeOptions::default())
+                        .transcribe(audio, &TranscribeOptions::default())
                         .map(|r| r.text)
                         .map_err(|e| anyhow::anyhow!("GigaAM transcription failed: {}", e)),
                     LoadedEngine::Canary(canary_engine) => {
@@ -1409,7 +1601,7 @@ impl TranscriptionManager {
                             ..Default::default()
                         };
                         canary_engine
-                            .transcribe(&audio, &options)
+                            .transcribe(audio, &options)
                             .map(|r| r.text)
                             .map_err(|e| anyhow::anyhow!("Canary transcription failed: {}", e))
                     }
@@ -1425,7 +1617,7 @@ impl TranscriptionManager {
                             ..Default::default()
                         };
                         cohere_engine
-                            .transcribe(&audio, &options)
+                            .transcribe(audio, &options)
                             .map(|r| r.text)
                             .map_err(|e| anyhow::anyhow!("Cohere transcription failed: {}", e))
                     }
@@ -1476,7 +1668,7 @@ impl TranscriptionManager {
 
             let output_language = with_model_detected_language(
                 resolve_output_language_evidence(
-                    &settings,
+                    settings,
                     applied_language_hint.as_deref(),
                     &model_languages,
                     output_was_translated,
@@ -1488,50 +1680,12 @@ impl TranscriptionManager {
             (text, output_language, model_languages)
         };
 
-        // Apply fuzzy word correction if custom words are configured — UNLESS the
-        // words were already handed to the model as an initial prompt (whisper
-        // family). We don't pass a prompt to non-whisper models (it requires the
-        // whisper-kind run extension), so they still get fuzzy correction here,
-        // same as the ONNX engines.
-        let filtered_result = post_process_transcription_text(
-            result,
-            &settings,
+        Ok(RawTranscript {
+            text: result,
+            output_language,
+            model_languages,
             model_is_whisper,
-            &output_language,
-            &model_languages,
-        );
-
-        let et = std::time::Instant::now();
-        let translation_note = if settings.translate_to_english {
-            " (translated)"
-        } else {
-            ""
-        };
-        // Real-time factor. Input PCM is 16 kHz mono, so audio length in seconds
-        // is samples / 16000. `speedup` is audio_secs / elapsed_secs — e.g. 4.00x
-        // means transcribed 4x faster than real time
-        let elapsed_secs = (et - st).as_secs_f64();
-        let audio_secs = audio_len as f64 / 16_000.0;
-        let speedup = real_time_factor(audio_secs, elapsed_secs);
-        info!(
-            "Transcription completed in {:.2}s for {:.2}s of audio ({:.2}x real-time){}",
-            elapsed_secs, audio_secs, speedup, translation_note
-        );
-
-        let final_result = filtered_result;
-
-        if final_result.is_empty() {
-            info!("Transcription result is empty");
-        } else {
-            info!(
-                "Transcription result: {}",
-                crate::utils::redact_text(&final_result)
-            );
-        }
-
-        self.maybe_unload_immediately("transcription");
-
-        Ok(final_result)
+        })
     }
 }
 
@@ -1866,7 +2020,7 @@ fn cpp_translation_task(
 fn drain_until_finalize(rx: mpsc::Receiver<StreamCmd>) {
     while let Ok(cmd) = rx.recv() {
         match cmd {
-            StreamCmd::Feed(_) => {}
+            StreamCmd::Feed(_) | StreamCmd::VoiceSubmitCheck { .. } => {}
             StreamCmd::Finalize(reply) => {
                 let _ = reply.send(None);
                 break;

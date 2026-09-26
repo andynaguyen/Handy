@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Verzenden met stem",
+        "description": "Sluit een dictaat af met je trefwoord en pauzeer even. Handy stopt de opname, verwijdert het trefwoord, plakt de tekst en drukt op de verzendtoets.",
+        "keyword": {
+          "title": "Verzendtrefwoord",
+          "description": "Zeg dit als laatste. Het telt alleen helemaal aan het einde van wat je dicteert.",
+          "invalid": "Gebruik een woord met letters of cijfers."
+        },
+        "key": {
+          "title": "Verzendtoets",
+          "description": "Wordt na het plakken ingedrukt als je eindigt met het trefwoord, ook als automatisch verzenden uit staat."
+        }
+      },
       "translateToEnglish": {
         "label": "Vertalen naar het Engels",
         "description": "Vertaal spraak uit andere talen tijdens het transcriberen automatisch naar het Engels."

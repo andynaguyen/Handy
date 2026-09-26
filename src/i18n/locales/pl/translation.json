@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Wysyłanie głosem",
+        "description": "Zakończ dyktowanie słowem kluczowym i zrób krótką przerwę. Handy zatrzymuje nagrywanie, usuwa słowo kluczowe, wkleja tekst i naciska klawisz wysyłania.",
+        "keyword": {
+          "title": "Słowo wysyłania",
+          "description": "Powiedz je na końcu. Liczy się tylko na samym końcu tego, co dyktujesz.",
+          "invalid": "Użyj słowa zawierającego litery lub cyfry."
+        },
+        "key": {
+          "title": "Klawisz wysyłania",
+          "description": "Naciskany po wklejeniu, gdy kończysz słowem kluczowym, nawet jeśli automatyczne wysyłanie jest wyłączone."
+        }
+      },
       "translateToEnglish": {
         "label": "Tłumacz na angielski",
         "description": "Automatycznie tłumacz mowę z innych języków na angielski podczas transkrypcji."

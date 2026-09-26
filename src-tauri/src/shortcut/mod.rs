@@ -987,6 +987,34 @@ pub fn change_auto_submit_setting(app: AppHandle, enabled: bool) -> Result<(), S
 
 #[tauri::command]
 #[specta::specta]
+pub fn change_voice_submit_enabled_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.voice_submit_enabled = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+/// Rejects keywords with no letters or digits, since they could never match
+/// a spoken word.
+#[tauri::command]
+#[specta::specta]
+pub fn change_voice_submit_keyword_setting(app: AppHandle, keyword: String) -> Result<(), String> {
+    let keyword = keyword.split_whitespace().collect::<Vec<_>>().join(" ");
+    if !keyword
+        .split(' ')
+        .all(|word| word.chars().any(char::is_alphanumeric))
+        || keyword.is_empty()
+    {
+        return Err("Voice submit keyword must contain letters or digits".to_string());
+    }
+    let mut settings = settings::get_settings(&app);
+    settings.voice_submit_keyword = keyword;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     let parsed = match key.as_str() {

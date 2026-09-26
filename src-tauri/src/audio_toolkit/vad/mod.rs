@@ -52,6 +52,12 @@ pub trait VoiceActivityDetector: Send + Sync {
         None
     }
 
+    /// The underlying speech decision for the most recent frame, before any
+    /// onset or hangover smoothing. Detectors without smoothing return None.
+    fn last_frame_voiced(&self) -> Option<bool> {
+        None
+    }
+
     fn reset(&mut self) {}
 }
 

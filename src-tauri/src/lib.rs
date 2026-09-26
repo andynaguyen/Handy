@@ -24,6 +24,7 @@ mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
 mod utils;
+mod voice_submit;
 
 pub use cli::CliArgs;
 #[cfg(debug_assertions)]
@@ -198,9 +199,14 @@ fn initialize_core_logic(app_handle: &AppHandle) {
         TranscriptionManager::new(app_handle, model_manager.clone())
             .expect("Failed to initialize transcription manager"),
     );
+    let voice_submit = voice_submit::VoiceSubmit::new(app_handle);
     let recording_manager = Arc::new(
-        AudioRecordingManager::new(app_handle, transcription_manager.stream_router())
-            .expect("Failed to initialize recording manager"),
+        AudioRecordingManager::new(
+            app_handle,
+            transcription_manager.stream_router(),
+            voice_submit.clone(),
+        )
+        .expect("Failed to initialize recording manager"),
     );
     let history_manager =
         Arc::new(HistoryManager::new(app_handle).expect("Failed to initialize history manager"));
@@ -217,6 +223,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     app_handle.manage(model_manager.clone());
     app_handle.manage(transcription_manager.clone());
     app_handle.manage(history_manager.clone());
+    app_handle.manage(voice_submit);
     app_handle.manage(tray::TrayState::new());
 
     // Note: Shortcuts are NOT initialized here.
@@ -675,6 +682,8 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_clipboard_handling_setting,
             shortcut::change_auto_submit_setting,
             shortcut::change_auto_submit_key_setting,
+            shortcut::change_voice_submit_enabled_setting,
+            shortcut::change_voice_submit_keyword_setting,
             shortcut::change_post_process_enabled_setting,
             shortcut::change_experimental_enabled_setting,
             shortcut::change_post_process_base_url_setting,

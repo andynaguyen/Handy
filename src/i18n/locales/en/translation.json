@@ -369,6 +369,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Voice Submit",
+        "description": "End a dictation with your keyword, then pause. Handy stops recording, removes the keyword, pastes the text, and presses the submit key.",
+        "keyword": {
+          "title": "Submit Keyword",
+          "description": "Say this last. It only counts at the very end of what you dictate.",
+          "invalid": "Use a word with letters or numbers."
+        },
+        "key": {
+          "title": "Submit Key",
+          "description": "Pressed after pasting when you end with the keyword, even if Auto Submit is off."
+        }
+      },
       "translateToEnglish": {
         "label": "Translate to English",
         "description": "Automatically translate speech from other languages to English during transcription."

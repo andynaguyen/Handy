@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Per Stimme absenden",
+        "description": "Beende ein Diktat mit deinem Schlüsselwort und mach eine kurze Pause. Handy stoppt die Aufnahme, entfernt das Schlüsselwort, fügt den Text ein und drückt die Absendetaste.",
+        "keyword": {
+          "title": "Absende-Schlüsselwort",
+          "description": "Sag es als Letztes. Es zählt nur ganz am Ende deines Diktats.",
+          "invalid": "Verwende ein Wort mit Buchstaben oder Zahlen."
+        },
+        "key": {
+          "title": "Absendetaste",
+          "description": "Wird nach dem Einfügen gedrückt, wenn du mit dem Schlüsselwort endest, auch wenn automatisches Absenden ausgeschaltet ist."
+        }
+      },
       "translateToEnglish": {
         "label": "Ins Englische übersetzen",
         "description": "Sprache aus anderen Sprachen automatisch während der Transkription ins Englische übersetzen."

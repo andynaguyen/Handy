@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Stemmeindsendelse",
+        "description": "Afslut en diktering med dit nøgleord, og hold en pause. Handy stopper optagelsen, fjerner nøgleordet, indsætter teksten og trykker på indsendelsestasten.",
+        "keyword": {
+          "title": "Nøgleord til indsendelse",
+          "description": "Sig det til sidst. Det tæller kun helt til sidst i det, du dikterer.",
+          "invalid": "Brug et ord med bogstaver eller tal."
+        },
+        "key": {
+          "title": "Indsendelsestast",
+          "description": "Trykkes efter indsættelse, når du slutter med nøgleordet, også selvom automatisk indsendelse er slået fra."
+        }
+      },
       "translateToEnglish": {
         "label": "Oversæt til engelsk",
         "description": "Oversæt automatisk tale fra andre sprog til engelsk under transskription."

@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Invio"
         }
       },
+      "voiceSubmit": {
+        "title": "Invio vocale",
+        "description": "Termina una dettatura con la tua parola chiave, poi fai una pausa. Handy interrompe la registrazione, rimuove la parola chiave, incolla il testo e preme il tasto di invio.",
+        "keyword": {
+          "title": "Parola chiave di invio",
+          "description": "Dilla per ultima. Conta solo alla fine esatta di ciò che detti.",
+          "invalid": "Usa una parola con lettere o numeri."
+        },
+        "key": {
+          "title": "Tasto di invio",
+          "description": "Premuto dopo l'incolla quando termini con la parola chiave, anche se l'invio automatico è disattivato."
+        }
+      },
       "translateToEnglish": {
         "label": "Traduci in inglese",
         "description": "Traduci automaticamente in inglese la voce in altre lingue durante la trascrizione."

@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Enviament per veu",
+        "description": "Acaba el dictat amb la paraula clau i fes una pausa. Handy atura la gravació, elimina la paraula clau, enganxa el text i prem la tecla d'enviament.",
+        "keyword": {
+          "title": "Paraula clau d'enviament",
+          "description": "Digues-la al final. Només compta si és just al final del que dictes.",
+          "invalid": "Fes servir una paraula amb lletres o números."
+        },
+        "key": {
+          "title": "Tecla d'enviament",
+          "description": "Es prem després d'enganxar quan acabes amb la paraula clau, encara que l'enviament automàtic estigui desactivat."
+        }
+      },
       "translateToEnglish": {
         "label": "Traduïu a l'anglès",
         "description": "Tradueix automàticament la parla d'altres llengües a l'anglès durant la transcripció."

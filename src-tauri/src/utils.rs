@@ -94,6 +94,9 @@ pub fn cancel_current_operation(app: &AppHandle) {
     let recording_was_active = audio_manager.is_recording();
     audio_manager.cancel_recording();
 
+    app.state::<Arc<crate::voice_submit::VoiceSubmit>>()
+        .disarm();
+
     // Abandon any live streaming transcription
     let tm = app.state::<Arc<TranscriptionManager>>();
     tm.cancel_stream();

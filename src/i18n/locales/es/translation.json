@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Intro"
         }
       },
+      "voiceSubmit": {
+        "title": "Envío por voz",
+        "description": "Termina un dictado con tu palabra clave y haz una pausa. Handy detiene la grabación, elimina la palabra clave, pega el texto y pulsa la tecla de envío.",
+        "keyword": {
+          "title": "Palabra clave de envío",
+          "description": "Dila al final. Solo cuenta si está justo al final de lo que dictas.",
+          "invalid": "Usa una palabra con letras o números."
+        },
+        "key": {
+          "title": "Tecla de envío",
+          "description": "Se pulsa después de pegar cuando terminas con la palabra clave, aunque el envío automático esté desactivado."
+        }
+      },
       "translateToEnglish": {
         "label": "Traducir al inglés",
         "description": "Traducir automáticamente el habla de otros idiomas al inglés durante la transcripción."

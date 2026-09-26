@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Entrée"
         }
       },
+      "voiceSubmit": {
+        "title": "Envoi vocal",
+        "description": "Terminez une dictée par votre mot-clé, puis marquez une pause. Handy arrête l'enregistrement, retire le mot-clé, colle le texte et appuie sur la touche d'envoi.",
+        "keyword": {
+          "title": "Mot-clé d'envoi",
+          "description": "Dites-le en dernier. Il n'est pris en compte qu'à la toute fin de votre dictée.",
+          "invalid": "Utilisez un mot contenant des lettres ou des chiffres."
+        },
+        "key": {
+          "title": "Touche d'envoi",
+          "description": "Appuyée après le collage lorsque vous terminez par le mot-clé, même si l'envoi automatique est désactivé."
+        }
+      },
       "translateToEnglish": {
         "label": "Traduire en anglais",
         "description": "Traduire automatiquement la parole d'autres langues vers l'anglais pendant la transcription."

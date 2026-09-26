@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Gửi bằng giọng nói",
+        "description": "Kết thúc bài đọc bằng từ khóa của bạn rồi dừng một chút. Handy sẽ dừng ghi âm, xóa từ khóa, dán văn bản và nhấn phím gửi.",
+        "keyword": {
+          "title": "Từ khóa gửi",
+          "description": "Nói từ này sau cùng. Nó chỉ có tác dụng khi nằm ở ngay cuối nội dung bạn đọc.",
+          "invalid": "Hãy dùng một từ có chữ cái hoặc chữ số."
+        },
+        "key": {
+          "title": "Phím gửi",
+          "description": "Được nhấn sau khi dán nếu bạn kết thúc bằng từ khóa, kể cả khi Gửi tự động đang tắt."
+        }
+      },
       "translateToEnglish": {
         "label": "Dịch sang tiếng Anh",
         "description": "Tự động dịch giọng nói từ các ngôn ngữ khác sang tiếng Anh trong quá trình chuyển đổi."

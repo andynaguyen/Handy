@@ -1,6 +1,7 @@
 use crate::actions::ACTION_MAP;
 use crate::managers::audio::AudioRecordingManager;
 use crate::settings::ShortcutActivation;
+use crate::voice_submit::VoiceSubmit;
 use log::{debug, error, warn};
 use std::sync::mpsc::{self, Sender};
 use std::sync::Arc;
@@ -170,9 +171,19 @@ enum Effect {
 /// Commands processed sequentially by the coordinator thread.
 enum Command {
     Input(InputEvent),
-    Cancel { recording_was_active: bool },
+    Cancel {
+        recording_was_active: bool,
+    },
     ProcessingFinished,
+    /// The voice-submit keyword ended an utterance in this recording.
+    VoiceStop {
+        session: u64,
+        revision: u64,
+    },
 }
+
+/// Passed as the hotkey string for a stop requested by voice submit.
+const VOICE_STOP_SOURCE: &str = "voice-submit";
 
 /// Decide whether a key-up should be deferred (so auto-repeat can cancel it)
 /// or a key-down cancels a deferred release. `hold_to_talk` is whether a
@@ -222,6 +233,10 @@ struct CoordinatorState {
     last_press: Option<Instant>,
     pending_release: Option<PendingRelease>,
     pending_press: Option<PendingPress>,
+    /// Voice submit stopped a recording while this binding's key was still
+    /// held. Its inputs are ignored until the key comes back up, so neither
+    /// the release nor a repeat starts a new recording.
+    swallow_until_release: Option<String>,
 }
 
 impl CoordinatorState {
@@ -232,6 +247,7 @@ impl CoordinatorState {
             last_press: None,
             pending_release: None,
             pending_press: None,
+            swallow_until_release: None,
         }
     }
 
@@ -248,6 +264,17 @@ impl CoordinatorState {
     }
 
     fn on_input(&mut self, input: InputEvent, now: Instant) -> Option<Effect> {
+        if self.swallow_until_release.as_deref() == Some(input.binding_id.as_str()) {
+            if !input.is_pressed {
+                self.swallow_until_release = None;
+            }
+            debug!(
+                "Ignoring input for '{}': key still held after voice submit",
+                input.binding_id
+            );
+            return None;
+        }
+
         let pending_release_binding = self
             .pending_release
             .as_ref()
@@ -458,7 +485,23 @@ impl CoordinatorState {
         None
     }
 
+    /// Voice submit heard the keyword: stop the current recording as if its
+    /// key had ended it. A key still held is ignored until released.
+    fn on_voice_stop(&mut self) -> Option<Effect> {
+        let Stage::Recording(binding_id) = &self.stage else {
+            return None;
+        };
+        let binding_id = binding_id.clone();
+        // A deferred release means the key is already up.
+        let key_released = self.pending_release.take().is_some();
+        if !key_released && !self.is_locked() {
+            self.swallow_until_release = Some(binding_id.clone());
+        }
+        Some(self.begin_processing(binding_id, VOICE_STOP_SOURCE.to_string()))
+    }
+
     fn on_cancel(&mut self, recording_was_active: bool) {
+        self.swallow_until_release = None;
         self.pending_release = None;
         // An explicit cancel abandons any remembered start too — the user
         // asked for silence, not a deferred recording.
@@ -579,6 +622,18 @@ impl TranscriptionCoordinator {
                                 run_effect(&app, &mut state, effect);
                             }
                         }
+                        Command::VoiceStop { session, revision } => {
+                            // Checked here, in order with start/stop effects,
+                            // so a late request never stops a newer recording.
+                            let current = app
+                                .try_state::<Arc<VoiceSubmit>>()
+                                .is_some_and(|v| v.is_current(session, revision));
+                            if current {
+                                if let Some(effect) = state.on_voice_stop() {
+                                    run_effect(&app, &mut state, effect);
+                                }
+                            }
+                        }
                     }
                 }
                 debug!("Transcription coordinator exited");
@@ -655,6 +710,16 @@ impl TranscriptionCoordinator {
             .send(Command::Cancel {
                 recording_was_active,
             })
+            .is_err()
+        {
+            warn!("Transcription coordinator channel closed");
+        }
+    }
+
+    pub fn notify_voice_stop(&self, session: u64, revision: u64) {
+        if self
+            .tx
+            .send(Command::VoiceStop { session, revision })
             .is_err()
         {
             warn!("Transcription coordinator channel closed");
@@ -1226,6 +1291,88 @@ mod tests {
 
     fn ms(n: u64) -> Duration {
         Duration::from_millis(n)
+    }
+
+    #[test]
+    fn voice_stop_while_key_held_ignores_the_release() {
+        let mut state = CoordinatorState::new();
+        let t0 = Instant::now();
+        let mode = ShortcutActivation::PushToTalk;
+        assert!(matches!(
+            state.on_input(input(mode, true), t0),
+            Some(Effect::Start { .. })
+        ));
+
+        assert!(matches!(state.on_voice_stop(), Some(Effect::Stop { .. })));
+        assert_eq!(state.stage, Stage::Processing);
+
+        // The held key's release and a repeat press do nothing.
+        assert_eq!(state.on_input(input(mode, true), t0 + ms(500)), None);
+        assert_eq!(state.on_input(input(mode, false), t0 + ms(600)), None);
+        assert_eq!(state.on_grace_expired(), None);
+        assert_eq!(state.on_processing_finished(), None);
+        assert_eq!(state.stage, Stage::Idle);
+
+        // The next real press starts a new recording.
+        assert!(matches!(
+            state.on_input(input(mode, true), t0 + ms(2000)),
+            Some(Effect::Start { .. })
+        ));
+    }
+
+    #[test]
+    fn voice_stop_in_a_locked_session_leaves_the_next_press_alone() {
+        let mut state = CoordinatorState::new();
+        let t0 = Instant::now();
+        let mode = ShortcutActivation::HoldOrToggle;
+        state.on_input(input(mode, true), t0);
+        state.on_input(input(mode, false), t0 + ms(50));
+        state.on_grace_expired();
+        assert!(state.is_locked());
+
+        assert!(matches!(state.on_voice_stop(), Some(Effect::Stop { .. })));
+        assert_eq!(state.swallow_until_release, None);
+        state.on_processing_finished();
+        assert!(matches!(
+            state.on_input(input(mode, true), t0 + ms(3000)),
+            Some(Effect::Start { .. })
+        ));
+    }
+
+    #[test]
+    fn voice_stop_after_release_was_deferred_does_not_swallow() {
+        let mut state = CoordinatorState::new();
+        let t0 = Instant::now();
+        let mode = ShortcutActivation::PushToTalk;
+        state.on_input(input(mode, true), t0);
+        state.on_input(input(mode, false), t0 + ms(900));
+        assert!(state.pending_release.is_some());
+
+        assert!(matches!(state.on_voice_stop(), Some(Effect::Stop { .. })));
+        assert_eq!(state.swallow_until_release, None);
+        assert_eq!(state.on_grace_expired(), None);
+    }
+
+    #[test]
+    fn voice_stop_outside_recording_is_ignored() {
+        let mut state = CoordinatorState::new();
+        assert_eq!(state.on_voice_stop(), None);
+
+        let t0 = Instant::now();
+        state.on_input(input(ShortcutActivation::Toggle, true), t0);
+        state.on_input(input(ShortcutActivation::Toggle, true), t0 + ms(500));
+        assert_eq!(state.stage, Stage::Processing);
+        assert_eq!(state.on_voice_stop(), None);
+    }
+
+    #[test]
+    fn cancel_clears_voice_stop_swallow() {
+        let mut state = CoordinatorState::new();
+        let t0 = Instant::now();
+        state.on_input(input(ShortcutActivation::PushToTalk, true), t0);
+        state.on_voice_stop();
+        state.on_cancel(false);
+        assert_eq!(state.swallow_until_release, None);
     }
 
     /// Hold-or-toggle: a key held past the threshold is push-to-talk — the

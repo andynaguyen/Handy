@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Kirim dengan Suara",
+        "description": "Akhiri dikte dengan kata kunci Anda, lalu jeda sejenak. Handy menghentikan perekaman, menghapus kata kunci, menempelkan teks, dan menekan tombol kirim.",
+        "keyword": {
+          "title": "Kata Kunci Kirim",
+          "description": "Ucapkan di bagian paling akhir. Kata ini hanya berlaku jika berada tepat di akhir dikte Anda.",
+          "invalid": "Gunakan kata yang berisi huruf atau angka."
+        },
+        "key": {
+          "title": "Tombol Kirim",
+          "description": "Ditekan setelah menempel saat Anda mengakhiri dengan kata kunci, meskipun Kirim Otomatis nonaktif."
+        }
+      },
       "translateToEnglish": {
         "label": "Terjemahkan ke Bahasa Inggris",
         "description": "Terjemahkan ucapan dari bahasa lain ke bahasa Inggris secara otomatis selama transkripsi."

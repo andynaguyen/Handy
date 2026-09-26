@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Skicka med rösten",
+        "description": "Avsluta en diktering med ditt nyckelord och pausa. Handy stoppar inspelningen, tar bort nyckelordet, klistrar in texten och trycker på skicka-tangenten.",
+        "keyword": {
+          "title": "Nyckelord för att skicka",
+          "description": "Säg det sist. Det räknas bara allra sist i det du dikterar.",
+          "invalid": "Använd ett ord med bokstäver eller siffror."
+        },
+        "key": {
+          "title": "Skicka-tangent",
+          "description": "Trycks efter inklistring när du avslutar med nyckelordet, även om Skicka automatiskt är avstängt."
+        }
+      },
       "translateToEnglish": {
         "label": "Översätt till engelska",
         "description": "Översätt automatiskt tal från andra språk till engelska under transkription."

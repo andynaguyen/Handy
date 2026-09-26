@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Hlasové odeslání",
+        "description": "Zakončete diktování klíčovým slovem a chvíli počkejte. Handy zastaví nahrávání, odstraní klíčové slovo, vloží text a stiskne klávesu pro odeslání.",
+        "keyword": {
+          "title": "Klíčové slovo pro odeslání",
+          "description": "Řekněte ho jako poslední. Počítá se jen na úplném konci diktovaného textu.",
+          "invalid": "Použijte slovo s písmeny nebo číslicemi."
+        },
+        "key": {
+          "title": "Klávesa pro odeslání",
+          "description": "Stiskne se po vložení, když diktování zakončíte klíčovým slovem, i když je automatické odeslání vypnuté."
+        }
+      },
       "translateToEnglish": {
         "label": "Překládat do angličtiny",
         "description": "Během přepisu automaticky překládat řeč z jiných jazyků do angličtiny."

@@ -443,6 +443,12 @@ pub struct AppSettings {
     pub auto_submit: bool,
     #[serde(default)]
     pub auto_submit_key: AutoSubmitKey,
+    /// Ending a dictation with `voice_submit_keyword` stops recording on the
+    /// following pause, removes the keyword, and presses `auto_submit_key`.
+    #[serde(default)]
+    pub voice_submit_enabled: bool,
+    #[serde(default = "default_voice_submit_keyword")]
+    pub voice_submit_keyword: String,
     #[serde(default = "default_post_process_enabled")]
     pub post_process_enabled: bool,
     #[serde(default = "default_post_process_provider_id")]
@@ -603,6 +609,10 @@ fn default_paste_delay_ms() -> u64 {
 
 fn default_paste_delay_after_ms() -> u64 {
     60
+}
+
+pub fn default_voice_submit_keyword() -> String {
+    "submit".to_string()
 }
 
 fn default_auto_submit() -> bool {
@@ -941,6 +951,8 @@ pub fn get_default_settings() -> AppSettings {
         clipboard_handling: ClipboardHandling::default(),
         auto_submit: default_auto_submit(),
         auto_submit_key: AutoSubmitKey::default(),
+        voice_submit_enabled: false,
+        voice_submit_keyword: default_voice_submit_keyword(),
         post_process_enabled: default_post_process_enabled(),
         post_process_provider_id: default_post_process_provider_id(),
         post_process_providers: default_post_process_providers(),
@@ -1397,6 +1409,8 @@ mod tests {
         assert_eq!(settings.sound_theme, SoundTheme::Pop);
         assert!(settings.filler_word_removal_enabled);
         assert_eq!(settings.vad_backend, VadBackend::Silero);
+        assert!(!settings.voice_submit_enabled);
+        assert_eq!(settings.voice_submit_keyword, "submit");
 
         // The 0.1 integer device index is cleared once for transcribe.cpp 0.2.
         // Without an exact device, the retired generic GPU choice becomes Auto.
@@ -1515,6 +1529,8 @@ mod tests {
         let settings = get_default_settings();
         assert!(!settings.auto_submit);
         assert_eq!(settings.auto_submit_key, AutoSubmitKey::Enter);
+        assert!(!settings.voice_submit_enabled);
+        assert_eq!(settings.voice_submit_keyword, "submit");
         assert_eq!(
             settings.settings_schema_version,
             CURRENT_SETTINGS_SCHEMA_VERSION

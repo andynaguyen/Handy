@@ -433,9 +433,95 @@ pub fn normalize_transcription_output(text: &str) -> String {
     normalized.trim().to_string()
 }
 
+/// If `text` ends with the spoken `keyword` (one or more words), returns the
+/// text before it; otherwise `None`. Words compare case-insensitively on their
+/// letters and digits, so "Submit." and "submit!" match but "resubmit" and a
+/// keyword in the middle of the sentence do not. Separators left dangling
+/// before the keyword ("Hello there, submit") are trimmed from the result.
+pub fn strip_trailing_keyword(text: &str, keyword: &str) -> Option<String> {
+    let keyword_keys: Vec<String> = keyword.split_whitespace().map(build_match_key).collect();
+    if keyword_keys.is_empty() || keyword_keys.iter().any(String::is_empty) {
+        return None;
+    }
+
+    let tokens: Vec<&str> = text.split_whitespace().collect();
+    if tokens.len() < keyword_keys.len() {
+        return None;
+    }
+    let tail = &tokens[tokens.len() - keyword_keys.len()..];
+    if tail
+        .iter()
+        .zip(&keyword_keys)
+        .any(|(token, key)| build_match_key(token) != *key)
+    {
+        return None;
+    }
+
+    // `split_whitespace` yields subslices of `text`, so the first matched
+    // token's offset marks where the keyword begins.
+    let keyword_start = tail[0].as_ptr() as usize - text.as_ptr() as usize;
+    let rest = text[..keyword_start]
+        .trim_end()
+        .trim_end_matches([
+            ',', ';', ':', '-', '\u{2013}', '\u{2014}', '\u{3001}', '\u{FF0C}',
+        ])
+        .trim_end();
+    Some(rest.to_string())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn strip_trailing_keyword_matches_the_final_word() {
+        assert_eq!(
+            strip_trailing_keyword("hello there submit", "submit").as_deref(),
+            Some("hello there")
+        );
+        assert_eq!(
+            strip_trailing_keyword("Hello there, Submit.", "submit").as_deref(),
+            Some("Hello there")
+        );
+        assert_eq!(
+            strip_trailing_keyword("Ship it  submit!  ", "Submit").as_deref(),
+            Some("Ship it")
+        );
+        assert_eq!(
+            strip_trailing_keyword("Submit.", "submit").as_deref(),
+            Some("")
+        );
+    }
+
+    #[test]
+    fn strip_trailing_keyword_supports_phrases() {
+        assert_eq!(
+            strip_trailing_keyword("Sounds good. Send it.", "send it").as_deref(),
+            Some("Sounds good.")
+        );
+        assert_eq!(strip_trailing_keyword("Sounds good, it.", "send it"), None);
+    }
+
+    #[test]
+    fn strip_trailing_keyword_ignores_other_positions_and_words() {
+        assert_eq!(
+            strip_trailing_keyword("please submit the form by Friday", "submit"),
+            None
+        );
+        assert_eq!(strip_trailing_keyword("I will resubmit", "submit"), None);
+        assert_eq!(strip_trailing_keyword("It was submitted", "submit"), None);
+        assert_eq!(strip_trailing_keyword("", "submit"), None);
+        assert_eq!(strip_trailing_keyword("hello submit", ""), None);
+        assert_eq!(strip_trailing_keyword("hello submit", "..."), None);
+    }
+
+    #[test]
+    fn strip_trailing_keyword_removes_only_one_occurrence() {
+        assert_eq!(
+            strip_trailing_keyword("submit submit", "submit").as_deref(),
+            Some("submit")
+        );
+    }
 
     /// Exercise the complete cleanup sequence with an explicitly selected
     /// language. Individual tests below predate the split between filler

@@ -13,6 +13,7 @@ use crate::tray::{set_tray_state, TrayIconState};
 use crate::utils::{
     self, show_processing_overlay, show_recording_overlay, show_transcribing_overlay,
 };
+use crate::voice_submit::VoiceSubmit;
 use crate::TranscriptionCoordinator;
 use ferrous_opencc::{config::BuiltinConfig, OpenCC};
 use log::{debug, error, warn};
@@ -539,6 +540,13 @@ impl ShortcutAction for TranscribeAction {
         );
         debug!("Microphone mode - always_on: {}", is_always_on);
 
+        // Arm before capture starts so the recorder prepares its detector for
+        // pause detection in this session.
+        let voice_submit = app.state::<Arc<VoiceSubmit>>();
+        if settings.voice_submit_enabled {
+            voice_submit.arm(&settings.voice_submit_keyword, model_supports_streaming);
+        }
+
         let mut recording_error: Option<String> = None;
         let recording_start_time = Instant::now();
         match rm.try_start_recording(&binding_id, vad_policy) {
@@ -603,6 +611,7 @@ impl ShortcutAction for TranscribeAction {
         } else {
             // Starting failed (for example due to blocked microphone permissions).
             // Revert UI state so we don't stay stuck in the recording overlay.
+            voice_submit.disarm();
             tm.cancel_stream();
             utils::hide_recording_overlay(app);
             set_tray_state(app, TrayIconState::Idle);
@@ -635,6 +644,8 @@ impl ShortcutAction for TranscribeAction {
         // after the user has already requested stop.
         app.state::<Arc<AudioRecordingManager>>()
             .invalidate_recording_readiness();
+        // No further pause checks may stop this recording.
+        app.state::<Arc<VoiceSubmit>>().disarm();
 
         // Unregister the cancel shortcut when transcription stops
         shortcut::unregister_cancel_shortcut(app);
@@ -652,7 +663,11 @@ impl ShortcutAction for TranscribeAction {
         // the larger panel, but it still switches from listening to a working
         // spinner while the stream finalizes. Non-streaming paths use the
         // compact transcribing pill (None no-ops in show_*).
-        let style = get_settings(app).overlay_style;
+        let settings = get_settings(app);
+        let style = settings.overlay_style;
+        let voice_submit_keyword = settings
+            .voice_submit_enabled
+            .then_some(settings.voice_submit_keyword);
         // Capture this before finalizing the stream so every later working state
         // targets the same overlay that was shown for this transcription.
         let use_streaming_overlay = should_use_streaming_overlay(style, tm.is_streaming());
@@ -717,15 +732,21 @@ impl ShortcutAction for TranscribeAction {
                     // running, finalize it and use its text (all audio was already
                     // fed to the stream); otherwise batch-transcribe the samples.
                     let transcription_time = Instant::now();
-                    let transcription_result = match tm.finalize_stream() {
+                    let keyword = voice_submit_keyword.as_deref();
+                    let transcription_result = match tm.finalize_stream(keyword) {
                         // A finalized stream with usable text wins. An empty result
                         // (no active stream, produced nothing, or a finalize error
                         // after the engine was returned) falls back to a full batch
                         // transcription of the same audio. A finalize timeout is
                         // surfaced instead — the worker may still hold the engine,
                         // so a batch fallback would contend with it.
-                        Ok(Some(text)) if !text.trim().is_empty() => Ok(text),
-                        Ok(_) => tm.transcribe(samples),
+                        // A keyword-only result is empty on purpose, not a failure.
+                        Ok(Some(transcript))
+                            if transcript.submit || !transcript.text.trim().is_empty() =>
+                        {
+                            Ok(transcript)
+                        }
+                        Ok(_) => tm.transcribe_recording(samples, keyword),
                         Err(err) => Err(err),
                     };
 
@@ -761,7 +782,14 @@ impl ShortcutAction for TranscribeAction {
                     }
 
                     match transcription_result {
-                        Ok(transcription) => {
+                        Ok(transcript) => {
+                            let submit = transcript.submit;
+                            let transcription = transcript.text;
+                            if submit {
+                                debug!(
+                                    "Voice submit keyword removed; will press submit after pasting"
+                                );
+                            }
                             debug!(
                                 "Transcription completed in {:?}: '{}'",
                                 transcription_time.elapsed(),
@@ -830,7 +858,7 @@ impl ShortcutAction for TranscribeAction {
                                         return;
                                     }
 
-                                    match utils::paste(final_text, ah_clone.clone()) {
+                                    match utils::paste(final_text, ah_clone.clone(), submit) {
                                         Ok(()) => debug!(
                                             "Text pasted successfully in {:?}",
                                             paste_time.elapsed()

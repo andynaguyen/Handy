@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "음성 제출",
+        "description": "받아쓰기를 키워드로 끝낸 뒤 잠시 멈추세요. Handy가 녹음을 멈추고 키워드를 지운 다음 텍스트를 붙여넣고 제출 키를 누릅니다.",
+        "keyword": {
+          "title": "제출 키워드",
+          "description": "마지막에 말하세요. 받아쓰기의 맨 끝에 있을 때만 인식됩니다.",
+          "invalid": "문자나 숫자가 포함된 단어를 사용하세요."
+        },
+        "key": {
+          "title": "제출 키",
+          "description": "키워드로 끝내면 붙여넣은 뒤 누릅니다. 자동 제출이 꺼져 있어도 동작합니다."
+        }
+      },
       "translateToEnglish": {
         "label": "영어로 번역",
         "description": "텍스트로 변환시 다른 언어의 음성을 자동으로 영어로 번역합니다."

@@ -85,6 +85,15 @@ impl VadConfig {
 pub type AudioFrameCallback = Arc<dyn Fn(&[f32]) + Send + Sync + 'static>;
 pub type LevelCallback = Arc<dyn Fn(Vec<f32>) + Send + Sync + 'static>;
 
+/// Watches every 16 kHz capture frame during recording, before VAD filtering,
+/// together with the detector's unsmoothed speech decision for it. Runs on the
+/// consumer thread, so `observe` must stay cheap. While `is_active` is false
+/// the recorder skips the observer entirely.
+pub trait FrameObserver: Send + Sync {
+    fn is_active(&self) -> bool;
+    fn observe(&self, frame: &[f32], voiced: Option<bool>);
+}
+
 pub struct AudioRecorder {
     device: Option<Device>,
     cmd_tx: Option<mpsc::Sender<Cmd>>,
@@ -92,6 +101,7 @@ pub struct AudioRecorder {
     vad: Option<VadConfig>,
     level_cb: Option<LevelCallback>,
     audio_cb: Option<AudioFrameCallback>,
+    frame_observer: Option<Arc<dyn FrameObserver>>,
     /// Which input channel to use. None = average all (original behavior).
     selected_channel: Option<usize>,
     /// Preferred stream config cached per device name. The two HAL property
@@ -114,6 +124,7 @@ impl AudioRecorder {
             vad: None,
             level_cb: None,
             audio_cb: None,
+            frame_observer: None,
             selected_channel: None,
             config_cache: Arc::new(Mutex::new(None)),
             stream_error: Arc::new(AtomicBool::new(false)),
@@ -160,6 +171,11 @@ impl AudioRecorder {
         self
     }
 
+    pub fn with_frame_observer(mut self, observer: Arc<dyn FrameObserver>) -> Self {
+        self.frame_observer = Some(observer);
+        self
+    }
+
     pub fn with_selected_channel(mut self, channel: Option<u16>) -> Self {
         self.set_selected_channel(channel);
         self
@@ -197,6 +213,7 @@ impl AudioRecorder {
         let level_cb = self.level_cb.clone();
         // Move the optional real-time audio frame callback into the worker thread
         let audio_cb = self.audio_cb.clone();
+        let frame_observer = self.frame_observer.clone();
         let selected_channel = self.selected_channel;
         let config_cache = Arc::clone(&self.config_cache);
         let stream_error = Arc::clone(&self.stream_error);
@@ -321,13 +338,14 @@ impl AudioRecorder {
                     // Timestamp for the play()-returned -> first-samples gap the
                     // init handshake can't see (hardware dependent).
                     let stream_running_at = Instant::now();
-                    let processor = CaptureProcessor::new(
+                    let mut processor = CaptureProcessor::new(
                         sample_rate,
                         vad,
                         level_cb,
                         audio_cb,
                         stream_running_at,
                     );
+                    processor.frame_observer = frame_observer;
                     run_consumer(
                         processor,
                         sample_consumer,
@@ -635,6 +653,7 @@ fn handle_frame(
     vad_policy: VadPolicy,
     vad: &Option<VadConfig>,
     audio_cb: &Option<AudioFrameCallback>,
+    frame_observer: &Option<Arc<dyn FrameObserver>>,
     out_buf: &mut Vec<f32>,
 ) {
     let mut emit = |buf: &[f32]| {
@@ -643,9 +662,20 @@ fn handle_frame(
             cb(buf);
         }
     };
+    let observer = frame_observer.as_ref().filter(|o| o.is_active());
 
     if vad_policy == VadPolicy::Disabled {
         emit(samples);
+        // With filtering off, the detector still runs for an active observer;
+        // its keep/drop result is ignored.
+        if let Some(observer) = observer {
+            let voiced = vad.as_ref().and_then(|cfg| {
+                let mut detector = cfg.detector.lock().unwrap();
+                detector.push_frame(samples).ok()?;
+                detector.last_frame_voiced()
+            });
+            observer.observe(samples, voiced);
+        }
         return;
     }
 
@@ -658,8 +688,14 @@ fn handle_frame(
             VadFrame::Speech(buf) => emit(buf),
             VadFrame::Noise => {}
         }
+        if let Some(observer) = observer {
+            observer.observe(samples, detector.last_frame_voiced());
+        }
     } else {
         emit(samples);
+        if let Some(observer) = observer {
+            observer.observe(samples, None);
+        }
     }
 }
 
@@ -704,6 +740,7 @@ struct CaptureProcessor {
     vad: Option<VadConfig>,
     level_cb: Option<LevelCallback>,
     audio_cb: Option<AudioFrameCallback>,
+    frame_observer: Option<Arc<dyn FrameObserver>>,
     stream_running_at: Instant,
     visualizer: AudioVisualiser,
     frame_resampler: FrameResampler,
@@ -757,6 +794,7 @@ impl CaptureProcessor {
             vad,
             level_cb,
             audio_cb,
+            frame_observer: None,
             stream_running_at,
             visualizer,
             frame_resampler,
@@ -781,7 +819,11 @@ impl CaptureProcessor {
         self.processed_samples.clear();
         self.visualizer.reset();
         self.frame_resampler.reset();
-        if policy != VadPolicy::Disabled {
+        let observing = self
+            .frame_observer
+            .as_ref()
+            .is_some_and(|observer| observer.is_active());
+        if policy != VadPolicy::Disabled || observing {
             if let Some(cfg) = &self.vad {
                 let mut detector = cfg.detector.lock().unwrap();
                 detector.set_hangover_frames(cfg.hangover_for(policy));
@@ -834,6 +876,7 @@ impl CaptureProcessor {
                 vad_policy,
                 &self.vad,
                 &self.audio_cb,
+                &self.frame_observer,
                 &mut self.processed_samples,
             )
         });
@@ -877,6 +920,7 @@ impl CaptureProcessor {
                 vad_policy,
                 &self.vad,
                 &self.audio_cb,
+                &self.frame_observer,
                 &mut self.processed_samples,
             )
         });

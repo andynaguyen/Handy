@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+回车"
         }
       },
+      "voiceSubmit": {
+        "title": "语音提交",
+        "description": "在听写结尾说出关键词，然后稍作停顿。Handy 会停止录音、删除关键词、粘贴文本并按下提交键。",
+        "keyword": {
+          "title": "提交关键词",
+          "description": "最后再说。只有在听写内容的最末尾才会生效。",
+          "invalid": "请使用包含字母或数字的词。"
+        },
+        "key": {
+          "title": "提交键",
+          "description": "以关键词结尾时，粘贴后会按下此键，即使自动提交已关闭。"
+        }
+      },
       "translateToEnglish": {
         "label": "翻译为英语",
         "description": "在转录过程中自动将其他语言的语音翻译为英语。"

@@ -4,7 +4,7 @@ use crate::audio_toolkit::{
         frames_for_duration_ms, EarshotVad, SmoothedVad, VAD_OFFLINE_HANGOVER_MS, VAD_ONSET_MS,
         VAD_PREFILL_MS, VAD_STREAMING_HANGOVER_MS,
     },
-    AudioRecorder, SileroVad, VadPolicy, VoiceActivityDetector,
+    AudioRecorder, FrameObserver, SileroVad, VadPolicy, VoiceActivityDetector,
 };
 use crate::helpers::clamshell;
 use crate::managers::transcription::StreamRouter;
@@ -282,6 +282,7 @@ fn create_audio_recorder(
     app_handle: &tauri::AppHandle,
     selected_channel: Option<u16>,
     stream_router: Arc<StreamRouter>,
+    frame_observer: Arc<dyn FrameObserver>,
 ) -> Result<AudioRecorder, anyhow::Error> {
     let detector: Box<dyn VoiceActivityDetector> = match backend {
         VadBackend::Silero => {
@@ -346,7 +347,8 @@ fn create_audio_recorder(
             move |frame| {
                 router.feed(frame);
             }
-        });
+        })
+        .with_frame_observer(frame_observer);
 
     Ok(recorder)
 }
@@ -385,6 +387,8 @@ pub struct AudioRecordingManager {
     close_generation: Arc<AtomicU64>,
     cancel_generation: Arc<AtomicU64>,
     stream_router: Arc<StreamRouter>,
+    /// Sees raw capture frames for hands-free voice submit.
+    frame_observer: Arc<dyn FrameObserver>,
     /// Lock-free mirror of "is the state in {Recording, Stopping}",
     /// maintained by `set_state()`. The hot-path `is_recording()` reads THIS
     /// instead of the std `state` mutex, so a UI poll can no longer deadlock
@@ -410,6 +414,7 @@ impl AudioRecordingManager {
     pub fn new(
         app: &tauri::AppHandle,
         stream_router: Arc<StreamRouter>,
+        frame_observer: Arc<dyn FrameObserver>,
     ) -> Result<Self, anyhow::Error> {
         let settings = get_settings(app);
         let mode = if settings.always_on_microphone {
@@ -430,6 +435,7 @@ impl AudioRecordingManager {
             close_generation: Arc::new(AtomicU64::new(0)),
             cancel_generation: Arc::new(AtomicU64::new(0)),
             stream_router,
+            frame_observer,
             recording_active: Arc::new(AtomicBool::new(false)),
             capture_generation: Arc::new(AtomicU64::new(0)),
             cached_device: Arc::new(Mutex::new(None)),
@@ -629,6 +635,7 @@ impl AudioRecordingManager {
                 &self.app_handle,
                 settings.selected_channel,
                 Arc::clone(&self.stream_router),
+                Arc::clone(&self.frame_observer),
             )?);
         }
         Ok(())
@@ -879,6 +886,7 @@ impl AudioRecordingManager {
             &self.app_handle,
             settings.selected_channel,
             Arc::clone(&self.stream_router),
+            Arc::clone(&self.frame_observer),
         )?;
         let was_open = *self.is_open.lock().unwrap();
 

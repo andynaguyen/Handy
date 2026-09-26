@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "語音送出",
+        "description": "在聽寫結尾說出關鍵字，然後稍作停頓。Handy 會停止錄音、移除關鍵字、貼上文字並按下送出鍵。",
+        "keyword": {
+          "title": "送出關鍵字",
+          "description": "最後再說。只有在聽寫內容的最末端才會生效。",
+          "invalid": "請使用包含字母或數字的詞。"
+        },
+        "key": {
+          "title": "送出鍵",
+          "description": "以關鍵字結尾時，貼上後會按下此鍵，即使自動送出已關閉。"
+        }
+      },
       "translateToEnglish": {
         "label": "翻譯為英語",
         "description": "在轉錄過程中自動將其他語言的語音翻譯為英語"

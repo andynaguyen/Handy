@@ -11,6 +11,7 @@ import { PasteMethodSetting } from "../PasteMethod";
 import { TypingToolSetting } from "../TypingTool";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AutoSubmit } from "../AutoSubmit";
+import { VoiceSubmit } from "../VoiceSubmit";
 import { PostProcessingToggle } from "../PostProcessingToggle";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 import { HistoryLimit } from "../HistoryLimit";
@@ -45,6 +46,7 @@ export const AdvancedSettings: React.FC = () => {
         <TypingToolSetting descriptionMode="inline" grouped={true} />
         <ClipboardHandlingSetting descriptionMode="inline" grouped={true} />
         <AutoSubmit descriptionMode="inline" grouped={true} />
+        <VoiceSubmit grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("settings.advanced.groups.transcription")}>

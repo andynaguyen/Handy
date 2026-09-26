@@ -358,6 +358,19 @@
           "ctrlEnter": "Ctrl+Enter"
         }
       },
+      "voiceSubmit": {
+        "title": "Sesle Gönder",
+        "description": "Dikteyi anahtar kelimenizle bitirin, ardından kısa bir ara verin. Handy kaydı durdurur, anahtar kelimeyi kaldırır, metni yapıştırır ve gönderme tuşuna basar.",
+        "keyword": {
+          "title": "Gönderme Anahtar Kelimesi",
+          "description": "En son bunu söyleyin. Yalnızca dikte ettiğiniz metnin en sonunda olduğunda sayılır.",
+          "invalid": "Harf veya rakam içeren bir kelime kullanın."
+        },
+        "key": {
+          "title": "Gönderme Tuşu",
+          "description": "Anahtar kelimeyle bitirdiğinizde yapıştırmadan sonra basılır, Otomatik Gönder kapalı olsa bile."
+        }
+      },
       "translateToEnglish": {
         "label": "İngilizce'ye Çevir",
         "description": "Transkripsiyon sırasında diğer dillerden İngilizce'ye otomatik olarak çevirir."
