@@ -477,8 +477,11 @@
       "streak_other": "{{count}} günlük seri",
       "longestStreak_one": "En uzun seri: {{count}} gün",
       "longestStreak_other": "En uzun seri: {{count}} gün",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} kelime",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} kelime",
+      "dayPopover": {
+        "words": "Toplam kelime",
+        "appsUsed": "Kullanılan uygulamalar",
+        "topApp": "En çok kullanılan uygulama"
+      },
       "less": "Az",
       "more": "Çok"
     },

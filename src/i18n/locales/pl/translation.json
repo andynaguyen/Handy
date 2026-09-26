@@ -481,10 +481,11 @@
       "longestStreak_few": "Najdłuższa seria: {{count}} dni",
       "longestStreak_many": "Najdłuższa seria: {{count}} dni",
       "longestStreak_other": "Najdłuższa seria: {{count}} dni",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} słowo",
-      "dayTooltip_few": "{{date}}: {{formattedCount}} słowa",
-      "dayTooltip_many": "{{date}}: {{formattedCount}} słów",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} słów",
+      "dayPopover": {
+        "words": "Łącznie słów",
+        "appsUsed": "Użyte aplikacje",
+        "topApp": "Najczęstsza aplikacja"
+      },
       "less": "Mniej",
       "more": "Więcej"
     },

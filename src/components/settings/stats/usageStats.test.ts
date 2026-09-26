@@ -71,6 +71,8 @@ const days = [
     transcriptions: 2,
     timed_words: 0,
     duration_ms: 0,
+    apps_used: 0,
+    top_app: null,
   },
   {
     date: "2026-03-05",
@@ -78,6 +80,8 @@ const days = [
     transcriptions: 3,
     timed_words: 100,
     duration_ms: 60_000,
+    apps_used: 0,
+    top_app: null,
   },
   {
     date: "2026-03-10",
@@ -85,6 +89,8 @@ const days = [
     transcriptions: 1,
     timed_words: 30,
     duration_ms: 10_000,
+    apps_used: 0,
+    top_app: null,
   },
 ];
 assert.deepEqual(summarizeUsage(days, "2026-03-10"), {

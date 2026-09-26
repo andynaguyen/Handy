@@ -116,6 +116,19 @@ pub fn cancel_current_operation(app: &AppHandle) {
     info!("Operation cancellation completed - returned to idle state");
 }
 
+/// Display name of the app with keyboard focus, e.g. "Slack". Uses the
+/// localized name rather than deriving one from the bundle id.
+#[cfg(target_os = "macos")]
+pub fn frontmost_app_name() -> Option<String> {
+    let app = objc2_app_kit::NSWorkspace::sharedWorkspace().frontmostApplication()?;
+    app.localizedName().map(|name| name.to_string())
+}
+
+#[cfg(not(target_os = "macos"))]
+pub fn frontmost_app_name() -> Option<String> {
+    None
+}
+
 /// Check if using the Wayland display server protocol
 #[cfg(target_os = "linux")]
 pub fn is_wayland() -> bool {

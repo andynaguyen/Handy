@@ -477,8 +477,11 @@
       "streak_other": "{{count}} dagar i rad",
       "longestStreak_one": "Rekord: {{count}} dag i rad",
       "longestStreak_other": "Rekord: {{count}} dagar i rad",
-      "dayTooltip_one": "{{formattedCount}} ord den {{date}}",
-      "dayTooltip_other": "{{formattedCount}} ord den {{date}}",
+      "dayPopover": {
+        "words": "Totalt antal ord",
+        "appsUsed": "Använda appar",
+        "topApp": "Mest använda app"
+      },
       "less": "Mindre",
       "more": "Mer"
     },

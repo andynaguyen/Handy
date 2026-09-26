@@ -481,10 +481,11 @@
       "longestStreak_few": "Рекорд: {{count}} дні поспіль",
       "longestStreak_many": "Рекорд: {{count}} днів поспіль",
       "longestStreak_other": "Рекорд: {{count}} днів поспіль",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} слово",
-      "dayTooltip_few": "{{date}}: {{formattedCount}} слова",
-      "dayTooltip_many": "{{date}}: {{formattedCount}} слів",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} слів",
+      "dayPopover": {
+        "words": "Усього слів",
+        "appsUsed": "Використано застосунків",
+        "topApp": "Головний застосунок"
+      },
       "less": "Менше",
       "more": "Більше"
     },

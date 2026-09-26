@@ -840,7 +840,11 @@ impl ShortcutAction for TranscribeAction {
                             let duration_ms = (sample_count as u64 * 1000
                                 / crate::audio_toolkit::constants::WHISPER_SAMPLE_RATE as u64)
                                 as i64;
-                            if let Err(err) = hm.record_usage(&transcription, duration_ms) {
+                            if let Err(err) = hm.record_usage(
+                                &transcription,
+                                duration_ms,
+                                utils::frontmost_app_name().as_deref(),
+                            ) {
                                 error!("Failed to record usage stats: {}", err);
                             }
 

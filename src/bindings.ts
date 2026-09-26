@@ -1064,7 +1064,15 @@ date: string; words: number; transcriptions: number;
  * Words from transcriptions with a recorded duration. Entries backfilled
  * from history have none, so words per minute uses this instead of `words`.
  */
-timed_words: number; duration_ms: number }
+timed_words: number; duration_ms: number;
+/**
+ * Distinct apps dictated into. 0 when no dictation recorded an app.
+ */
+apps_used: number;
+/**
+ * App that received the most words, or None when no app was recorded.
+ */
+top_app: string | null }
 export type EngineType = 
 /**
  * Any GGML/GGUF model loaded through transcribe-cpp (Whisper, Parakeet,

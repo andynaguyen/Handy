@@ -1,6 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { commands, type DailyUsage } from "@/bindings";
+import { Tooltip } from "@/components/ui";
+import { isRTLLanguage } from "@/lib/utils/rtl";
 import {
   buildHeatmap,
   computeStreaks,
@@ -8,9 +10,19 @@ import {
   parseDateKey,
   rangeStart,
   summarizeUsage,
+  toDateKey,
 } from "./usageStats";
 
 const HEATMAP_WEEKS = 20;
+const DAY_POPOVER_ID = "stats-day-popover";
+
+// [week, weekday] offsets for moving between heatmap cells, in LTR layout.
+const ARROW_STEPS: Record<string, [number, number]> = {
+  ArrowLeft: [-1, 0],
+  ArrowRight: [1, 0],
+  ArrowUp: [0, -1],
+  ArrowDown: [0, 1],
+};
 
 // `days: null` means all time.
 const RANGES = [
@@ -44,11 +56,26 @@ const StatCard: React.FC<{ value: string; label: string }> = ({
   </div>
 );
 
+const PopoverRow: React.FC<{ label: string; value: string }> = ({
+  label,
+  value,
+}) => (
+  <div className="flex justify-between gap-3">
+    <dt className="text-text/60 whitespace-nowrap">{label}</dt>
+    <dd className="font-medium tabular-nums truncate">{value}</dd>
+  </div>
+);
+
 export const StatsSettings: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [days, setDays] = useState<DailyUsage[] | null>(null);
   const [error, setError] = useState(false);
   const [rangeId, setRangeId] = useState<RangeId>("week");
+  // The cell that takes Tab focus; arrow keys move it. Null means today.
+  const [focusDate, setFocusDate] = useState<string | null>(null);
+  const [activeDate, setActiveDate] = useState<string | null>(null);
+  const activeCellRef = useRef<HTMLElement | null>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     commands.getDailyUsage().then((result) => {
@@ -75,6 +102,7 @@ export const StatsSettings: React.FC = () => {
     return {
       today,
       weeks,
+      usageByDate: new Map(days.map((day) => [day.date, day])),
       maxWords,
       streaks: computeStreaks(
         days.map((day) => day.date),
@@ -110,7 +138,7 @@ export const StatsSettings: React.FC = () => {
   const monthFormat = new Intl.DateTimeFormat(locale, { month: "short" });
   const weekdayFormat = new Intl.DateTimeFormat(locale, { weekday: "short" });
   const longDateFormat = new Intl.DateTimeFormat(locale, {
-    dateStyle: "medium",
+    dateStyle: "long",
   });
   // First column is always a full week, so its days give Sunday..Saturday labels.
   const weekdayLabels = view.weeks[0].map((cell) =>
@@ -129,6 +157,33 @@ export const StatsSettings: React.FC = () => {
       ? ""
       : monthFormat.format(sunday);
   });
+
+  const tabStopDate = focusDate ?? toDateKey(view.today);
+  const activeUsage = activeDate ? view.usageByDate.get(activeDate) : undefined;
+
+  const showDay = (cell: HTMLElement, date: string) => {
+    activeCellRef.current = cell;
+    setActiveDate(date);
+  };
+
+  const moveFocus = (
+    event: React.KeyboardEvent,
+    weekIndex: number,
+    dayIndex: number,
+  ) => {
+    const step = ARROW_STEPS[event.key];
+    if (!step) {
+      return;
+    }
+    event.preventDefault();
+    const weekStep = isRTLLanguage(locale) ? -step[0] : step[0];
+    const target = view.weeks[weekIndex + weekStep]?.[dayIndex + step[1]];
+    if (target) {
+      gridRef.current
+        ?.querySelector<HTMLElement>(`[data-date="${target.date}"]`)
+        ?.focus();
+    }
+  };
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
@@ -186,6 +241,7 @@ export const StatsSettings: React.FC = () => {
         </div>
 
         <div
+          ref={gridRef}
           className="grid gap-1 text-[10px] text-text/50 leading-none"
           style={{
             gridTemplateColumns: `auto repeat(${HEATMAP_WEEKS}, minmax(0, 1fr))`,
@@ -210,14 +266,26 @@ export const StatsSettings: React.FC = () => {
                 return (
                   <div
                     key={weekIndex}
-                    className={`aspect-square rounded-[3px] ${
+                    role="img"
+                    data-date={cell.date}
+                    tabIndex={cell.date === tabStopDate ? 0 : -1}
+                    aria-label={longDateFormat.format(parseDateKey(cell.date))}
+                    aria-describedby={
+                      cell.date === activeDate ? DAY_POPOVER_ID : undefined
+                    }
+                    onMouseEnter={(event) =>
+                      showDay(event.currentTarget, cell.date)
+                    }
+                    onMouseLeave={() => setActiveDate(null)}
+                    onFocus={(event) => {
+                      setFocusDate(cell.date);
+                      showDay(event.currentTarget, cell.date);
+                    }}
+                    onBlur={() => setActiveDate(null)}
+                    onKeyDown={(event) => moveFocus(event, weekIndex, dayIndex)}
+                    className={`aspect-square rounded-[3px] outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                       LEVEL_CLASSES[intensityLevel(cell.words, view.maxWords)]
                     }`}
-                    title={t("settings.stats.dayTooltip", {
-                      count: cell.words,
-                      formattedCount: number.format(cell.words),
-                      date: longDateFormat.format(parseDateKey(cell.date)),
-                    })}
                   />
                 );
               })}
@@ -236,6 +304,35 @@ export const StatsSettings: React.FC = () => {
           <span className="ms-1">{t("settings.stats.more")}</span>
         </div>
       </div>
+
+      {activeDate && (
+        // Keyed so the tooltip remounts and repositions for each cell.
+        <Tooltip key={activeDate} targetRef={activeCellRef} position="top">
+          <div id={DAY_POPOVER_ID} role="tooltip" className="text-xs space-y-2">
+            <p className="text-sm font-semibold">
+              {longDateFormat.format(parseDateKey(activeDate))}
+            </p>
+            <dl className="space-y-1">
+              <PopoverRow
+                label={t("settings.stats.dayPopover.words")}
+                value={number.format(activeUsage?.words ?? 0)}
+              />
+              {activeUsage?.top_app && (
+                <>
+                  <PopoverRow
+                    label={t("settings.stats.dayPopover.appsUsed")}
+                    value={number.format(activeUsage.apps_used)}
+                  />
+                  <PopoverRow
+                    label={t("settings.stats.dayPopover.topApp")}
+                    value={activeUsage.top_app}
+                  />
+                </>
+              )}
+            </dl>
+          </div>
+        </Tooltip>
+      )}
     </div>
   );
 };

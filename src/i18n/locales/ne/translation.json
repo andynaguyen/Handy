@@ -477,8 +477,11 @@
       "streak_other": "लगातार {{count}} दिन",
       "longestStreak_one": "सबैभन्दा लामो क्रम: {{count}} दिन",
       "longestStreak_other": "सबैभन्दा लामो क्रम: {{count}} दिन",
-      "dayTooltip_one": "{{date}} मा {{formattedCount}} शब्द",
-      "dayTooltip_other": "{{date}} मा {{formattedCount}} शब्द",
+      "dayPopover": {
+        "words": "कुल शब्दहरू",
+        "appsUsed": "प्रयोग गरिएका एपहरू",
+        "topApp": "शीर्ष एप"
+      },
       "less": "कम",
       "more": "बढी"
     },

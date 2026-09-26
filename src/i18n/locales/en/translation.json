@@ -488,8 +488,11 @@
       "streak_other": "{{count}} day streak",
       "longestStreak_one": "Longest streak: {{count}} day",
       "longestStreak_other": "Longest streak: {{count}} days",
-      "dayTooltip_one": "{{formattedCount}} word on {{date}}",
-      "dayTooltip_other": "{{formattedCount}} words on {{date}}",
+      "dayPopover": {
+        "words": "Total words",
+        "appsUsed": "Total apps used",
+        "topApp": "Top app"
+      },
       "less": "Less",
       "more": "More"
     },

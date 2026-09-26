@@ -481,10 +481,11 @@
       "longestStreak_few": "Рекорд: {{count}} дня подряд",
       "longestStreak_many": "Рекорд: {{count}} дней подряд",
       "longestStreak_other": "Рекорд: {{count}} дней подряд",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} слово",
-      "dayTooltip_few": "{{date}}: {{formattedCount}} слова",
-      "dayTooltip_many": "{{date}}: {{formattedCount}} слов",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} слов",
+      "dayPopover": {
+        "words": "Всего слов",
+        "appsUsed": "Использовано приложений",
+        "topApp": "Главное приложение"
+      },
       "less": "Меньше",
       "more": "Больше"
     },

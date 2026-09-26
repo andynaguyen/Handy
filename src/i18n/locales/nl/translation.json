@@ -477,8 +477,11 @@
       "streak_other": "{{count}} dagen op rij",
       "longestStreak_one": "Langste reeks: {{count}} dag",
       "longestStreak_other": "Langste reeks: {{count}} dagen",
-      "dayTooltip_one": "{{formattedCount}} woord op {{date}}",
-      "dayTooltip_other": "{{formattedCount}} woorden op {{date}}",
+      "dayPopover": {
+        "words": "Totaal aantal woorden",
+        "appsUsed": "Gebruikte apps",
+        "topApp": "Meest gebruikte app"
+      },
       "less": "Minder",
       "more": "Meer"
     },

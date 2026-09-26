@@ -479,9 +479,11 @@
       "longestStreak_one": "Maior sequência: {{count}} dia",
       "longestStreak_many": "Maior sequência: {{count}} de dias",
       "longestStreak_other": "Maior sequência: {{count}} dias",
-      "dayTooltip_one": "{{formattedCount}} palavra em {{date}}",
-      "dayTooltip_many": "{{formattedCount}} de palavras em {{date}}",
-      "dayTooltip_other": "{{formattedCount}} palavras em {{date}}",
+      "dayPopover": {
+        "words": "Total de palavras",
+        "appsUsed": "Apps usados",
+        "topApp": "App principal"
+      },
       "less": "Menos",
       "more": "Mais"
     },

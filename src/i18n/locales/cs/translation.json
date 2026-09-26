@@ -481,10 +481,11 @@
       "longestStreak_few": "Nejdelší série: {{count}} dny",
       "longestStreak_many": "Nejdelší série: {{count}} dne",
       "longestStreak_other": "Nejdelší série: {{count}} dní",
-      "dayTooltip_one": "{{date}}: {{formattedCount}} slovo",
-      "dayTooltip_few": "{{date}}: {{formattedCount}} slova",
-      "dayTooltip_many": "{{date}}: {{formattedCount}} slova",
-      "dayTooltip_other": "{{date}}: {{formattedCount}} slov",
+      "dayPopover": {
+        "words": "Celkem slov",
+        "appsUsed": "Použité aplikace",
+        "topApp": "Nejčastější aplikace"
+      },
       "less": "Méně",
       "more": "Více"
     },
