@@ -5,6 +5,7 @@ import { useSettings } from "../../../hooks/useSettings";
 import { Button } from "../../ui/Button";
 import { Dialog } from "../../ui/Dialog";
 import { Input } from "../../ui/Input";
+import { Tabs } from "../../ui/Tabs";
 import { Snippets } from "./Snippets";
 
 const MAX_WORD_LENGTH = 50;
@@ -188,30 +189,14 @@ export const DictionarySettings: React.FC = () => {
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-5">
-      <div className="flex gap-6 border-b border-mid-gray/20" role="tablist">
-        {TABS.map((candidate) => {
-          const selected = candidate.id === tab;
-          return (
-            <button
-              key={candidate.id}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              onClick={() => {
-                setTab(candidate.id);
-                setQuery("");
-              }}
-              className={`-mb-px pb-2 text-[15px] font-medium border-b-2 transition-colors cursor-pointer ${
-                selected
-                  ? "border-accent text-text"
-                  : "border-transparent text-text/50 hover:text-text"
-              }`}
-            >
-              {t(candidate.labelKey)}
-            </button>
-          );
-        })}
-      </div>
+      <Tabs
+        tabs={TABS}
+        selected={tab}
+        onSelect={(id) => {
+          setTab(id);
+          setQuery("");
+        }}
+      />
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
           <Search

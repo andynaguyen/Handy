@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { commands, type DailyUsage } from "@/bindings";
-import { Tooltip } from "@/components/ui";
+import { Tabs, Tooltip } from "@/components/ui";
 import { isRTLLanguage } from "@/lib/utils/rtl";
 import {
   buildHeatmap,
@@ -195,26 +195,7 @@ export const StatsSettings: React.FC = () => {
   return (
     <div className="max-w-3xl w-full mx-auto space-y-6">
       <div className="space-y-5">
-        <div className="flex gap-6 border-b border-mid-gray/20" role="group">
-          {RANGES.map((candidate) => {
-            const selected = candidate.id === rangeId;
-            return (
-              <button
-                key={candidate.id}
-                type="button"
-                onClick={() => setRangeId(candidate.id)}
-                aria-pressed={selected}
-                className={`-mb-px pb-2 text-[15px] font-medium border-b-2 transition-colors cursor-pointer ${
-                  selected
-                    ? "border-accent text-text"
-                    : "border-transparent text-text/50 hover:text-text"
-                }`}
-              >
-                {t(candidate.labelKey)}
-              </button>
-            );
-          })}
-        </div>
+        <Tabs tabs={RANGES} selected={rangeId} onSelect={setRangeId} />
         <div className="grid grid-cols-3 gap-3">
           <StatCard
             value={
