@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "אפליקציה",
-        "output": "פלט",
         "transcription": "תמלול",
-        "history": "היסטוריה",
         "experimental": "ניסיוני"
       },
       "experimentalToggle": {

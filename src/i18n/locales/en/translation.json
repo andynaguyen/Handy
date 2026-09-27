@@ -267,12 +267,19 @@
     },
     "advanced": {
       "groups": {
-        "keybinding": "Keybinding",
-        "app": "App",
-        "output": "Output",
         "transcription": "Transcription",
-        "history": "History",
-        "experimental": "Experimental"
+        "experimental": "Experimental",
+        "dictation": "Dictation",
+        "appearance": "Appearance",
+        "system": "System",
+        "shortcut": "Shortcut",
+        "cleanup": "Cleanup",
+        "pasting": "Pasting",
+        "submitting": "Submitting",
+        "startup": "Startup",
+        "memory": "Memory",
+        "updates": "Updates",
+        "advanced": "Advanced"
       },
       "experimentalToggle": {
         "label": "Experimental Features",

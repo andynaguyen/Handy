@@ -1,42 +1,53 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-test("opens on Keybinding and switches tabs", async ({ page }) => {
+const heading = (page: Page, name: string) =>
+  page.getByRole("heading", { level: 2, name, exact: true });
+
+test("opens on Dictation and switches tabs", async ({ page }) => {
   await page.goto("/tests/fixtures/settings.html");
-  await expect(page.getByRole("tab", { name: "Keybinding" })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: "Dictation" })).toHaveAttribute(
     "aria-selected",
     "true",
   );
+  for (const name of ["Shortcut", "Microphone", "Language", "Sound"]) {
+    await expect(heading(page, name)).toBeVisible();
+  }
   await expect(
     page.getByText("Transcribe Shortcut", { exact: true }),
-  ).toBeVisible();
-  await expect(
-    page.getByText("Shortcut Behavior", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByText("Cancel Shortcut", { exact: true }),
   ).toBeVisible();
-
-  await page.getByRole("tab", { name: "Sound" }).click();
-  await expect(page.getByText("Microphone", { exact: true })).toBeVisible();
+  await expect(page.getByText("Translate to English")).toBeVisible();
+  await expect(page.getByText("Voice Activity Detection")).toBeVisible();
   await expect(page.getByText("Audio Feedback", { exact: true })).toBeVisible();
+
+  await page.getByRole("tab", { name: "Transcription" }).click();
+  for (const name of ["Cleanup", "Pasting", "Submitting"]) {
+    await expect(heading(page, name)).toBeVisible();
+  }
+  await expect(page.getByText("Remove Filler Words")).toBeVisible();
+  await expect(page.getByText("Paste Method")).toBeVisible();
   await expect(
     page.getByText("Transcribe Shortcut", { exact: true }),
   ).toBeHidden();
 
-  await page.getByRole("tab", { name: "App" }).click();
+  await page.getByRole("tab", { name: "Appearance" }).click();
+  await expect(
+    page.getByText("Application Language", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Paste Method")).toBeHidden();
+
+  await page.getByRole("tab", { name: "System" }).click();
+  for (const name of ["Startup", "Memory", "Updates", "About"]) {
+    await expect(heading(page, name)).toBeVisible();
+  }
   await expect(page.getByText("Start Hidden")).toBeVisible();
-
-  await page.getByRole("tab", { name: "Output" }).click();
-  await expect(page.getByText("Paste Method")).toBeVisible();
-  await expect(page.getByText("Start Hidden")).toBeHidden();
-
-  await page.getByRole("tab", { name: "Transcription" }).click();
-  await expect(page.getByText("Language", { exact: true })).toBeVisible();
-  await expect(page.getByText("Translate to English")).toBeVisible();
-  await expect(page.getByText("Voice Activity Detection")).toBeVisible();
-
-  await page.getByRole("tab", { name: "History" }).click();
-  await expect(page.getByText("History Limit")).toBeVisible();
+  await expect(page.getByText("Version", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("App Data Directory", { exact: true }),
+  ).toBeVisible();
+  await expect(heading(page, "Experimental")).toBeVisible();
 });
 
 test("shows the Experimental tab only when experimental is on", async ({
@@ -44,43 +55,45 @@ test("shows the Experimental tab only when experimental is on", async ({
 }) => {
   await page.goto("/tests/fixtures/settings.html");
   await expect(page.getByRole("tab")).toHaveText([
-    "Keybinding",
-    "Sound",
-    "App",
-    "Output",
+    "Dictation",
     "Transcription",
-    "History",
-    "About",
+    "Appearance",
+    "System",
   ]);
 
-  // The experimental toggle is the last switch on the App tab
-  await page.getByRole("tab", { name: "App" }).click();
+  // The experimental toggle is the last switch on the System tab
+  await page.getByRole("tab", { name: "System" }).click();
   await page
     .locator("label", { has: page.getByRole("checkbox") })
     .last()
     .click();
-  await expect(page.getByRole("tab").last()).toHaveText("About");
+  await expect(page.getByRole("tab").last()).toHaveText("Experimental");
+
   await page.getByRole("tab", { name: "Experimental" }).click();
+  await expect(heading(page, "Post Processing")).toBeVisible();
+  await expect(heading(page, "Advanced")).toBeVisible();
   await expect(
     page.getByText("Keep Mic Open Between Transcriptions"),
   ).toBeVisible();
 });
 
-test("shows About as the last tab", async ({ page }) => {
+test("falls back to Dictation when the Experimental tab goes away", async ({
+  page,
+}) => {
   await page.goto("/tests/fixtures/settings.html?experimental=1");
-  await expect(page.getByRole("tab").last()).toHaveText("About");
+  await page.getByRole("tab", { name: "Experimental" }).click();
+  await expect(heading(page, "Advanced")).toBeVisible();
 
-  await page.getByRole("tab", { name: "About" }).click();
-  await expect(
-    page.getByText("Application Language", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText("Version", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText("Support Development", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText("Source Code", { exact: true })).toBeVisible();
-  await expect(
-    page.getByText("App Data Directory", { exact: true }),
-  ).toBeVisible();
-  await expect(page.getByText("Start Hidden")).toBeHidden();
+  await page.evaluate(async () => {
+    const { useSettingsStore } = await import("/src/stores/settingsStore.ts");
+    const { settings } = useSettingsStore.getState();
+    useSettingsStore.setState({
+      settings: { ...settings!, experimental_enabled: false },
+    });
+  });
+  await expect(page.getByRole("tab", { name: "Experimental" })).toHaveCount(0);
+  await expect(page.getByRole("tab", { name: "Dictation" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
 });

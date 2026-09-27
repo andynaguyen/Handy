@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Aplikace",
-        "output": "Výstup",
         "transcription": "Přepis",
-        "history": "Historie",
         "experimental": "Experimentální"
       },
       "experimentalToggle": {

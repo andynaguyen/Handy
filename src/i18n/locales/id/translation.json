@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Aplikasi",
-        "output": "Keluaran",
         "transcription": "Transkripsi",
-        "history": "Riwayat",
         "experimental": "Eksperimental"
       },
       "experimentalToggle": {

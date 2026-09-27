@@ -234,10 +234,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "التطبيق",
-        "output": "الإخراج",
         "transcription": "التفريغ الصوتي",
-        "history": "السجل",
         "experimental": "تجريبي"
       },
       "experimentalToggle": {

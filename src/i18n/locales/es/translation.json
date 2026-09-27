@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Aplicación",
-        "output": "Salida",
         "transcription": "Transcripción",
-        "history": "Historial",
         "experimental": "Experimental"
       },
       "experimentalToggle": {

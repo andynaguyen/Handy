@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Додаток",
-        "output": "Вивід",
         "transcription": "Транскрипція",
-        "history": "Історія",
         "experimental": "Експериментальне"
       },
       "experimentalToggle": {

@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "앱",
-        "output": "출력",
         "transcription": "전사",
-        "history": "히스토리",
         "experimental": "실험적"
       },
       "experimentalToggle": {

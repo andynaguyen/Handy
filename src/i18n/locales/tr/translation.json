@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Uygulama",
-        "output": "Çıktı",
         "transcription": "Transkripsiyon",
-        "history": "Geçmiş",
         "experimental": "Deneysel"
       },
       "experimentalToggle": {

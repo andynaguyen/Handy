@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "एप",
-        "output": "आउटपुट",
         "transcription": "ट्रान्सक्रिप्सन",
-        "history": "हिस्ट्री",
         "experimental": "प्रयोगात्मक"
       },
       "experimentalToggle": {

@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "應用程式",
-        "output": "輸出",
         "transcription": "轉錄",
-        "history": "歷史",
         "experimental": "實驗性"
       },
       "experimentalToggle": {

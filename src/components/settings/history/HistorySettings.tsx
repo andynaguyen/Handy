@@ -1,7 +1,15 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { readFile } from "@tauri-apps/plugin-fs";
-import { Check, Copy, FolderOpen, RotateCcw, Star, Trash2 } from "lucide-react";
+import {
+  Check,
+  Copy,
+  FolderOpen,
+  RotateCcw,
+  SlidersHorizontal,
+  Star,
+  Trash2,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import {
@@ -13,6 +21,9 @@ import {
 import { useOsType } from "@/hooks/useOsType";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
+import { SettingsGroup } from "../../ui/SettingsGroup";
+import { HistoryLimit } from "../HistoryLimit";
+import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
 import { copyToClipboard } from "./clipboard";
 import { toDateKey } from "../stats/usageStats";
 
@@ -77,26 +88,8 @@ const groupByDay = (entries: HistoryEntry[]) => {
   return groups;
 };
 
-interface OpenRecordingsButtonProps {
-  onClick: () => void;
-  label: string;
-}
-
-const OpenRecordingsButton: React.FC<OpenRecordingsButtonProps> = ({
-  onClick,
-  label,
-}) => (
-  <Button
-    onClick={onClick}
-    variant="ghost"
-    size="sm"
-    className="flex items-center gap-1.5 text-text/60 hover:text-text"
-    title={label}
-  >
-    <FolderOpen className="w-3.5 h-3.5" />
-    <span>{label}</span>
-  </Button>
-);
+const headerButtonClass =
+  "flex items-center gap-1.5 text-text/60 hover:text-text";
 
 export const HistorySettings: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -107,6 +100,7 @@ export const HistorySettings: React.FC = () => {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const entriesRef = useRef<HistoryEntry[]>([]);
   const loadingRef = useRef(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   // Keep ref in sync for use in IntersectionObserver callback
   useEffect(() => {
@@ -265,25 +259,48 @@ export const HistorySettings: React.FC = () => {
     }
   };
 
-  const openFolderButton = (
-    <OpenRecordingsButton
-      onClick={openRecordingsFolder}
-      label={t("settings.history.openFolder")}
-    />
-  );
-  const dayHeader = (label: string, withFolderButton: boolean) => (
-    <div className="flex items-center justify-between gap-4 px-1 min-h-7">
-      <h2 className="text-xs font-medium uppercase tracking-[0.08em] text-text/55">
-        {label}
-      </h2>
-      {withFolderButton && openFolderButton}
-    </div>
+  // History settings sit behind a header toggle so they stay one click away
+  // however long the list gets.
+  const header = (
+    <>
+      <div className="flex justify-end gap-1">
+        <Button
+          onClick={() => setShowSettings((shown) => !shown)}
+          variant="ghost"
+          size="sm"
+          className={headerButtonClass}
+          aria-expanded={showSettings}
+        >
+          <SlidersHorizontal className="w-3.5 h-3.5" />
+          <span>{t("sidebar.settings")}</span>
+        </Button>
+        <Button
+          onClick={openRecordingsFolder}
+          variant="ghost"
+          size="sm"
+          className={headerButtonClass}
+          title={t("settings.history.openFolder")}
+        >
+          <FolderOpen className="w-3.5 h-3.5" />
+          <span>{t("settings.history.openFolder")}</span>
+        </Button>
+      </div>
+      {showSettings && (
+        <SettingsGroup>
+          <HistoryLimit descriptionMode="inline" grouped={true} />
+          <RecordingRetentionPeriodSelector
+            descriptionMode="inline"
+            grouped={true}
+          />
+        </SettingsGroup>
+      )}
+    </>
   );
 
   if (loading || entries.length === 0) {
     return (
       <div className="max-w-3xl w-full mx-auto space-y-2">
-        <div className="flex justify-end">{openFolderButton}</div>
+        {header}
         <div className="px-4 py-10 text-center text-sm text-text/55 border border-mid-gray/15 rounded-2xl">
           {loading
             ? t("settings.history.loading")
@@ -294,15 +311,15 @@ export const HistorySettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto">
+    <div className="max-w-3xl w-full mx-auto space-y-2">
+      {header}
       <AudioPlayerGroup>
         <div className="space-y-6">
-          {groupByDay(entries).map((group, index) => (
+          {groupByDay(entries).map((group) => (
             <section key={group.key} className="space-y-2">
-              {dayHeader(
-                formatDayLabel(group.date, i18n.language),
-                index === 0,
-              )}
+              <h2 className="px-1 text-xs font-medium uppercase tracking-[0.08em] text-text/55">
+                {formatDayLabel(group.date, i18n.language)}
+              </h2>
               <div className="border border-mid-gray/15 rounded-2xl divide-y divide-mid-gray/15 overflow-hidden">
                 {group.entries.map((entry) => (
                   <HistoryEntryComponent

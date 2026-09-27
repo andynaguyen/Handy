@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Ứng dụng",
-        "output": "Đầu ra",
         "transcription": "Chuyển đổi",
-        "history": "Lịch sử",
         "experimental": "Thử nghiệm"
       },
       "experimentalToggle": {

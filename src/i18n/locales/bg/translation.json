@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "Приложение",
-        "output": "Изход",
         "transcription": "Транскрипция",
-        "history": "История",
         "experimental": "Експериментални"
       },
       "experimentalToggle": {

@@ -254,10 +254,7 @@
     },
     "advanced": {
       "groups": {
-        "app": "App",
-        "output": "Utmatning",
         "transcription": "Transkription",
-        "history": "Historik",
         "experimental": "Experimentellt"
       },
       "experimentalToggle": {
