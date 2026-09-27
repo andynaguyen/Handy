@@ -57,8 +57,8 @@ Open the file and translate only the **values** (right side), not the keys (left
 ```json
 {
   "sidebar": {
-    "general": "General",      // ← Translate this value
-    "advanced": "Advanced",    // ← Translate this value
+    "history": "History",      // ← Translate this value
+    "settings": "Settings",    // ← Translate this value
     ...
   }
 }
@@ -90,7 +90,7 @@ export const LANGUAGE_METADATA: Record<
 ### Step 5: Test Your Translation
 
 1. Run the app: `bun run tauri dev`
-2. Go to Settings → General → App Language
+2. Go to About → App Language
 3. Select your language
 4. Verify all text displays correctly
 

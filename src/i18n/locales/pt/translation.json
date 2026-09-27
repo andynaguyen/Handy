@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Atalhos bloqueados pelo Secure Input"
   },
   "sidebar": {
-    "general": "Geral",
     "models": "Modelos",
-    "advanced": "Avançado",
     "history": "Histórico",
     "stats": "Estatísticas",
     "dictionary": "Dicionário",
@@ -156,11 +154,7 @@
     "legacy": "Legado"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Configurações de {{model}}"
-    },
     "general": {
-      "title": "Geral",
       "shortcut": {
         "title": "Atalhos do Handy",
         "description": "Configure atalhos de teclado para iniciar a gravação de voz para texto",

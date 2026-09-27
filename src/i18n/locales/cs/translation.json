@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Zkratky blokuje Secure Input"
   },
   "sidebar": {
-    "general": "Obecné",
     "models": "Modely",
-    "advanced": "Pokročilé",
     "history": "Historie",
     "stats": "Statistiky",
     "dictionary": "Slovník",
@@ -156,9 +154,6 @@
     "legacy": "Zastaralé"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Nastavení {{model}}"
-    },
     "models": {
       "title": "Modely přepisu",
       "description": "Vyberte model přepisu nebo stáhněte další modely. Různé modely nabízejí různé úrovně přesnosti a rychlosti.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Obecné",
       "shortcut": {
         "title": "Zkratky Handy",
         "description": "Nastavte klávesové zkratky pro spuštění nahrávání řeči na text",

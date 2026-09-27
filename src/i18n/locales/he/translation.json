@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ קיצורי המקשים חסומים על ידי Secure Input"
   },
   "sidebar": {
-    "general": "כללי",
     "models": "מודלים",
-    "advanced": "מתקדם",
     "history": "היסטוריה",
     "stats": "סטטיסטיקה",
     "dictionary": "מילון",
@@ -156,11 +154,7 @@
     "legacy": "מדור קודם"
   },
   "settings": {
-    "modelSettings": {
-      "title": "הגדרות עבור {{model}}"
-    },
     "general": {
-      "title": "כללי",
       "shortcut": {
         "title": "קיצורי מקשים של Handy",
         "description": "הגדר קיצורי מקשים כדי להפעיל הקלטה ותמלול דיבור",

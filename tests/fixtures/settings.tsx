@@ -4,8 +4,10 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import translations from "../../src/i18n/locales/en/translation.json";
-import { AdvancedSettings } from "../../src/components/settings/advanced/AdvancedSettings";
+import { SettingsPage } from "../../src/components/settings/settings-page/SettingsPage";
 import { useSettingsStore } from "../../src/stores/settingsStore";
+import { useModelStore } from "../../src/stores/modelStore";
+import type { ModelInfo } from "../../src/bindings";
 import "../../src/App.css";
 
 declare global {
@@ -21,7 +23,25 @@ let experimental = params.get("experimental") === "1";
 
 mockIPC((command, args) => {
   if (command === "get_app_settings") {
-    return { experimental_enabled: experimental };
+    return {
+      experimental_enabled: experimental,
+      bindings: {
+        transcribe: {
+          id: "transcribe",
+          name: "Transcribe",
+          description: "",
+          current_binding: "ctrl+space",
+          default_binding: "ctrl+space",
+        },
+        cancel: {
+          id: "cancel",
+          name: "Cancel",
+          description: "",
+          current_binding: "escape",
+          default_binding: "escape",
+        },
+      },
+    };
   }
   if (command === "change_experimental_enabled_setting") {
     experimental = (args as { enabled: boolean }).enabled;
@@ -35,11 +55,24 @@ await i18n.use(initReactI18next).init({
   interpolation: { escapeValue: false },
 });
 await useSettingsStore.getState().refreshSettings();
+useModelStore.setState({
+  currentModel: "whisper",
+  models: [
+    {
+      id: "whisper",
+      name: "Whisper",
+      supported_languages: ["en", "fr"],
+      supports_language_selection: true,
+      supports_language_detection: true,
+      supports_translation: true,
+    } as ModelInfo,
+  ],
+});
 
 createRoot(document.getElementById("root")!).render(
   <div className="flex flex-col items-center px-7 pt-7 pb-8 gap-5 min-h-screen bg-background text-text">
     {/* eslint-disable-next-line i18next/no-literal-string */}
-    <h1 className="max-w-3xl w-full font-serif text-[28px]">Advanced</h1>
-    <AdvancedSettings />
+    <h1 className="max-w-3xl w-full font-serif text-[28px]">Settings</h1>
+    <SettingsPage />
   </div>,
 );

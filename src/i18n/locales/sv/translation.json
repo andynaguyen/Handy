@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Kortkommandon blockeras av Secure Input"
   },
   "sidebar": {
-    "general": "Allmänt",
     "models": "Modeller",
-    "advanced": "Avancerat",
     "history": "Historik",
     "stats": "Statistik",
     "dictionary": "Ordlista",
@@ -156,11 +154,7 @@
     "legacy": "Äldre"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}}-inställningar"
-    },
     "general": {
-      "title": "Allmänt",
       "shortcut": {
         "title": "Handy-kortkommandon",
         "description": "Konfigurera kortkommandon för att starta tal-till-text-inspelning",

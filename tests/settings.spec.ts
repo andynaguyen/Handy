@@ -1,11 +1,29 @@
 import { expect, test } from "@playwright/test";
 
-test("opens on App and switches tabs", async ({ page }) => {
-  await page.goto("/tests/fixtures/advanced.html");
-  await expect(page.getByRole("tab", { name: "App" })).toHaveAttribute(
+test("opens on Keybinding and switches tabs", async ({ page }) => {
+  await page.goto("/tests/fixtures/settings.html");
+  await expect(page.getByRole("tab", { name: "Keybinding" })).toHaveAttribute(
     "aria-selected",
     "true",
   );
+  await expect(
+    page.getByText("Transcribe Shortcut", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Shortcut Behavior", { exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Cancel Shortcut", { exact: true }),
+  ).toBeVisible();
+
+  await page.getByRole("tab", { name: "Sound" }).click();
+  await expect(page.getByText("Microphone", { exact: true })).toBeVisible();
+  await expect(page.getByText("Audio Feedback", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Transcribe Shortcut", { exact: true }),
+  ).toBeHidden();
+
+  await page.getByRole("tab", { name: "App" }).click();
   await expect(page.getByText("Start Hidden")).toBeVisible();
 
   await page.getByRole("tab", { name: "Output" }).click();
@@ -13,6 +31,8 @@ test("opens on App and switches tabs", async ({ page }) => {
   await expect(page.getByText("Start Hidden")).toBeHidden();
 
   await page.getByRole("tab", { name: "Transcription" }).click();
+  await expect(page.getByText("Language", { exact: true })).toBeVisible();
+  await expect(page.getByText("Translate to English")).toBeVisible();
   await expect(page.getByText("Voice Activity Detection")).toBeVisible();
 
   await page.getByRole("tab", { name: "History" }).click();
@@ -22,8 +42,10 @@ test("opens on App and switches tabs", async ({ page }) => {
 test("shows the Experimental tab only when experimental is on", async ({
   page,
 }) => {
-  await page.goto("/tests/fixtures/advanced.html");
+  await page.goto("/tests/fixtures/settings.html");
   await expect(page.getByRole("tab")).toHaveText([
+    "Keybinding",
+    "Sound",
     "App",
     "Output",
     "Transcription",
@@ -31,6 +53,7 @@ test("shows the Experimental tab only when experimental is on", async ({
   ]);
 
   // The experimental toggle is the last switch on the App tab
+  await page.getByRole("tab", { name: "App" }).click();
   await page
     .locator("label", { has: page.getByRole("checkbox") })
     .last()

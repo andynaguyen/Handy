@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Raccourcis bloqués par Secure Input"
   },
   "sidebar": {
-    "general": "Général",
     "models": "Modèles",
-    "advanced": "Avancé",
     "history": "Historique",
     "stats": "Statistiques",
     "dictionary": "Dictionnaire",
@@ -156,9 +154,6 @@
     "legacy": "Hérité"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Paramètres de {{model}}"
-    },
     "models": {
       "title": "Modèles de Transcription",
       "description": "Sélectionnez un modèle de transcription ou téléchargez des modèles supplémentaires. Différents modèles offrent différents niveaux de précision et de vitesse.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Général",
       "shortcut": {
         "title": "Raccourcis Handy",
         "description": "Configurer les raccourcis clavier pour déclencher l'enregistrement de la reconnaissance vocale",

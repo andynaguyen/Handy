@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Genveje blokeret af Secure Input"
   },
   "sidebar": {
-    "general": "Generelt",
     "models": "Modeller",
-    "advanced": "Avanceret",
     "history": "Historik",
     "stats": "Statistik",
     "dictionary": "Ordbog",
@@ -156,11 +154,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}}-indstillinger"
-    },
     "general": {
-      "title": "Generelt",
       "shortcut": {
         "title": "Handy-genveje",
         "description": "Konfigurer tastaturgenveje til at udløse tale-til-tekst-optagelse",

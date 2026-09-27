@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Secure Input ने शॉर्टकट ब्लॉक किए हैं"
   },
   "sidebar": {
-    "general": "सामान्य",
     "models": "मॉडल",
-    "advanced": "ऐडवांस",
     "history": "इतिहास",
     "stats": "आंकड़े",
     "dictionary": "शब्दकोश",
@@ -156,11 +154,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} सेटिंग"
-    },
     "general": {
-      "title": "सामान्य",
       "shortcut": {
         "title": "Handy शॉर्टकट",
         "description": "स्पीच-टू-टेक्स्ट रिकॉर्डिंग शुरू करने के लिए कीबोर्ड शॉर्टकट सेट करें",

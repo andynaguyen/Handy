@@ -1,6 +1,4 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { SettingsGroup } from "../../ui/SettingsGroup";
 import { LanguageSelector } from "../LanguageSelector";
 import { TranslateToEnglish } from "../TranslateToEnglish";
 import { useModelStore } from "../../../stores/modelStore";
@@ -10,36 +8,28 @@ import {
   getUniqueCapabilityLanguages,
 } from "@/lib/constants/languages";
 
-export const ModelSettingsCard: React.FC = () => {
-  const { t } = useTranslation();
+// Language and translate rows for the current model. Each row only renders
+// when the model supports it.
+export const ModelLanguageSettings: React.FC = () => {
   const { currentModel, models } = useModelStore();
 
   const currentModelInfo = models.find((m: ModelInfo) => m.id === currentModel);
+  if (!currentModelInfo) {
+    return null;
+  }
 
-  const supportsLanguageSelection =
-    currentModelInfo?.supports_language_selection ?? false;
   const capabilityLanguages = getUniqueCapabilityLanguages(
-    currentModelInfo?.supported_languages ?? [],
+    currentModelInfo.supported_languages,
   );
   const supportsChineseOnlyScriptSelection =
     capabilityLanguages.length === 1 &&
     capabilityLanguages[0] === CHINESE_LANGUAGE_CODE;
   const showLanguageSelector =
-    supportsLanguageSelection || supportsChineseOnlyScriptSelection;
-  const supportsTranslation = currentModelInfo?.supports_translation ?? false;
-  const hasAnySettings = showLanguageSelector || supportsTranslation;
-
-  // Don't render anything if no model is selected or no settings available
-  if (!currentModel || !currentModelInfo || !hasAnySettings) {
-    return null;
-  }
+    currentModelInfo.supports_language_selection ||
+    supportsChineseOnlyScriptSelection;
 
   return (
-    <SettingsGroup
-      title={t("settings.modelSettings.title", {
-        model: currentModelInfo.name,
-      })}
-    >
+    <>
       {showLanguageSelector && (
         <LanguageSelector
           descriptionMode="inline"
@@ -50,9 +40,9 @@ export const ModelSettingsCard: React.FC = () => {
           }
         />
       )}
-      {supportsTranslation && (
+      {currentModelInfo.supports_translation && (
         <TranslateToEnglish descriptionMode="inline" grouped={true} />
       )}
-    </SettingsGroup>
+    </>
   );
 };

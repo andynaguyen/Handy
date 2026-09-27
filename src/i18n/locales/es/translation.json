@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Atajos bloqueados por Secure Input"
   },
   "sidebar": {
-    "general": "General",
     "models": "Modelos",
-    "advanced": "Avanzado",
     "history": "Historial",
     "stats": "Estadísticas",
     "dictionary": "Diccionario",
@@ -156,9 +154,6 @@
     "legacy": "Heredado"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Configuración de {{model}}"
-    },
     "models": {
       "title": "Modelos de transcripción",
       "description": "Selecciona un modelo de transcripción o descarga modelos adicionales. Diferentes modelos ofrecen distintos niveles de precisión y velocidad.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "General",
       "shortcut": {
         "title": "Atajos de Handy",
         "description": "Configura atajos de teclado para activar la grabación de voz a texto",

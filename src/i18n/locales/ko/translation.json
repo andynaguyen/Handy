@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Secure Input으로 단축키가 차단됨"
   },
   "sidebar": {
-    "general": "일반",
     "models": "모델",
-    "advanced": "고급",
     "history": "히스토리",
     "stats": "통계",
     "dictionary": "사전",
@@ -156,11 +154,7 @@
     "legacy": "레거시"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} 설정"
-    },
     "general": {
-      "title": "일반",
       "shortcut": {
         "title": "Handy 단축키",
         "description": "음성-텍스트 녹음을 시작하는 키보드 단축키를 설정하세요",

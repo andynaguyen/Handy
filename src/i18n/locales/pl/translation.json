@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Skróty zablokowane przez Secure Input"
   },
   "sidebar": {
-    "general": "Ogólne",
     "models": "Modele",
-    "advanced": "Zaawansowane",
     "history": "Historia",
     "stats": "Statystyki",
     "dictionary": "Słownik",
@@ -156,9 +154,6 @@
     "legacy": "Przestarzałe"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Ustawienia {{model}}"
-    },
     "models": {
       "title": "Modele transkrypcji",
       "description": "Wybierz model transkrypcji lub pobierz dodatkowe modele. Różne modele oferują różne poziomy dokładności i szybkości.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Ogólne",
       "shortcut": {
         "title": "Skróty Handy",
         "description": "Skonfiguruj skróty klawiaturowe do uruchamiania nagrywania mowy",

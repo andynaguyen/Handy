@@ -10,8 +10,6 @@
     "secureInputWarning": "⚠ الاختصارات محجوبة بواسطة Secure Input"
   },
   "sidebar": {
-    "general": "عام",
-    "advanced": "متقدم",
     "history": "السجل",
     "stats": "الإحصائيات",
     "dictionary": "القاموس",
@@ -157,7 +155,6 @@
   },
   "settings": {
     "general": {
-      "title": "عام",
       "shortcut": {
         "title": "اختصارات Handy",
         "description": "إعداد اختصارات لوحة المفاتيح لبدء تسجيل التفريغ الصوتي",
@@ -674,9 +671,6 @@
         "label": "إظهار الجديد",
         "description": "إظهار ملاحظات الإصدار بعد تحديثات Handy"
       }
-    },
-    "modelSettings": {
-      "title": "إعدادات {{model}}"
     },
     "models": {
       "title": "نماذج النسخ",

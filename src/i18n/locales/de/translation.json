@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Tastenkürzel durch Secure Input blockiert"
   },
   "sidebar": {
-    "general": "Allgemein",
     "models": "Modelle",
-    "advanced": "Erweitert",
     "history": "Verlauf",
     "stats": "Statistik",
     "dictionary": "Wörterbuch",
@@ -156,9 +154,6 @@
     "legacy": "Veraltet"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}}-Einstellungen"
-    },
     "models": {
       "title": "Transkriptionsmodelle",
       "description": "Wähle ein Transkriptionsmodell aus oder lade zusätzliche Modelle herunter. Verschiedene Modelle bieten unterschiedliche Genauigkeits- und Geschwindigkeitsstufen.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Allgemein",
       "shortcut": {
         "title": "Handy-Tastenkürzel",
         "description": "Tastenkürzel für die Sprachaufnahme konfigurieren",

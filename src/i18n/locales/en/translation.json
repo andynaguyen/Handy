@@ -10,9 +10,8 @@
     "secureInputWarning": "⚠ Shortcuts blocked by Secure Input"
   },
   "sidebar": {
-    "general": "General",
     "models": "Models",
-    "advanced": "Advanced",
+    "settings": "Settings",
     "history": "History",
     "stats": "Stats",
     "dictionary": "Dictionary",
@@ -157,11 +156,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} Settings"
-    },
     "general": {
-      "title": "General",
       "shortcut": {
         "title": "Handy Shortcuts",
         "description": "Configure keyboard or mouse shortcuts to trigger speech-to-text recording",
@@ -273,6 +268,7 @@
     },
     "advanced": {
       "groups": {
+        "keybinding": "Keybinding",
         "app": "App",
         "output": "Output",
         "transcription": "Transcription",

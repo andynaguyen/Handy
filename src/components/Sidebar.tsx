@@ -3,22 +3,20 @@ import { useTranslation } from "react-i18next";
 import {
   BookA,
   ChartColumn,
-  Cog,
   FlaskConical,
   History,
   Info,
   Cpu,
   MessageSquareText,
+  Settings,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
-import HandyHand from "./icons/HandyHand";
 import ModelSelector from "./model-selector";
 import UpdateChecker from "./update-checker";
 import { useSettings } from "../hooks/useSettings";
 import { getVersion } from "@tauri-apps/api/app";
 import {
-  GeneralSettings,
-  AdvancedSettings,
+  SettingsPage,
   HistorySettings,
   StatsSettings,
   DictionarySettings,
@@ -48,12 +46,6 @@ interface SectionConfig {
 }
 
 export const SECTIONS_CONFIG = {
-  general: {
-    labelKey: "sidebar.general",
-    icon: HandyHand,
-    component: GeneralSettings,
-    enabled: () => true,
-  },
   history: {
     labelKey: "sidebar.history",
     icon: History,
@@ -84,10 +76,10 @@ export const SECTIONS_CONFIG = {
     component: ModelsSettings,
     enabled: () => true,
   },
-  advanced: {
-    labelKey: "sidebar.advanced",
-    icon: Cog,
-    component: AdvancedSettings,
+  settings: {
+    labelKey: "sidebar.settings",
+    icon: Settings,
+    component: SettingsPage,
     enabled: () => true,
   },
   debug: {

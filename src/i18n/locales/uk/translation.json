@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Комбінації клавіш заблоковано Secure Input"
   },
   "sidebar": {
-    "general": "Загальні",
     "models": "Моделі",
-    "advanced": "Розширені",
     "history": "Історія",
     "stats": "Статистика",
     "dictionary": "Словник",
@@ -156,11 +154,7 @@
     "legacy": "Застаріле"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Налаштування {{model}}"
-    },
     "general": {
-      "title": "Загальні",
       "shortcut": {
         "title": "Комбінації клавіш",
         "description": "Налаштуйте клавіатурні скорочення для запуску запису мовлення в текст",

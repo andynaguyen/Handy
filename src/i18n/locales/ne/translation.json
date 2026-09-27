@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Secure Input ले सर्टकटहरू रोकेको छ"
   },
   "sidebar": {
-    "general": "सामान्य",
     "models": "मोडेलहरू",
-    "advanced": "उन्नत",
     "history": "हिस्ट्री",
     "stats": "तथ्याङ्क",
     "dictionary": "शब्दकोश",
@@ -156,11 +154,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} सेटिङहरू"
-    },
     "general": {
-      "title": "सामान्य",
       "shortcut": {
         "title": "Handy सर्टकटहरू",
         "description": "स्पिच-टु-टेक्स्ट रेकर्डिङ सुरु गर्न किबोर्ड सर्टकटहरू सेट अप गर्नुहोस्",

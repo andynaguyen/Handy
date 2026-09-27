@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Phím tắt bị Secure Input chặn"
   },
   "sidebar": {
-    "general": "Chung",
     "models": "Mô hình",
-    "advanced": "Nâng cao",
     "history": "Lịch sử",
     "stats": "Thống kê",
     "dictionary": "Từ điển",
@@ -156,9 +154,6 @@
     "legacy": "Cũ"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Cài đặt {{model}}"
-    },
     "models": {
       "title": "Mô hình chuyển đổi",
       "description": "Chọn mô hình chuyển đổi hoặc tải thêm mô hình. Các mô hình khác nhau có mức độ chính xác và tốc độ khác nhau.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Chung",
       "shortcut": {
         "title": "Phím tắt Handy",
         "description": "Cấu hình phím tắt để kích hoạt ghi âm chuyển đổi giọng nói thành văn bản",

@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Sneltoetsen geblokkeerd door Secure Input"
   },
   "sidebar": {
-    "general": "Algemeen",
     "models": "Modellen",
-    "advanced": "Geavanceerd",
     "history": "Geschiedenis",
     "stats": "Statistieken",
     "dictionary": "Woordenboek",
@@ -156,11 +154,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "Instellingen voor {{model}}"
-    },
     "general": {
-      "title": "Algemeen",
       "shortcut": {
         "title": "Sneltoetsen",
         "description": "Configureer sneltoetsen om spraak-naar-tekst-opnames te starten",

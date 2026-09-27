@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Kısayollar Secure Input tarafından engelleniyor"
   },
   "sidebar": {
-    "general": "Genel",
     "models": "Modeller",
-    "advanced": "Gelişmiş",
     "history": "Geçmiş",
     "stats": "İstatistikler",
     "dictionary": "Sözlük",
@@ -156,9 +154,6 @@
     "legacy": "Eski"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} Ayarları"
-    },
     "models": {
       "title": "Transkripsiyon Modelleri",
       "description": "Bir transkripsiyon modeli seçin veya ek modeller indirin. Farklı modeller değişen doğruluk ve hız seviyeleri sunar.",
@@ -180,7 +175,6 @@
       }
     },
     "general": {
-      "title": "Genel",
       "shortcut": {
         "title": "Handy Kısayolları",
         "description": "Sesle yazma kaydını başlatmak için klavye kısayollarını yapılandırın",

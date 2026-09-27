@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Бързите клавиши са блокирани от Secure Input"
   },
   "sidebar": {
-    "general": "Общи",
     "models": "Модели",
-    "advanced": "Разширени",
     "history": "История",
     "stats": "Статистика",
     "dictionary": "Речник",
@@ -156,11 +154,7 @@
     "legacy": "Наследен"
   },
   "settings": {
-    "modelSettings": {
-      "title": "Настройки на {{model}}"
-    },
     "general": {
-      "title": "Общи",
       "shortcut": {
         "title": "Бързи клавиши на Handy",
         "description": "Настройте клавишни комбинации за стартиране на запис за реч към текст",

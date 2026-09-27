@@ -10,9 +10,7 @@
     "secureInputWarning": "⚠ Dreceres blocades per l'entrada segura"
   },
   "sidebar": {
-    "general": "General",
     "models": "Models",
-    "advanced": "Avançat",
     "history": "Historial",
     "stats": "Estadístiques",
     "dictionary": "Diccionari",
@@ -156,11 +154,7 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "Configuració de {{model}}"
-    },
     "general": {
-      "title": "General",
       "shortcut": {
         "title": "Dreceres del Handy",
         "description": "Configura les dreceres de teclat per iniciar l'enregistrament de veu per a la transcripció",
