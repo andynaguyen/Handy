@@ -12,7 +12,9 @@ import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AutoSubmit } from "../AutoSubmit";
 import { VoiceSubmit } from "../VoiceSubmit";
 import { PostProcessingToggle } from "../PostProcessingToggle";
-import { PostProcessingSettings } from "../post-processing/PostProcessingSettings";
+import { PostProcessingSettingsApi } from "../PostProcessingSettingsApi";
+import { PostProcessingSettingsPrompts } from "../PostProcessingSettingsPrompts";
+import { ShortcutInput } from "../ShortcutInput";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
 import { HistoryLimit } from "../HistoryLimit";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
@@ -67,7 +69,17 @@ export const AdvancedSettings: React.FC = () => {
       {experimentalEnabled && (
         <SettingsGroup title={t("settings.advanced.groups.experimental")}>
           <PostProcessingToggle descriptionMode="inline" grouped={true} />
-          {postProcessEnabled && <PostProcessingSettings />}
+          {postProcessEnabled && (
+            <>
+              <ShortcutInput
+                shortcutId="transcribe_with_post_process"
+                descriptionMode="inline"
+                grouped={true}
+              />
+              <PostProcessingSettingsApi />
+              <PostProcessingSettingsPrompts />
+            </>
+          )}
           <KeyboardImplementationSelector
             descriptionMode="inline"
             grouped={true}

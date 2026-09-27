@@ -418,10 +418,6 @@
       }
     },
     "postProcessing": {
-      "configure": {
-        "title": "Configure Post Processing",
-        "description": "Hotkey, provider, API key, model, and prompt"
-      },
       "api": {
         "provider": {
           "title": "Provider",
