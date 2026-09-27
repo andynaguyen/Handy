@@ -14,8 +14,7 @@
     "settings": "Settings",
     "history": "History",
     "stats": "Stats",
-    "dictionary": "Dictionary",
-    "style": "Style",
+    "customize": "Customize",
     "debug": "Debug"
   },
   "onboarding": {
@@ -501,7 +500,8 @@
     "dictionary": {
       "tabs": {
         "dictionary": "Dictionary",
-        "snippets": "Snippets"
+        "snippets": "Snippets",
+        "style": "Style"
       },
       "addNew": "Add new",
       "searchPlaceholder": "Search",

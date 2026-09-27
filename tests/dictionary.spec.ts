@@ -1,15 +1,30 @@
 import { expect, test } from "@playwright/test";
 
 const saved = (page: import("@playwright/test").Page) =>
-  page.evaluate(() => window.dictionaryTest.saved);
+  page.evaluate(() => window.customizeTest.saved);
+
+test("shows the Dictionary, Snippets, and Style tabs in order", async ({
+  page,
+}) => {
+  await page.goto("/tests/fixtures/customize.html");
+  await expect(page.getByRole("tab")).toHaveText([
+    "Dictionary",
+    "Snippets",
+    "Style",
+  ]);
+  await expect(page.getByRole("tab", { name: "Dictionary" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+});
 
 test("shows an empty state with no words", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html");
+  await page.goto("/tests/fixtures/customize.html");
   await expect(page.getByText("No words yet.", { exact: false })).toBeVisible();
 });
 
 test("lists words newest first", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html?words=Karat,Wispr Flow,QA");
+  await page.goto("/tests/fixtures/customize.html?words=Karat,Wispr Flow,QA");
   await expect(page.getByRole("listitem")).toHaveText([
     "QA",
     "Wispr Flow",
@@ -18,7 +33,7 @@ test("lists words newest first", async ({ page }) => {
 });
 
 test("adds a normalized word from the dialog", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html?words=Karat");
+  await page.goto("/tests/fixtures/customize.html?words=Karat");
   await page.getByRole("button", { name: "Add new" }).click();
   const input = page.getByPlaceholder("Add a word");
   await expect(input).toBeFocused();
@@ -33,7 +48,7 @@ test("adds a normalized word from the dialog", async ({ page }) => {
 });
 
 test("blocks duplicates", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html?words=Karat");
+  await page.goto("/tests/fixtures/customize.html?words=Karat");
   await page.getByRole("button", { name: "Add new" }).click();
   await page.getByPlaceholder("Add a word").fill("Karat");
 
@@ -44,7 +59,7 @@ test("blocks duplicates", async ({ page }) => {
 });
 
 test("cancel discards the draft", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html");
+  await page.goto("/tests/fixtures/customize.html");
   await page.getByRole("button", { name: "Add new" }).click();
   await page.getByPlaceholder("Add a word").fill("draft");
   await page.getByRole("button", { name: "Cancel" }).click();
@@ -56,7 +71,7 @@ test("cancel discards the draft", async ({ page }) => {
 
 test("filters by search, case-insensitively", async ({ page }) => {
   await page.goto(
-    "/tests/fixtures/dictionary.html?words=Karat,Andy,Andy Nguyen",
+    "/tests/fixtures/customize.html?words=Karat,Andy,Andy Nguyen",
   );
   await page.getByPlaceholder("Search").fill("andy");
   await expect(page.getByRole("listitem")).toHaveText(["Andy Nguyen", "Andy"]);
@@ -66,7 +81,7 @@ test("filters by search, case-insensitively", async ({ page }) => {
 });
 
 test("removes a word", async ({ page }) => {
-  await page.goto("/tests/fixtures/dictionary.html?words=Karat,QA");
+  await page.goto("/tests/fixtures/customize.html?words=Karat,QA");
   await page.getByRole("button", { name: "Remove Karat" }).click();
 
   await expect(page.getByRole("listitem")).toHaveText(["QA"]);
@@ -74,14 +89,14 @@ test("removes a word", async ({ page }) => {
 });
 
 const snippetsPage = (snippets: { trigger: string; text: string }[] = []) =>
-  `/tests/fixtures/dictionary.html?snippets=${encodeURIComponent(JSON.stringify(snippets))}`;
+  `/tests/fixtures/customize.html?snippets=${encodeURIComponent(JSON.stringify(snippets))}`;
 
 const openSnippetsTab = async (page: import("@playwright/test").Page) => {
   await page.getByRole("tab", { name: "Snippets" }).click();
 };
 
 const savedSnippets = (page: import("@playwright/test").Page) =>
-  page.evaluate(() => window.dictionaryTest.savedSnippets);
+  page.evaluate(() => window.customizeTest.savedSnippets);
 
 test("adds a snippet from the snippets tab", async ({ page }) => {
   await page.goto(snippetsPage());

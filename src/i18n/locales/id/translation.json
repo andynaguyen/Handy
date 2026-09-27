@@ -13,7 +13,6 @@
     "models": "Model",
     "history": "Riwayat",
     "stats": "Statistik",
-    "dictionary": "Kamus",
     "debug": "Debug"
   },
   "onboarding": {

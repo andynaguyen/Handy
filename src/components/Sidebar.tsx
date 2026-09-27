@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  BookA,
   ChartColumn,
   FlaskConical,
   History,
   Cpu,
-  MessageSquareText,
+  PencilRuler,
   Settings,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
@@ -18,8 +17,7 @@ import {
   SettingsPage,
   HistorySettings,
   StatsSettings,
-  DictionarySettings,
-  StyleSettings,
+  CustomizePage,
   DebugSettings,
   ModelsSettings,
 } from "./settings";
@@ -56,16 +54,10 @@ export const SECTIONS_CONFIG = {
     component: StatsSettings,
     enabled: () => true,
   },
-  dictionary: {
-    labelKey: "sidebar.dictionary",
-    icon: BookA,
-    component: DictionarySettings,
-    enabled: () => true,
-  },
-  style: {
-    labelKey: "sidebar.style",
-    icon: MessageSquareText,
-    component: StyleSettings,
+  customize: {
+    labelKey: "sidebar.customize",
+    icon: PencilRuler,
+    component: CustomizePage,
     enabled: () => true,
   },
   models: {

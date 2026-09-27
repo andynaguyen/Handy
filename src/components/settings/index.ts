@@ -4,8 +4,7 @@ export { DebugSettings } from "./debug/DebugSettings";
 export type { OnboardingPreviewStep } from "./debug/OnboardingPreview";
 export { HistorySettings } from "./history/HistorySettings";
 export { StatsSettings } from "./stats/StatsSettings";
-export { DictionarySettings } from "./dictionary/DictionarySettings";
-export { StyleSettings } from "./style/StyleSettings";
+export { CustomizePage } from "./customize/CustomizePage";
 export { ModelsSettings } from "./models/ModelsSettings";
 
 // Individual setting components

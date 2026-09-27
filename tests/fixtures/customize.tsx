@@ -4,22 +4,30 @@ import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { mockIPC } from "@tauri-apps/api/mocks";
 import translations from "../../src/i18n/locales/en/translation.json";
-import { StyleSettings } from "../../src/components/settings/style/StyleSettings";
+import { CustomizePage } from "../../src/components/settings/customize/CustomizePage";
 import { useSettingsStore } from "../../src/stores/settingsStore";
 import "../../src/App.css";
 
-import type { AppStyleRule, RunningApp } from "../../src/bindings";
+import type { AppStyleRule, RunningApp, Snippet } from "../../src/bindings";
 
 declare global {
   interface Window {
-    styleTest: { saved: AppStyleRule[][] };
+    customizeTest: {
+      saved: string[][];
+      savedSnippets: Snippet[][];
+      savedStyles: AppStyleRule[][];
+    };
     __TAURI_OS_PLUGIN_INTERNALS__: { os_type: string };
   }
 }
 
-// ?os=windows switches platforms; the rules start as the backend defaults
+// ?words=a,b and ?snippets=<JSON> seed the stored lists, oldest first like
+// the real settings. ?os=windows switches platforms; the style rules start as
+// the backend defaults.
 const params = new URLSearchParams(location.search);
 window.__TAURI_OS_PLUGIN_INTERNALS__ = { os_type: params.get("os") ?? "macos" };
+let words = params.get("words")?.split(",") ?? [];
+let snippets: Snippet[] = JSON.parse(params.get("snippets") ?? "[]");
 let rules: AppStyleRule[] = [
   {
     bundle_id: "com.apple.MobileSMS",
@@ -37,18 +45,26 @@ const runningApps: RunningApp[] = [
   { bundle_id: "com.apple.MobileSMS", name: "Messages" },
   { bundle_id: "com.linear", name: "Linear" },
 ];
-window.styleTest = { saved: [] };
+window.customizeTest = { saved: [], savedSnippets: [], savedStyles: [] };
 
 mockIPC((command, args) => {
   if (command === "get_app_settings") {
-    return { app_styles: rules };
+    return { custom_words: words, snippets, app_styles: rules };
   }
   if (command === "get_running_apps") {
     return runningApps;
   }
+  if (command === "update_custom_words") {
+    words = (args as { words: string[] }).words;
+    window.customizeTest.saved.push(words);
+  }
+  if (command === "update_snippets") {
+    snippets = (args as { snippets: Snippet[] }).snippets;
+    window.customizeTest.savedSnippets.push(snippets);
+  }
   if (command === "update_app_styles") {
     rules = (args as { rules: AppStyleRule[] }).rules;
-    window.styleTest.saved.push(rules);
+    window.customizeTest.savedStyles.push(rules);
   }
   return null;
 });
@@ -63,7 +79,7 @@ await useSettingsStore.getState().refreshSettings();
 createRoot(document.getElementById("root")!).render(
   <div className="flex flex-col items-center px-7 pt-7 pb-8 gap-5 min-h-screen bg-background text-text">
     {/* eslint-disable-next-line i18next/no-literal-string */}
-    <h1 className="max-w-3xl w-full font-serif text-[28px]">Style</h1>
-    <StyleSettings />
+    <h1 className="max-w-3xl w-full font-serif text-[28px]">Customize</h1>
+    <CustomizePage />
   </div>,
 );

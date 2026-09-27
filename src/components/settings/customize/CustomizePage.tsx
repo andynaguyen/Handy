@@ -7,6 +7,7 @@ import { Dialog } from "../../ui/Dialog";
 import { Input } from "../../ui/Input";
 import { Tabs } from "../../ui/Tabs";
 import { Snippets } from "./Snippets";
+import { Style } from "./Style";
 
 const MAX_WORD_LENGTH = 50;
 
@@ -176,16 +177,17 @@ const Words: React.FC<WordsProps> = ({ query, adding, onAddingChange }) => {
 const TABS = [
   { id: "words", labelKey: "settings.dictionary.tabs.dictionary" },
   { id: "snippets", labelKey: "settings.dictionary.tabs.snippets" },
+  { id: "style", labelKey: "settings.dictionary.tabs.style" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
 
-export const DictionarySettings: React.FC = () => {
+export const CustomizePage: React.FC = () => {
   const { t } = useTranslation();
   const [tab, setTab] = useState<TabId>("words");
   const [query, setQuery] = useState("");
   const [adding, setAdding] = useState(false);
-  const Tab = tab === "words" ? Words : Snippets;
+  const List = tab === "words" ? Words : Snippets;
 
   return (
     <div className="max-w-3xl w-full mx-auto space-y-5">
@@ -197,30 +199,36 @@ export const DictionarySettings: React.FC = () => {
           setQuery("");
         }}
       />
-      <div className="flex items-center gap-3">
-        <div className="relative flex-1">
-          <Search
-            className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40"
-            aria-hidden="true"
-          />
-          <Input
-            type="search"
-            className="w-full ps-9"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t("settings.dictionary.searchPlaceholder")}
-            aria-label={t("settings.dictionary.searchPlaceholder")}
-          />
-        </div>
-        <Button
-          onClick={() => setAdding(true)}
-          className="inline-flex items-center gap-1.5 py-2"
-        >
-          <Plus className="w-4 h-4" aria-hidden="true" />
-          {t("settings.dictionary.addNew")}
-        </Button>
-      </div>
-      <Tab query={query} adding={adding} onAddingChange={setAdding} />
+      {tab === "style" ? (
+        <Style />
+      ) : (
+        <>
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1">
+              <Search
+                className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40"
+                aria-hidden="true"
+              />
+              <Input
+                type="search"
+                className="w-full ps-9"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("settings.dictionary.searchPlaceholder")}
+                aria-label={t("settings.dictionary.searchPlaceholder")}
+              />
+            </div>
+            <Button
+              onClick={() => setAdding(true)}
+              className="inline-flex items-center gap-1.5 py-2"
+            >
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              {t("settings.dictionary.addNew")}
+            </Button>
+          </div>
+          <List query={query} adding={adding} onAddingChange={setAdding} />
+        </>
+      )}
     </div>
   );
 };

@@ -1,13 +1,21 @@
 import { expect, test } from "@playwright/test";
 
 const saved = (page: import("@playwright/test").Page) =>
-  page.evaluate(() => window.styleTest.saved);
+  page.evaluate(() => window.customizeTest.savedStyles);
+
+const openStyleTab = async (
+  page: import("@playwright/test").Page,
+  query = "",
+) => {
+  await page.goto(`/tests/fixtures/customize.html${query}`);
+  await page.getByRole("tab", { name: "Style" }).click();
+};
 
 const rows = (page: import("@playwright/test").Page) =>
   page.getByRole("list").last().getByRole("listitem");
 
 test("shows each style with its example", async ({ page }) => {
-  await page.goto("/tests/fixtures/style.html");
+  await openStyleTab(page);
   await expect(page.getByText("Formal (default)")).toBeVisible();
   await expect(page.getByText("No caps + less punctuation")).toBeVisible();
   await expect(
@@ -19,14 +27,14 @@ test("shows each style with its example", async ({ page }) => {
 });
 
 test("lists the default casual apps", async ({ page }) => {
-  await page.goto("/tests/fixtures/style.html");
+  await openStyleTab(page);
   await expect(rows(page)).toHaveCount(2);
   await expect(rows(page).first()).toContainText("Messages");
   await expect(rows(page).first()).toContainText("Very casual");
 });
 
 test("adds a running app that has no rule yet", async ({ page }) => {
-  await page.goto("/tests/fixtures/style.html");
+  await openStyleTab(page);
   await page.getByRole("button", { name: "Add an open app" }).click();
   await expect(page.getByRole("button", { name: "Mail" })).toBeVisible();
   // Messages already has a rule
@@ -44,7 +52,7 @@ test("adds a running app that has no rule yet", async ({ page }) => {
 });
 
 test("changes and removes a rule", async ({ page }) => {
-  await page.goto("/tests/fixtures/style.html");
+  await openStyleTab(page);
   const slack = rows(page).nth(1);
   await slack.getByRole("button", { name: "Very casual" }).click();
   await slack.getByRole("button", { name: "Formal" }).click();
@@ -57,7 +65,7 @@ test("changes and removes a rule", async ({ page }) => {
 });
 
 test("explains that per-app style is macOS only", async ({ page }) => {
-  await page.goto("/tests/fixtures/style.html?os=windows");
+  await openStyleTab(page, "?os=windows");
   await expect(page.getByText("only available on macOS")).toBeVisible();
   await expect(
     page.getByRole("button", { name: "Add an open app" }),

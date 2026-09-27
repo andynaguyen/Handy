@@ -150,12 +150,12 @@ const AppRules: React.FC = () => {
   );
 };
 
-export const StyleSettings: React.FC = () => {
+export const Style: React.FC = () => {
   const { t } = useTranslation();
   const isMacOS = useOsType() === "macos";
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-5">
+    <div className="space-y-5">
       <p className="text-sm text-text/65">{t("settings.style.intro")}</p>
       <StyleCards />
       {isMacOS ? (
