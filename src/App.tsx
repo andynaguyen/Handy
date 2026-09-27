@@ -113,7 +113,7 @@ function App() {
     }
   }, [onboardingStep, refreshAudioDevices, refreshOutputDevices]);
 
-  // Handle keyboard shortcuts for debug mode toggle
+  // Handle in-app keyboard shortcuts (debug mode toggle, open Settings)
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check for Ctrl+Shift+D (Windows/Linux) or Cmd+Shift+D (macOS)
@@ -126,6 +126,14 @@ function App() {
         event.preventDefault();
         const currentDebugMode = settings?.debug_mode ?? false;
         updateSetting("debug_mode", !currentDebugMode);
+      }
+
+      // Ctrl+, (Windows/Linux) or Cmd+, (macOS) opens Settings. Shortcut
+      // recorders only render inside Settings, so recording Cmd+, lands here
+      // as a no-op and the recorder still captures it.
+      if (event.key === "," && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        setCurrentSection("settings");
       }
     };
 
