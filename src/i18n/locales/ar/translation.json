@@ -12,7 +12,6 @@
   "sidebar": {
     "general": "عام",
     "advanced": "متقدم",
-    "postProcessing": "معالجة لاحقة",
     "history": "السجل",
     "stats": "الإحصائيات",
     "dictionary": "القاموس",
@@ -385,11 +384,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "مفتاح الاختصار"
-      },
       "api": {
-        "title": "API (متوافق مع OpenAI)",
         "provider": {
           "title": "المزود",
           "description": "اختر مزوداً متوافقاً مع OpenAI."
@@ -417,7 +412,6 @@
         }
       },
       "prompts": {
-        "title": "المطالبة",
         "selectedPrompt": {
           "title": "المطالبة المختارة",
           "description": ".اختر قالباً لتحسين التفريغ الصوتي أو أنشئ قالباً جديداً. استخدم ${output} داخل نص المطالبة للإشارة إلى النص الملتقط"

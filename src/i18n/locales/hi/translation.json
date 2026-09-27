@@ -13,7 +13,6 @@
     "general": "सामान्य",
     "models": "मॉडल",
     "advanced": "ऐडवांस",
-    "postProcessing": "पोस्ट प्रोसेस",
     "history": "इतिहास",
     "stats": "आंकड़े",
     "dictionary": "शब्दकोश",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "हॉटकी"
-      },
       "api": {
-        "title": "API (OpenAI संगत)",
         "provider": {
           "title": "प्रोवाइडर",
           "description": "कोई OpenAI-संगत प्रोवाइडर चुनें."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "प्रॉम्प्ट",
         "selectedPrompt": {
           "title": "चुना गया प्रॉम्प्ट",
           "description": "ट्रांसक्रिप्शन को बेहतर बनाने के लिए कोई टेम्पलेट चुनें या नया बनाएं. प्रॉम्प्ट टेक्स्ट में कैप्चर किए गए ट्रांसक्रिप्ट का इस्तेमाल करने के लिए ${output} लिखें."

@@ -7,7 +7,6 @@ import {
   FlaskConical,
   History,
   Info,
-  Sparkles,
   Cpu,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
@@ -24,7 +23,6 @@ import {
   DictionarySettings,
   DebugSettings,
   AboutSettings,
-  PostProcessingSettings,
   ModelsSettings,
 } from "./settings";
 
@@ -83,12 +81,6 @@ export const SECTIONS_CONFIG = {
     icon: Cog,
     component: AdvancedSettings,
     enabled: () => true,
-  },
-  postprocessing: {
-    labelKey: "sidebar.postProcessing",
-    icon: Sparkles,
-    component: PostProcessingSettings,
-    enabled: (settings) => settings?.post_process_enabled ?? false,
   },
   debug: {
     labelKey: "sidebar.debug",

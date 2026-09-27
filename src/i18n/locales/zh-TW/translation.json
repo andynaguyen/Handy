@@ -13,7 +13,6 @@
     "general": "一般",
     "models": "模型",
     "advanced": "進階",
-    "postProcessing": "後處理",
     "history": "歷史紀錄",
     "stats": "統計",
     "dictionary": "詞典",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "快捷鍵"
-      },
       "api": {
-        "title": "API（相容 OpenAI）",
         "provider": {
           "title": "供應商",
           "description": "選擇一個相容 OpenAI 的供應商"
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "提示詞",
         "selectedPrompt": {
           "title": "已選提示詞",
           "description": "選擇用於最佳化轉錄的範本或建立新範本。在提示詞文字中使用 ${output} 來引用轉錄結果"

@@ -13,7 +13,6 @@
     "general": "Generelt",
     "models": "Modeller",
     "advanced": "Avanceret",
-    "postProcessing": "Efterbehandling",
     "history": "Historik",
     "stats": "Statistik",
     "dictionary": "Ordbog",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Genvejstast"
-      },
       "api": {
-        "title": "API (OpenAI-kompatibel)",
         "provider": {
           "title": "Udbyder",
           "description": "Vælg en OpenAI-kompatibel udbyder."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Valgt prompt",
           "description": "Vælg en skabelon til at forfine transskriptioner, eller opret en ny. Brug ${output} i promptteksten for at referere til den fangede transskription."

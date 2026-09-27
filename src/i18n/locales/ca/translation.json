@@ -13,7 +13,6 @@
     "general": "General",
     "models": "Models",
     "advanced": "Avançat",
-    "postProcessing": "Postprocessament",
     "history": "Historial",
     "stats": "Estadístiques",
     "dictionary": "Diccionari",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Drecera de teclat"
-      },
       "api": {
-        "title": "API (compatible amb OpenAI)",
         "provider": {
           "title": "Proveïdor",
           "description": "Seleccioneu un proveïdor compatible amb OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Indicació",
         "selectedPrompt": {
           "title": "Indicació seleccionada",
           "description": "Seleccioneu una plantilla per millorar les transcripcions o creeu-ne una de nova. Utilitzeu ${output} dins del text de la indicació per fer referència a la transcripció enregistrada."

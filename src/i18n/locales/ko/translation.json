@@ -13,7 +13,6 @@
     "general": "일반",
     "models": "모델",
     "advanced": "고급",
-    "postProcessing": "후처리",
     "history": "히스토리",
     "stats": "통계",
     "dictionary": "사전",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "단축키"
-      },
       "api": {
-        "title": "API (OpenAI 호환)",
         "provider": {
           "title": "제공자",
           "description": "OpenAI 호환 제공자를 선택하세요."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "프롬프트",
         "selectedPrompt": {
           "title": "선택된 프롬프트",
           "description": "텍스트 변환을 개선하기 위한 템플릿을 선택하거나 새로 만드세요. 프롬프트 텍스트 내에서 ${output}를 사용하여 캡처된 텍스트를 참조하세요."

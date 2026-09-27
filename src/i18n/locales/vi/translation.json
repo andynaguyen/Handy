@@ -13,7 +13,6 @@
     "general": "Chung",
     "models": "Mô hình",
     "advanced": "Nâng cao",
-    "postProcessing": "Xử lý sau",
     "history": "Lịch sử",
     "stats": "Thống kê",
     "dictionary": "Từ điển",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Phím tắt"
-      },
       "api": {
-        "title": "API (Tương thích OpenAI)",
         "provider": {
           "title": "Nhà cung cấp",
           "description": "Chọn một nhà cung cấp tương thích OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Câu lệnh",
         "selectedPrompt": {
           "title": "Prompt đã chọn",
           "description": "Chọn một mẫu để tinh chỉnh bản ghi hoặc tạo mới. Sử dụng ${output} trong văn bản prompt để tham chiếu bản ghi đã chụp."

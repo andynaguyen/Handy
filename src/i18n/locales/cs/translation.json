@@ -13,7 +13,6 @@
     "general": "Obecné",
     "models": "Modely",
     "advanced": "Pokročilé",
-    "postProcessing": "Následné zpracování",
     "history": "Historie",
     "stats": "Statistiky",
     "dictionary": "Slovník",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Klávesová zkratka"
-      },
       "api": {
-        "title": "API (kompatibilní s OpenAI)",
         "provider": {
           "title": "Poskytovatel",
           "description": "Vyberte poskytovatele kompatibilního s OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Vybraný prompt",
           "description": "Vyberte šablonu pro zpřesnění přepisu nebo vytvořte novou. V textu promptu použijte ${output} pro vložení zachyceného přepisu."

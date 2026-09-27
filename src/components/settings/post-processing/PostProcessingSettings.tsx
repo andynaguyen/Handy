@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { RefreshCcw } from "lucide-react";
+import { ChevronDown, RefreshCcw } from "lucide-react";
 import { commands } from "@/bindings";
 
 import { Alert } from "../../ui/Alert";
-import {
-  Dropdown,
-  SettingContainer,
-  SettingsGroup,
-  Textarea,
-} from "@/components/ui";
+import { Dropdown, SettingContainer, Textarea } from "@/components/ui";
 import { Button } from "../../ui/Button";
 import { ResetButton } from "../../ui/ResetButton";
 import { Input } from "../../ui/Input";
@@ -422,26 +417,45 @@ export const PostProcessingSettingsPrompts = React.memo(
 );
 PostProcessingSettingsPrompts.displayName = "PostProcessingSettingsPrompts";
 
+// Rendered inside Advanced > Experimental, under the post-processing toggle.
+// Collapsed by default so the prompt editor doesn't bury the other
+// experimental settings.
 export const PostProcessingSettings: React.FC = () => {
   const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("settings.postProcessing.hotkey.title")}>
-        <ShortcutInput
-          shortcutId="transcribe_with_post_process"
-          descriptionMode="inline"
-          grouped={true}
+    <>
+      <button
+        type="button"
+        className="flex items-center justify-between gap-4 w-full min-h-14 px-5 py-3 text-start cursor-pointer hover:bg-mid-gray/5 transition-colors"
+        onClick={() => setExpanded((value) => !value)}
+        aria-expanded={expanded}
+      >
+        <div className="min-w-0">
+          <h3 className="text-sm font-medium">
+            {t("settings.postProcessing.configure.title")}
+          </h3>
+          <p className="text-[13px] leading-snug text-text/55 mt-0.5">
+            {t("settings.postProcessing.configure.description")}
+          </p>
+        </div>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-text/55 transition-transform ${expanded ? "rotate-180" : ""}`}
         />
-      </SettingsGroup>
+      </button>
 
-      <SettingsGroup title={t("settings.postProcessing.api.title")}>
-        <PostProcessingSettingsApi />
-      </SettingsGroup>
-
-      <SettingsGroup title={t("settings.postProcessing.prompts.title")}>
-        <PostProcessingSettingsPrompts />
-      </SettingsGroup>
-    </div>
+      {expanded && (
+        <div className="bg-mid-gray/5 divide-y divide-mid-gray/15">
+          <ShortcutInput
+            shortcutId="transcribe_with_post_process"
+            descriptionMode="inline"
+            grouped={true}
+          />
+          <PostProcessingSettingsApi />
+          <PostProcessingSettingsPrompts />
+        </div>
+      )}
+    </>
   );
 };

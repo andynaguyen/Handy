@@ -13,7 +13,6 @@
     "general": "כללי",
     "models": "מודלים",
     "advanced": "מתקדם",
-    "postProcessing": "עיבוד משלים",
     "history": "היסטוריה",
     "stats": "סטטיסטיקה",
     "dictionary": "מילון",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "קיצור מקשים"
-      },
       "api": {
-        "title": "API (תואם OpenAI)",
         "provider": {
           "title": "ספק",
           "description": "בחר ספק שתואם ל-OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "פרומפט",
         "selectedPrompt": {
           "title": "פרומפט נבחר",
           "description": "בחר תבנית לשיפור התמלול או צור חדשה. השתמש ב-${output} בתוך טקסט הפרומפט כדי להפנות לתמלול שנקלט."

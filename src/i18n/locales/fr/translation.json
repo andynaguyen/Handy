@@ -13,7 +13,6 @@
     "general": "Général",
     "models": "Modèles",
     "advanced": "Avancé",
-    "postProcessing": "Post-traitement",
     "history": "Historique",
     "stats": "Statistiques",
     "dictionary": "Dictionnaire",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Raccourci clavier"
-      },
       "api": {
-        "title": "API (Compatible OpenAI)",
         "provider": {
           "title": "Fournisseur",
           "description": "Sélectionnez un fournisseur compatible OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt sélectionné",
           "description": "Sélectionnez un modèle pour affiner les transcriptions ou créez-en un nouveau. Utilisez ${output} dans le texte du prompt pour référencer la transcription capturée."

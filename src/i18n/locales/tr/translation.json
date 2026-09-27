@@ -13,7 +13,6 @@
     "general": "Genel",
     "models": "Modeller",
     "advanced": "Gelişmiş",
-    "postProcessing": "Son İşlem",
     "history": "Geçmiş",
     "stats": "İstatistikler",
     "dictionary": "Sözlük",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Kısayol Tuşu"
-      },
       "api": {
-        "title": "API (OpenAI Uyumlu)",
         "provider": {
           "title": "Sağlayıcı",
           "description": "OpenAI uyumlu bir sağlayıcı seçin."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Seçili Prompt",
           "description": "Transkripsiyonları iyileştirmek için bir şablon seçin veya yeni bir tane oluşturun. Yakalanan transkripte referans vermek için prompt metni içinde ${output} kullanın."

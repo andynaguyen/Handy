@@ -13,7 +13,6 @@
     "general": "General",
     "models": "Models",
     "advanced": "Advanced",
-    "postProcessing": "Post Process",
     "history": "History",
     "stats": "Stats",
     "dictionary": "Dictionary",
@@ -419,11 +418,11 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Hotkey"
+      "configure": {
+        "title": "Configure Post Processing",
+        "description": "Hotkey, provider, API key, model, and prompt"
       },
       "api": {
-        "title": "API (OpenAI Compatible)",
         "provider": {
           "title": "Provider",
           "description": "Select an OpenAI-compatible provider."
@@ -451,7 +450,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Selected Prompt",
           "description": "Select a template for refining transcriptions or create a new one. Use ${output} inside the prompt text to reference the captured transcript."

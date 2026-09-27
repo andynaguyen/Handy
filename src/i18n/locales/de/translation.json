@@ -13,7 +13,6 @@
     "general": "Allgemein",
     "models": "Modelle",
     "advanced": "Erweitert",
-    "postProcessing": "Nachbearbeitung",
     "history": "Verlauf",
     "stats": "Statistik",
     "dictionary": "Wörterbuch",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Tastenkürzel"
-      },
       "api": {
-        "title": "API (OpenAI-kompatibel)",
         "provider": {
           "title": "Anbieter",
           "description": "Wähle einen OpenAI-kompatiblen Anbieter."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Ausgewählter Prompt",
           "description": "Wähle eine Vorlage zur Verfeinerung von Transkriptionen oder erstelle eine neue. Verwende ${output} im Prompt-Text, um auf das erfasste Transkript zu verweisen."

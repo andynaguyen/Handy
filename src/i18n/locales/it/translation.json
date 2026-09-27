@@ -13,7 +13,6 @@
     "general": "Generale",
     "models": "Modelli",
     "advanced": "Avanzate",
-    "postProcessing": "Post-Elaborazione",
     "history": "Cronologia",
     "stats": "Statistiche",
     "dictionary": "Dizionario",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Tasto di scelta rapida"
-      },
       "api": {
-        "title": "API (Compatibile con OpenAI)",
         "provider": {
           "title": "Provider",
           "description": "Seleziona un provider compatibile con OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Prompt Selezionato",
           "description": "Seleziona un template per migliorare le trascrizioni o creane uno nuovo. Usa ${output} nel prompt per fare riferimento alla trascrizione."

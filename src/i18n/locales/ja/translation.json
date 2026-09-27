@@ -13,7 +13,6 @@
     "general": "一般",
     "models": "モデル",
     "advanced": "詳細設定",
-    "postProcessing": "後処理",
     "history": "履歴",
     "stats": "統計",
     "dictionary": "辞書",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "ショートカット"
-      },
       "api": {
-        "title": "API (OpenAI 互換)",
         "provider": {
           "title": "プロバイダー",
           "description": "OpenAI 互換のプロバイダーを選択。"
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "プロンプト",
         "selectedPrompt": {
           "title": "選択したプロンプト",
           "description": "文字起こしを改善するテンプレートを選択するか、新しく作成します。プロンプトテキスト内で ${output} を使用して、キャプチャした文字起こしを参照します。"

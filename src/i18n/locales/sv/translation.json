@@ -13,7 +13,6 @@
     "general": "Allmänt",
     "models": "Modeller",
     "advanced": "Avancerat",
-    "postProcessing": "Efterbearbetning",
     "history": "Historik",
     "stats": "Statistik",
     "dictionary": "Ordlista",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Snabbkommando"
-      },
       "api": {
-        "title": "API (OpenAI-kompatibelt)",
         "provider": {
           "title": "Leverantör",
           "description": "Välj en OpenAI-kompatibel leverantör."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Vald prompt",
           "description": "Välj en mall för att förfina transkriptioner eller skapa en ny. Använd ${output} inuti prompttexten för att referera till den fångade transkriptionen."

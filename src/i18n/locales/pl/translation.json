@@ -13,7 +13,6 @@
     "general": "Ogólne",
     "models": "Modele",
     "advanced": "Zaawansowane",
-    "postProcessing": "Postproces",
     "history": "Historia",
     "stats": "Statystyki",
     "dictionary": "Słownik",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Skrót klawiszowy"
-      },
       "api": {
-        "title": "API (zgodne z OpenAI)",
         "provider": {
           "title": "Dostawca",
           "description": "Wybierz dostawcę zgodnego z OpenAI."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Wybrany prompt",
           "description": "Wybierz szablon do ulepszania transkrypcji lub utwórz nowy. Użyj ${output} w treści, aby odwołać się do przechwyconej transkrypcji."

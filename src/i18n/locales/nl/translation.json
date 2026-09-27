@@ -13,7 +13,6 @@
     "general": "Algemeen",
     "models": "Modellen",
     "advanced": "Geavanceerd",
-    "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
     "stats": "Statistieken",
     "dictionary": "Woordenboek",
@@ -408,11 +407,7 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "Sneltoets"
-      },
       "api": {
-        "title": "API (OpenAI-compatibel)",
         "provider": {
           "title": "Provider",
           "description": "Selecteer een OpenAI-compatibele provider."
@@ -440,7 +435,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Geselecteerde prompt",
           "description": "Selecteer een sjabloon voor het verfijnen van transcripties of maak een nieuwe aan. Gebruik ${output} in de prompttekst om naar de gemaakte transcriptie te verwijzen."
