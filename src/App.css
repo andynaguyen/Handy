@@ -80,6 +80,18 @@
   scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 
+/* Height of the drag strip across the top of the main window. macOS uses an
+   overlay title bar (see lib.rs), so views pad their tops by this much to keep
+   content clear of the traffic lights. Other platforms keep native title bars
+   and get 0. */
+:root {
+  --titlebar-height: 0px;
+}
+
+:root[data-platform="macos"] {
+  --titlebar-height: 28px;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 14px;

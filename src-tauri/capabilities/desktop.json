@@ -4,6 +4,7 @@
   "windows": ["main"],
   "permissions": [
     "autostart:default",
+    "core:window:allow-start-dragging",
     "global-shortcut:default",
     "autostart:default",
     "autostart:default",

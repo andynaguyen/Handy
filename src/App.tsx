@@ -360,7 +360,7 @@ function App() {
     content = (
       <div
         dir={direction}
-        className="h-screen flex flex-col select-none cursor-default"
+        className="h-screen flex flex-col pt-(--titlebar-height) select-none cursor-default"
       >
         <ErrorBoundary context="What's New">
           <WhatsNewGate />
@@ -391,6 +391,13 @@ function App() {
   return (
     <>
       {toaster}
+      {/* Window drag strip, zero height outside macOS. Views pad their tops by
+          the same height so nothing clickable sits underneath it. Tauri's drag
+          script also zooms the window on double-click. */}
+      <div
+        data-tauri-drag-region
+        className="fixed inset-x-0 top-0 h-(--titlebar-height)"
+      />
       {content}
     </>
   );

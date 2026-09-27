@@ -968,6 +968,18 @@ pub fn run(cli_args: CliArgs) {
                 win_builder = win_builder.data_directory(data_dir.join("webview"));
             }
 
+            // On macOS, drop the title bar and let the web content run to the top
+            // edge, with the traffic lights drawn over the sidebar. The title is
+            // hidden, not removed, so Mission Control and the Window menu still
+            // show it. The frontend reserves the top strip as a drag region (see
+            // `--titlebar-height` in App.css).
+            #[cfg(target_os = "macos")]
+            {
+                win_builder = win_builder
+                    .title_bar_style(tauri::TitleBarStyle::Overlay)
+                    .hidden_title(true);
+            }
+
             // Only used on Windows, to disable WebView2 browser accelerators.
             #[cfg_attr(not(target_os = "windows"), allow(unused_variables))]
             let main_window = win_builder.build()?;
