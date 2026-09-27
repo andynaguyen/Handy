@@ -11,7 +11,7 @@ test("shows each style with its example", async ({ page }) => {
   await expect(page.getByText("No caps + less punctuation")).toBeVisible();
   await expect(
     page.getByText(
-      "hey are you free for lunch tomorrow? let's do 12 if that works for you",
+      "hey are you free for lunch tomorrow? lets do 12 if that works for you",
       { exact: true },
     ),
   ).toBeVisible();

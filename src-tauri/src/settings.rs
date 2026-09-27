@@ -102,7 +102,8 @@ pub enum WritingStyle {
     Formal,
     /// Caps, no commas, no trailing period.
     Casual,
-    /// Casual plus lowercase sentence starts and a lowercase "i".
+    /// Casual plus lowercase sentence starts, a lowercase "i", and most
+    /// apostrophes dropped ("dont").
     VeryCasual,
 }
 

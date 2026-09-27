@@ -1277,7 +1277,8 @@ export type WritingStyle =
  */
 "casual" | 
 /**
- * Casual plus lowercase sentence starts and a lowercase "i".
+ * Casual plus lowercase sentence starts, a lowercase "i", and most
+ * apostrophes dropped ("dont").
  */
 "very_casual"
 

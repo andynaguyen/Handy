@@ -20,12 +20,14 @@ pub fn style_for_app(rules: &[AppStyleRule], bundle_id: Option<&str>) -> Writing
 /// - Casual removes commas (except inside numbers like "1,000") and drops one
 ///   trailing period. `?`, `!`, `...`, and periods between sentences stay.
 /// - Very casual also lowercases the first letter of each sentence (acronyms
-///   like "API" excepted) and the pronoun "I" and its contractions anywhere.
+///   like "API" excepted) and the pronoun "I" and its contractions anywhere,
+///   and drops apostrophes inside words ("don't" -> "dont") except in
+///   [`KEPT_CONTRACTIONS`].
 pub fn apply_style(text: &str, style: WritingStyle) -> String {
     if style == WritingStyle::Formal {
         return text.to_string();
     }
-    let lowercase_sentences = style == WritingStyle::VeryCasual;
+    let very_casual = style == WritingStyle::VeryCasual;
 
     let trimmed = text.trim_end();
     let trailing_whitespace = &text[trimmed.len()..];
@@ -52,9 +54,11 @@ pub fn apply_style(text: &str, style: WritingStyle) -> String {
             if spaced_before && matches!(next, Some(' ' | '\t')) {
                 chars.next();
             }
+        } else if very_casual && is_droppable_apostrophe(body, index, prev, next) {
+            // "don't" -> "dont"
         } else {
             let rest = &body[index..];
-            let lowercase = lowercase_sentences
+            let lowercase = very_casual
                 && ((sentence_start && should_lowercase(rest)) || is_pronoun_i(prev, rest));
             if lowercase {
                 styled.extend(c.to_lowercase());
@@ -68,6 +72,48 @@ pub fn apply_style(text: &str, style: WritingStyle) -> String {
     }
     styled.push_str(trailing_whitespace);
     styled
+}
+
+/// Contractions that read as a different word without the apostrophe ("we'll"
+/// vs "well"), so Very casual keeps it.
+const KEPT_CONTRACTIONS: [&str; 8] = [
+    "we'll", "we're", "i'll", "he'll", "she'll", "i'd", "she'd", "we'd",
+];
+
+fn is_apostrophe(c: char) -> bool {
+    matches!(c, '\'' | '\u{2019}')
+}
+
+/// Whether the apostrophe at `index` sits between two letters in a word that
+/// isn't one of [`KEPT_CONTRACTIONS`]. Quote marks at word edges don't count.
+fn is_droppable_apostrophe(
+    body: &str,
+    index: usize,
+    prev: Option<char>,
+    next: Option<char>,
+) -> bool {
+    let between_letters =
+        prev.is_some_and(char::is_alphabetic) && next.is_some_and(char::is_alphabetic);
+    if !between_letters || !body[index..].starts_with(is_apostrophe) {
+        return false;
+    }
+    let is_word_char = |c: char| c.is_alphabetic() || is_apostrophe(c);
+    let start = body[..index]
+        .char_indices()
+        .rev()
+        .take_while(|&(_, c)| is_word_char(c))
+        .last()
+        .map_or(index, |(i, _)| i);
+    let end = body[index..]
+        .char_indices()
+        .find(|&(_, c)| !is_word_char(c))
+        .map_or(body.len(), |(i, _)| index + i);
+    let word: String = body[start..end]
+        .chars()
+        .map(|c| if is_apostrophe(c) { '\'' } else { c })
+        .flat_map(char::to_lowercase)
+        .collect();
+    !KEPT_CONTRACTIONS.contains(&word.trim_matches('\''))
 }
 
 /// A comma between two digits, as in "1,000".
@@ -141,7 +187,7 @@ mod tests {
     fn very_casual_matches_the_example() {
         assert_eq!(
             very_casual(EXAMPLE),
-            "hey are you free for lunch tomorrow? let's do 12 if that works for you"
+            "hey are you free for lunch tomorrow? lets do 12 if that works for you"
         );
     }
 
@@ -187,11 +233,11 @@ mod tests {
         );
         assert_eq!(
             very_casual("Sure, I'm in and I've seen it. I'd say yes, I."),
-            "sure i'm in and i've seen it. i'd say yes i"
+            "sure im in and ive seen it. i'd say yes i"
         );
         assert_eq!(
             very_casual("So I\u{2019}m told, and I\u{2019}d agree."),
-            "so i\u{2019}m told and i\u{2019}d agree"
+            "so im told and i\u{2019}d agree"
         );
     }
 
@@ -202,10 +248,52 @@ mod tests {
             "we saw Italy and IBM. it was fun"
         );
         // Neither a standalone "I" nor one of its contractions
+        assert_eq!(very_casual("Say 'I' twice, or I's."), "say 'I' twice or Is");
+    }
+
+    #[test]
+    fn very_casual_drops_apostrophes_inside_words() {
         assert_eq!(
-            very_casual("Say 'I' twice, or I's."),
-            "say 'I' twice or I's"
+            very_casual("Sounds good. I'll be there, I don't think I'm late."),
+            "sounds good. i'll be there i dont think im late"
         );
+        assert_eq!(
+            very_casual("don't won't can't it's let's I'm I've you're that's andy's"),
+            "dont wont cant its lets im ive youre thats andys"
+        );
+        assert_eq!(very_casual("Andy's car."), "andys car");
+        assert_eq!(
+            very_casual("Don\u{2019}t worry, it\u{2019}s fine."),
+            "dont worry its fine"
+        );
+    }
+
+    #[test]
+    fn very_casual_keeps_apostrophes_that_change_the_word() {
+        assert_eq!(
+            very_casual("we'll we're I'll he'll she'll I'd she'd we'd"),
+            "we'll we're i'll he'll she'll i'd she'd we'd"
+        );
+        assert_eq!(very_casual("We'll see."), "we'll see");
+        assert_eq!(very_casual("Sure. SHE'LL go."), "sure. SHE'LL go");
+        assert_eq!(
+            very_casual("Maybe we\u{2019}re late, she\u{2019}d know."),
+            "maybe we\u{2019}re late she\u{2019}d know"
+        );
+    }
+
+    #[test]
+    fn very_casual_keeps_quote_marks_at_word_edges() {
+        assert_eq!(
+            very_casual("She said 'don't' and 'we'll'."),
+            "she said 'dont' and 'we'll'"
+        );
+        assert_eq!(very_casual("The '90s."), "the '90s");
+    }
+
+    #[test]
+    fn casual_keeps_apostrophes() {
+        assert_eq!(casual("I don't know, it's fine."), "I don't know it's fine");
     }
 
     #[test]
