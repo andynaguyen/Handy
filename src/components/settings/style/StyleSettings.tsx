@@ -25,6 +25,12 @@ const StyleCards: React.FC = () => {
           <li key={style.id} className="bg-card rounded-2xl px-4 py-3.5">
             <p className="text-[15px] font-medium">
               {t(`settings.style.styles.${style.key}.name`)}
+              {style.id === "formal" && (
+                <span className="font-normal text-text/55">
+                  {" "}
+                  {t("settings.style.default")}
+                </span>
+              )}
             </p>
             <p className="text-[13px] text-text/55">
               {t(`settings.style.styles.${style.key}.description`)}

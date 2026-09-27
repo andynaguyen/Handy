@@ -516,6 +516,7 @@
       }
     },
     "style": {
+      "default": "(default)",
       "intro": "Handy formats each dictation for the app in front when you start recording. Apps without a rule use Formal.",
       "styles": {
         "formal": {

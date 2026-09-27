@@ -8,6 +8,7 @@ const rows = (page: import("@playwright/test").Page) =>
 
 test("shows each style with its example", async ({ page }) => {
   await page.goto("/tests/fixtures/style.html");
+  await expect(page.getByText("Formal (default)")).toBeVisible();
   await expect(page.getByText("No caps + less punctuation")).toBeVisible();
   await expect(
     page.getByText(
