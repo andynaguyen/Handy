@@ -662,16 +662,6 @@
       "appDataDirectory": {
         "title": "Directori de dades de l'aplicació",
         "description": "Ubicació on el Handy desa les dades"
-      },
-      "sourceCode": {
-        "title": "Codi font",
-        "description": "Consulta el codi font i col·laboreu-hi",
-        "button": "Mostra al GitHub"
-      },
-      "supportDevelopment": {
-        "title": "Dona suport al desenvolupament",
-        "description": "Ajudeu-nos a continuar desenvolupant el Handy",
-        "button": "Feu una donació"
       }
     }
   },

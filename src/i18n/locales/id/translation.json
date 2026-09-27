@@ -660,16 +660,6 @@
       "appDataDirectory": {
         "title": "Direktori Data Aplikasi",
         "description": "Lokasi Handy menyimpan datanya"
-      },
-      "sourceCode": {
-        "title": "Kode Sumber",
-        "description": "Lihat kode sumber dan berkontribusi",
-        "button": "Lihat di GitHub"
-      },
-      "supportDevelopment": {
-        "title": "Dukung Pengembangan",
-        "description": "Bantu kami terus mengembangkan Handy",
-        "button": "Donasi"
       }
     }
   },

@@ -660,16 +660,6 @@
       "appDataDirectory": {
         "title": "App-datamap",
         "description": "Locatie waar Handy de gegevens opslaat"
-      },
-      "sourceCode": {
-        "title": "Broncode",
-        "description": "Bekijk de broncode en draag bij",
-        "button": "Bekijk op GitHub"
-      },
-      "supportDevelopment": {
-        "title": "Ontwikkeling ondersteunen",
-        "description": "Help ons om te blijven bouwen aan Handy",
-        "button": "Doneren"
       }
     }
   },
