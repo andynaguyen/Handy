@@ -236,9 +236,16 @@ async changeVoiceSubmitKeywordSetting(keyword: string) : Promise<Result<null, st
     else return { status: "error", error: e  as any };
 }
 },
+async changeScrubEnabledSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_scrub_enabled_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
- * An empty keyword turns scrubbing off. Otherwise every word needs a letter
- * or digit, like the voice submit keyword.
+ * Rejects keywords with no letters or digits, like the voice submit keyword.
  */
 async changeScrubKeywordSetting(keyword: string) : Promise<Result<null, string>> {
     try {
@@ -1051,10 +1058,10 @@ selected_channel?: number | null; clamshell_microphone?: string | null; selected
  */
 voice_submit_enabled?: boolean; voice_submit_keyword?: string; 
 /**
- * Saying this throws away everything dictated before it in the current
- * recording. Empty turns scrubbing off.
+ * Saying `scrub_keyword` throws away everything dictated before it in the
+ * current recording.
  */
-scrub_keyword?: string; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: SecretMap; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; theme?: Theme; experimental_enabled?: boolean; lazy_stream_close?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; paste_delay_after_ms?: number; 
+scrub_enabled?: boolean; scrub_keyword?: string; post_process_enabled?: boolean; post_process_provider_id?: string; post_process_providers?: PostProcessProvider[]; post_process_api_keys?: SecretMap; post_process_models?: Partial<{ [key in string]: string }>; post_process_prompts?: LLMPrompt[]; post_process_selected_prompt_id?: string | null; mute_while_recording?: boolean; append_trailing_space?: boolean; app_language?: string; theme?: Theme; experimental_enabled?: boolean; lazy_stream_close?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; paste_delay_after_ms?: number; 
 /**
  * Debug-gated ("beta") receipt-sequenced paste: restore the clipboard only
  * after the target app actually reads the transcript, instead of after a

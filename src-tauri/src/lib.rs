@@ -685,6 +685,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_auto_submit_key_setting,
             shortcut::change_voice_submit_enabled_setting,
             shortcut::change_voice_submit_keyword_setting,
+            shortcut::change_scrub_enabled_setting,
             shortcut::change_scrub_keyword_setting,
             shortcut::change_post_process_enabled_setting,
             shortcut::change_experimental_enabled_setting,

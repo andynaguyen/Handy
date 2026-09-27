@@ -50,7 +50,7 @@ test("opens on Dictation and switches tabs", async ({ page }) => {
   await expect(heading(page, "Experimental")).toBeVisible();
 });
 
-test("shows the Scrub Keyword row in Transcription > Cleanup", async ({
+test("shows the Voice Scrub toggle in Transcription > Cleanup", async ({
   page,
 }) => {
   await page.goto("/tests/fixtures/settings.html");
@@ -58,10 +58,21 @@ test("shows the Scrub Keyword row in Transcription > Cleanup", async ({
   const cleanup = page.locator("section", {
     has: heading(page, "Cleanup"),
   });
-  await expect(
-    cleanup.getByText("Scrub Keyword", { exact: true }),
-  ).toBeVisible();
+  // Voice Scrub is the last switch in Cleanup
+  const toggle = cleanup.getByRole("checkbox").last();
+  const keywordRow = cleanup.getByText("Scrub Keyword", { exact: true });
+
+  await expect(cleanup.getByText("Voice Scrub", { exact: true })).toBeVisible();
+  await expect(toggle).toBeChecked();
+  await expect(keywordRow).toBeVisible();
   await expect(cleanup.getByRole("textbox")).toHaveValue("scrub that");
+
+  await cleanup
+    .locator("label", { has: page.getByRole("checkbox") })
+    .last()
+    .click();
+  await expect(toggle).not.toBeChecked();
+  await expect(keywordRow).toBeHidden();
 });
 
 test("shows the Experimental tab only when experimental is on", async ({

@@ -330,12 +330,15 @@ fn split_voice_submit(raw: String, keyword: Option<&str>) -> (String, bool) {
     }
 }
 
-/// Keep only what follows the last scrub keyword. Runs right after the
-/// voice-submit split, on raw engine text for the same reason, so every later
-/// step (custom words, fillers, style, snippets, paste, history) sees the
-/// scrubbed text.
-fn apply_scrub(text: String, keyword: &str) -> (String, bool) {
-    match scrub_before_keyword(&text, keyword) {
+/// Keep only what follows the last scrub keyword when scrubbing is on. Runs
+/// right after the voice-submit split, on raw engine text for the same reason,
+/// so every later step (custom words, fillers, style, snippets, paste, history)
+/// sees the scrubbed text.
+fn apply_scrub(text: String, settings: &AppSettings) -> (String, bool) {
+    if !settings.scrub_enabled {
+        return (text, false);
+    }
+    match scrub_before_keyword(&text, &settings.scrub_keyword) {
         Some(rest) => (rest, true),
         None => (text, false),
     }
@@ -1220,7 +1223,7 @@ impl TranscriptionManager {
 
         let settings = get_settings(&self.app_handle);
         let (text, submit) = split_voice_submit(finalized.text, voice_submit_keyword);
-        let (text, scrubbed) = apply_scrub(text, &settings.scrub_keyword);
+        let (text, scrubbed) = apply_scrub(text, &settings);
         // Streaming models do not receive a decode prompt, so custom words
         // always go through the shared fuzzy post-correction path.
         let filtered = post_process_transcription_text(
@@ -1329,7 +1332,7 @@ impl TranscriptionManager {
         // whisper-kind run extension), so they still get fuzzy correction here,
         // same as the ONNX engines.
         let (text, submit) = split_voice_submit(raw.text, voice_submit_keyword);
-        let (text, scrubbed) = apply_scrub(text, &settings.scrub_keyword);
+        let (text, scrubbed) = apply_scrub(text, &settings);
         let filtered_result = post_process_transcription_text(
             text,
             &settings,
@@ -2325,6 +2328,19 @@ mod tests {
 
     fn languages(codes: &[&str]) -> Vec<String> {
         codes.iter().map(|code| (*code).to_string()).collect()
+    }
+
+    #[test]
+    fn scrub_runs_only_when_turned_on() {
+        let mut settings = crate::settings::get_default_settings();
+        let text = || "wrong start scrub that right start".to_string();
+        assert_eq!(
+            apply_scrub(text(), &settings),
+            ("Right start".to_string(), true)
+        );
+
+        settings.scrub_enabled = false;
+        assert_eq!(apply_scrub(text(), &settings), (text(), false));
     }
 
     #[test]
