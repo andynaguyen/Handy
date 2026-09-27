@@ -94,6 +94,27 @@ pub struct Snippet {
     pub text: String,
 }
 
+/// How dictated text is formatted before it's pasted.
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Type)]
+#[serde(rename_all = "snake_case")]
+pub enum WritingStyle {
+    /// Caps and punctuation: the text as transcribed.
+    Formal,
+    /// Caps, no commas, no trailing period.
+    Casual,
+    /// Casual plus lowercase sentence starts and a lowercase "i".
+    VeryCasual,
+}
+
+/// Writing style for dictations started while an app is frontmost (macOS).
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Type)]
+pub struct AppStyleRule {
+    pub bundle_id: String,
+    /// Display name, captured when the rule was added.
+    pub app_name: String,
+    pub style: WritingStyle,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct LLMPrompt {
     pub id: String,
@@ -436,6 +457,8 @@ pub struct AppSettings {
     pub custom_words: Vec<String>,
     #[serde(default)]
     pub snippets: Vec<Snippet>,
+    #[serde(default = "default_app_styles")]
+    pub app_styles: Vec<AppStyleRule>,
     #[serde(default)]
     pub model_unload_timeout: ModelUnloadTimeout,
     #[serde(default = "default_word_correction_threshold")]
@@ -618,6 +641,20 @@ fn default_paste_delay_ms() -> u64 {
 
 fn default_paste_delay_after_ms() -> u64 {
     60
+}
+
+fn default_app_styles() -> Vec<AppStyleRule> {
+    [
+        ("com.apple.MobileSMS", "Messages"),
+        ("com.tinyspeck.slackmacgap", "Slack"),
+    ]
+    .into_iter()
+    .map(|(bundle_id, app_name)| AppStyleRule {
+        bundle_id: bundle_id.to_string(),
+        app_name: app_name.to_string(),
+        style: WritingStyle::VeryCasual,
+    })
+    .collect()
 }
 
 pub fn default_voice_submit_keyword() -> String {
@@ -953,6 +990,7 @@ pub fn get_default_settings() -> AppSettings {
         log_level: default_log_level(),
         custom_words: Vec::new(),
         snippets: Vec::new(),
+        app_styles: default_app_styles(),
         model_unload_timeout: ModelUnloadTimeout::default(),
         word_correction_threshold: default_word_correction_threshold(),
         history_limit: default_history_limit(),
@@ -1421,6 +1459,7 @@ mod tests {
         assert_eq!(settings.vad_backend, VadBackend::Silero);
         assert!(!settings.voice_submit_enabled);
         assert_eq!(settings.voice_submit_keyword, "submit");
+        assert_eq!(settings.app_styles, default_app_styles());
 
         // The 0.1 integer device index is cleared once for transcribe.cpp 0.2.
         // Without an exact device, the retired generic GPU choice becomes Auto.

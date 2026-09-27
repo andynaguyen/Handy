@@ -3,6 +3,7 @@ use crate::managers::{
     history::{DailyUsage, HistoryManager, PaginatedHistory},
     transcription::TranscriptionManager,
 };
+use crate::settings::WritingStyle;
 use std::sync::Arc;
 use tauri::{AppHandle, State};
 
@@ -101,8 +102,14 @@ pub async fn retry_history_entry_transcription(
         return Err("Recording contains no speech".to_string());
     }
 
-    let processed =
-        process_transcription_output(&app, &transcription, entry.post_process_requested).await;
+    // The app the dictation was for isn't stored, so a retry is formal.
+    let processed = process_transcription_output(
+        &app,
+        &transcription,
+        entry.post_process_requested,
+        WritingStyle::Formal,
+    )
+    .await;
     history_manager
         .update_transcription(
             id,

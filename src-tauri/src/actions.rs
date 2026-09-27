@@ -9,20 +9,23 @@ use crate::managers::history::HistoryManager;
 use crate::managers::model::ModelManager;
 use crate::managers::transcription::StreamWorkKind;
 use crate::managers::transcription::TranscriptionManager;
-use crate::settings::{get_settings, AppSettings, OverlayStyle, APPLE_INTELLIGENCE_PROVIDER_ID};
+use crate::settings::{
+    get_settings, AppSettings, OverlayStyle, WritingStyle, APPLE_INTELLIGENCE_PROVIDER_ID,
+};
 use crate::shortcut;
 use crate::tray::{set_tray_state, TrayIconState};
 use crate::utils::{
     self, show_processing_overlay, show_recording_overlay, show_transcribing_overlay,
 };
 use crate::voice_submit::VoiceSubmit;
+use crate::writing_style::{apply_style, style_for_app};
 use crate::TranscriptionCoordinator;
 use ferrous_opencc::{config::BuiltinConfig, OpenCC};
 use log::{debug, error, warn};
 use once_cell::sync::Lazy;
 use std::collections::HashMap;
 use std::future::Future;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 use tauri::Manager;
 use tauri::{AppHandle, Emitter};
@@ -60,6 +63,18 @@ pub trait ShortcutAction: Send + Sync {
 // Transcribe Action
 struct TranscribeAction {
     post_process: bool,
+    /// Bundle id of the frontmost app when recording started. Captured at
+    /// start because the user may switch apps before the paste.
+    start_app: Mutex<Option<String>>,
+}
+
+impl TranscribeAction {
+    fn new(post_process: bool) -> Self {
+        Self {
+            post_process,
+            start_app: Mutex::new(None),
+        }
+    }
 }
 
 /// Field name for structured output JSON schema
@@ -427,6 +442,7 @@ pub(crate) async fn process_transcription_output(
     app: &AppHandle,
     transcription: &str,
     post_process: bool,
+    style: WritingStyle,
 ) -> ProcessedTranscription {
     let settings = get_settings(app);
     let mut final_text = transcription.to_string();
@@ -462,6 +478,14 @@ pub(crate) async fn process_transcription_output(
         post_processed_text = Some(final_text.clone());
     }
 
+    // After post-processing so the LLM can't undo the style, and before snippet
+    // expansion so saved snippet text keeps its caps and commas.
+    let styled = apply_style(&final_text, style);
+    if styled != final_text {
+        final_text = styled;
+        post_processed_text = Some(final_text.clone());
+    }
+
     // Last, so post-processing can't rewrite the snippet text
     let expanded = expand_snippets(
         &final_text,
@@ -486,6 +510,8 @@ impl ShortcutAction for TranscribeAction {
     fn start(&self, app: &AppHandle, binding_id: &str, _shortcut_str: &str) {
         let start_time = Instant::now();
         debug!("TranscribeAction::start called for binding: {}", binding_id);
+
+        *self.start_app.lock().unwrap() = utils::frontmost_app_bundle_id();
 
         // Load model in the background
         let tm = app.state::<Arc<TranscriptionManager>>();
@@ -680,6 +706,9 @@ impl ShortcutAction for TranscribeAction {
         // compact transcribing pill (None no-ops in show_*).
         let settings = get_settings(app);
         let style = settings.overlay_style;
+        let start_app = self.start_app.lock().unwrap().take();
+        let writing_style = style_for_app(&settings.app_styles, start_app.as_deref());
+        debug!("Writing style for {:?}: {:?}", start_app, writing_style);
         let voice_submit_keyword = settings
             .voice_submit_enabled
             .then_some(settings.voice_submit_keyword);
@@ -819,7 +848,12 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             }
                             let Some(processed) = complete_unless_cancelled(
-                                process_transcription_output(&ah, &transcription, post_process),
+                                process_transcription_output(
+                                    &ah,
+                                    &transcription,
+                                    post_process,
+                                    writing_style,
+                                ),
                                 || rm.was_cancelled_since(cancel_generation),
                             )
                             .await
@@ -985,13 +1019,11 @@ pub static ACTION_MAP: Lazy<HashMap<String, Arc<dyn ShortcutAction>>> = Lazy::ne
     let mut map = HashMap::new();
     map.insert(
         "transcribe".to_string(),
-        Arc::new(TranscribeAction {
-            post_process: false,
-        }) as Arc<dyn ShortcutAction>,
+        Arc::new(TranscribeAction::new(false)) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "transcribe_with_post_process".to_string(),
-        Arc::new(TranscribeAction { post_process: true }) as Arc<dyn ShortcutAction>,
+        Arc::new(TranscribeAction::new(true)) as Arc<dyn ShortcutAction>,
     );
     map.insert(
         "cancel".to_string(),

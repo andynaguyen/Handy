@@ -6,6 +6,7 @@ export type { OnboardingPreviewStep } from "./debug/OnboardingPreview";
 export { HistorySettings } from "./history/HistorySettings";
 export { StatsSettings } from "./stats/StatsSettings";
 export { DictionarySettings } from "./dictionary/DictionarySettings";
+export { StyleSettings } from "./style/StyleSettings";
 export { AboutSettings } from "./about/AboutSettings";
 export { ModelsSettings } from "./models/ModelsSettings";
 

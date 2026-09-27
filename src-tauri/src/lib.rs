@@ -25,6 +25,7 @@ mod tray;
 mod tray_i18n;
 mod utils;
 mod voice_submit;
+mod writing_style;
 
 pub use cli::CliArgs;
 #[cfg(debug_assertions)]
@@ -697,6 +698,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::set_post_process_selected_prompt,
             shortcut::update_custom_words,
             shortcut::update_snippets,
+            shortcut::update_app_styles,
             shortcut::suspend_all_bindings,
             shortcut::resume_all_bindings,
             shortcut::change_mute_while_recording_setting,
@@ -724,6 +726,7 @@ pub fn run(cli_args: CliArgs) {
             show_main_window_command,
             commands::cancel_operation,
             commands::is_portable,
+            commands::get_running_apps,
             commands::is_update_checks_locked,
             commands::get_app_dir_path,
             commands::get_app_settings,

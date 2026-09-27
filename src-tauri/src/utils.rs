@@ -129,6 +129,56 @@ pub fn frontmost_app_name() -> Option<String> {
     None
 }
 
+/// Bundle id of the app with keyboard focus, e.g. "com.tinyspeck.slackmacgap".
+#[cfg(target_os = "macos")]
+pub fn frontmost_app_bundle_id() -> Option<String> {
+    let app = objc2_app_kit::NSWorkspace::sharedWorkspace().frontmostApplication()?;
+    app.bundleIdentifier().map(|id| id.to_string())
+}
+
+#[cfg(not(target_os = "macos"))]
+pub fn frontmost_app_bundle_id() -> Option<String> {
+    None
+}
+
+/// An app that could get a writing style rule.
+#[derive(serde::Serialize, specta::Type)]
+pub struct RunningApp {
+    pub bundle_id: String,
+    pub name: String,
+}
+
+/// Running apps that show in the Dock (not Handy itself), sorted by name.
+#[cfg(target_os = "macos")]
+pub fn running_apps() -> Vec<RunningApp> {
+    use objc2_app_kit::{NSApplicationActivationPolicy, NSWorkspace};
+
+    let own_pid = std::process::id() as i32;
+    let mut apps: Vec<RunningApp> = NSWorkspace::sharedWorkspace()
+        .runningApplications()
+        .iter()
+        .filter(|app| {
+            app.activationPolicy() == NSApplicationActivationPolicy::Regular
+                && app.processIdentifier() != own_pid
+        })
+        .filter_map(|app| {
+            let bundle_id = app.bundleIdentifier()?.to_string();
+            let name = app
+                .localizedName()
+                .map_or_else(|| bundle_id.clone(), |name| name.to_string());
+            Some(RunningApp { bundle_id, name })
+        })
+        .collect();
+    apps.sort_by_key(|app| app.name.to_lowercase());
+    apps.dedup_by(|a, b| a.bundle_id == b.bundle_id);
+    apps
+}
+
+#[cfg(not(target_os = "macos"))]
+pub fn running_apps() -> Vec<RunningApp> {
+    Vec::new()
+}
+
 /// Check if using the Wayland display server protocol
 #[cfg(target_os = "linux")]
 pub fn is_wayland() -> bool {

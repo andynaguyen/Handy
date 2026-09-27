@@ -16,6 +16,13 @@ pub fn cancel_operation(app: AppHandle) {
     cancel_current_operation(&app);
 }
 
+/// Running apps the user can add a writing style rule for. Empty off macOS.
+#[tauri::command]
+#[specta::specta]
+pub fn get_running_apps() -> Vec<crate::utils::RunningApp> {
+    crate::utils::running_apps()
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn is_portable() -> bool {

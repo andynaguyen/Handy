@@ -16,6 +16,7 @@
     "history": "History",
     "stats": "Stats",
     "dictionary": "Dictionary",
+    "style": "Style",
     "debug": "Debug",
     "about": "About"
   },
@@ -517,6 +518,33 @@
         "duplicate": "A snippet for \"{{trigger}}\" already exists",
         "remove": "Remove {{trigger}}"
       }
+    },
+    "style": {
+      "intro": "Handy formats each dictation for the app in front when you start recording. Apps without a rule use Formal.",
+      "styles": {
+        "formal": {
+          "name": "Formal",
+          "description": "Caps + punctuation",
+          "example": "Hey, are you free for lunch tomorrow? Let's do 12 if that works for you."
+        },
+        "casual": {
+          "name": "Casual",
+          "description": "Caps + less punctuation",
+          "example": "Hey are you free for lunch tomorrow? Let's do 12 if that works for you"
+        },
+        "veryCasual": {
+          "name": "Very casual",
+          "description": "No caps + less punctuation",
+          "example": "hey are you free for lunch tomorrow? let's do 12 if that works for you"
+        }
+      },
+      "apps": {
+        "title": "Apps",
+        "add": "Add an open app",
+        "empty": "No app rules yet. Every app uses Formal.",
+        "remove": "Remove {{app}}"
+      },
+      "macOSOnly": "Per-app style is only available on macOS. Dictations use Formal."
     },
     "history": {
       "title": "History",

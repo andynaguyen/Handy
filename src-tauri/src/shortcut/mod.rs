@@ -852,6 +852,15 @@ pub fn update_snippets(app: AppHandle, snippets: Vec<settings::Snippet>) -> Resu
 
 #[tauri::command]
 #[specta::specta]
+pub fn update_app_styles(app: AppHandle, rules: Vec<settings::AppStyleRule>) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.app_styles = rules;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_word_correction_threshold_setting(
     app: AppHandle,
     threshold: f64,

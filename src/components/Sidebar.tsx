@@ -8,6 +8,7 @@ import {
   History,
   Info,
   Cpu,
+  MessageSquareText,
 } from "lucide-react";
 import HandyTextLogo from "./icons/HandyTextLogo";
 import HandyHand from "./icons/HandyHand";
@@ -21,6 +22,7 @@ import {
   HistorySettings,
   StatsSettings,
   DictionarySettings,
+  StyleSettings,
   DebugSettings,
   AboutSettings,
   ModelsSettings,
@@ -68,6 +70,12 @@ export const SECTIONS_CONFIG = {
     labelKey: "sidebar.dictionary",
     icon: BookA,
     component: DictionarySettings,
+    enabled: () => true,
+  },
+  style: {
+    labelKey: "sidebar.style",
+    icon: MessageSquareText,
+    component: StyleSettings,
     enabled: () => true,
   },
   models: {

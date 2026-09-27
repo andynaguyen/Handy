@@ -340,6 +340,14 @@ async updateSnippets(snippets: Snippet[]) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+async updateAppStyles(rules: AppStyleRule[]) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_app_styles", { rules }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 /**
  * Temporarily unregister all bindings while the user is recording a
  * shortcut in the UI. This avoids firing actions while keys are recorded.
@@ -560,6 +568,12 @@ async cancelOperation() : Promise<void> {
 },
 async isPortable() : Promise<boolean> {
     return await TAURI_INVOKE("is_portable");
+},
+/**
+ * Running apps the user can add a writing style rule for. Empty off macOS.
+ */
+async getRunningApps() : Promise<RunningApp[]> {
+    return await TAURI_INVOKE("get_running_apps");
 },
 async isUpdateChecksLocked() : Promise<boolean> {
     return await TAURI_INVOKE("is_update_checks_locked");
@@ -1018,7 +1032,7 @@ whats_new_last_seen_version?: string; selected_model?: string; onboarding_comple
  * Which input channel to use on the selected microphone device.
  * None means "average all channels" (original behavior).
  */
-selected_channel?: number | null; clamshell_microphone?: string | null; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; snippets?: Snippet[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; 
+selected_channel?: number | null; clamshell_microphone?: string | null; selected_output_device?: string | null; translate_to_english?: boolean; selected_language?: string; overlay_position?: OverlayPosition; debug_mode?: boolean; log_level?: LogLevel; custom_words?: string[]; snippets?: Snippet[]; app_styles?: AppStyleRule[]; model_unload_timeout?: ModelUnloadTimeout; word_correction_threshold?: number; history_limit?: number; recording_retention_period?: RecordingRetentionPeriod; paste_method?: PasteMethod; clipboard_handling?: ClipboardHandling; auto_submit?: boolean; auto_submit_key?: AutoSubmitKey; 
 /**
  * Ending a dictation with `voice_submit_keyword` stops recording on the
  * following pause, removes the keyword, and presses `auto_submit_key`.
@@ -1046,6 +1060,14 @@ vad_backend?: VadBackend;
  * `overlay_position` (position `none` → style `None`).
  */
 overlay_style?: OverlayStyle }
+/**
+ * Writing style for dictations started while an app is frontmost (macOS).
+ */
+export type AppStyleRule = { bundle_id: string; 
+/**
+ * Display name, captured when the rule was added.
+ */
+app_name: string; style: WritingStyle }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1064,11 +1086,11 @@ date: string; words: number; transcriptions: number;
  * Words from transcriptions with a recorded duration. Entries backfilled
  * from history have none, so words per minute uses this instead of `words`.
  */
-timed_words: number; duration_ms: number;
+timed_words: number; duration_ms: number; 
 /**
  * Distinct apps dictated into. 0 when no dictation recorded an app.
  */
-apps_used: number;
+apps_used: number; 
 /**
  * App that received the most words, or None when no app was recorded.
  */
@@ -1140,6 +1162,10 @@ export type PasteMethod = "ctrl_v" | "direct" | "none" | "shift_insert" | "ctrl_
 export type PermissionAccess = "allowed" | "denied" | "unknown"
 export type PostProcessProvider = { id: string; label: string; base_url: string; allow_base_url_edit?: boolean; models_endpoint?: string | null; supports_structured_output?: boolean }
 export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "weeks_2" | "months_3"
+/**
+ * An app that could get a writing style rule.
+ */
+export type RunningApp = { bundle_id: string; name: string }
 export type SecretMap = Partial<{ [key in string]: string }>
 export type SecureInputStatus = { 
 /**
@@ -1238,6 +1264,22 @@ export type TranscribeAcceleratorSetting = "auto" | "cpu" | "gpu"
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
 export type VadBackend = "silero" | "earshot"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }
+/**
+ * How dictated text is formatted before it's pasted.
+ */
+export type WritingStyle = 
+/**
+ * Caps and punctuation: the text as transcribed.
+ */
+"formal" | 
+/**
+ * Caps, no commas, no trailing period.
+ */
+"casual" | 
+/**
+ * Casual plus lowercase sentence starts and a lowercase "i".
+ */
+"very_casual"
 
 /** tauri-specta globals **/
 
