@@ -14,8 +14,7 @@
     "history": "Lịch sử",
     "stats": "Thống kê",
     "dictionary": "Từ điển",
-    "debug": "Gỡ lỗi",
-    "about": "Giới thiệu"
+    "debug": "Gỡ lỗi"
   },
   "onboarding": {
     "subtitle": "Để bắt đầu, hãy chọn một mô hình chuyển đổi giọng nói",
@@ -670,14 +669,6 @@
         "title": "Hỗ trợ phát triển",
         "description": "Giúp chúng tôi tiếp tục xây dựng Handy",
         "button": "Quyên góp"
-      },
-      "acknowledgments": {
-        "title": "Lời cảm ơn",
-        "ggml": {
-          "title": "ggml",
-          "description": "Suy luận hiệu suất cao của mô hình nhận dạng giọng nói tự động Whisper của OpenAI",
-          "details": "Handy sử dụng ggml để xử lý chuyển đổi giọng nói thành văn bản nhanh, cục bộ. Cảm ơn công việc tuyệt vời của Georgi Gerganov và các cộng tác viên."
-        }
       },
       "whatsNewUpdates": {
         "label": "Hiển thị điểm mới",

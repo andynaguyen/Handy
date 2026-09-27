@@ -14,8 +14,7 @@
     "history": "履歴",
     "stats": "統計",
     "dictionary": "辞書",
-    "debug": "デバッグ",
-    "about": "概要"
+    "debug": "デバッグ"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -670,14 +669,6 @@
         "title": "開発を支援",
         "description": "Handy の開発を支援してください",
         "button": "寄付する"
-      },
-      "acknowledgments": {
-        "title": "謝辞",
-        "ggml": {
-          "title": "ggml",
-          "description": "オンデバイス機械学習推論のための高性能テンソルライブラリ",
-          "details": "Handy のローカルの音声からテキストへの文字起こしは transcribe.cpp と ggml を基盤としています。Georgi Gerganov 氏と貢献者の皆様の素晴らしい仕事に感謝します。"
-        }
       },
       "whatsNewUpdates": {
         "label": "新機能を表示",

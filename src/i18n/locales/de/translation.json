@@ -14,8 +14,7 @@
     "history": "Verlauf",
     "stats": "Statistik",
     "dictionary": "Wörterbuch",
-    "debug": "Debug",
-    "about": "Info"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
@@ -670,14 +669,6 @@
         "title": "Entwicklung unterstützen",
         "description": "Hilf uns, Handy weiterzuentwickeln",
         "button": "Spenden"
-      },
-      "acknowledgments": {
-        "title": "Danksagungen",
-        "ggml": {
-          "title": "ggml",
-          "description": "Hochleistungs-Inferenz des Whisper-Spracherkennungsmodells von OpenAI",
-          "details": "Handy verwendet ggml für schnelle, lokale Sprach-zu-Text-Verarbeitung. Dank an Georgi Gerganov und die Mitwirkenden für ihre großartige Arbeit."
-        }
       },
       "whatsNewUpdates": {
         "label": "Neuerungen anzeigen",

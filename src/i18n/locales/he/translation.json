@@ -14,8 +14,7 @@
     "history": "היסטוריה",
     "stats": "סטטיסטיקה",
     "dictionary": "מילון",
-    "debug": "ניפוי שגיאות",
-    "about": "אודות"
+    "debug": "ניפוי שגיאות"
   },
   "onboarding": {
     "subtitle": "כדי להתחיל, בחר מודל תמלול",
@@ -672,14 +671,6 @@
         "title": "תמיכה בפיתוח",
         "description": "עזור לנו להמשיך לבנות את Handy",
         "button": "תרומה"
-      },
-      "acknowledgments": {
-        "title": "תודות",
-        "ggml": {
-          "title": "ggml",
-          "description": "הסקה מהירה לביצועים גבוהים עבור מודל זיהוי הדיבור Whisper של OpenAI",
-          "details": "Handy משתמש ב-ggml לתמלול מהיר ומקומי. תודה לעבודה המדהימה של Georgi Gerganov וכל התורמים."
-        }
       },
       "whatsNewUpdates": {
         "label": "הצג מה חדש",

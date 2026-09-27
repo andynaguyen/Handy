@@ -14,8 +14,7 @@
     "history": "Geçmiş",
     "stats": "İstatistikler",
     "dictionary": "Sözlük",
-    "debug": "Hata Ayıklama",
-    "about": "Hakkında"
+    "debug": "Hata Ayıklama"
   },
   "onboarding": {
     "subtitle": "Başlamak için bir transkripsiyon modeli seçin",
@@ -670,14 +669,6 @@
         "title": "Geliştirmeyi Destekle",
         "description": "Handy'yi geliştirmeye devam etmemize yardımcı olun",
         "button": "Bağış Yap"
-      },
-      "acknowledgments": {
-        "title": "Teşekkürler",
-        "ggml": {
-          "title": "ggml",
-          "description": "Cihaz üzerinde makine öğrenmesi çıkarımı için yüksek performanslı tensör kütüphanesi",
-          "details": "Handy'nin yerel konuşmadan metne dönüştürme özelliği transcribe.cpp ve ggml üzerine kuruludur. Georgi Gerganov'a ve katkıda bulunanlara harika çalışmaları için teşekkür ederiz."
-        }
       },
       "whatsNewUpdates": {
         "label": "Yenilikleri Göster",

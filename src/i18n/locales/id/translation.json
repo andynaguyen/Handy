@@ -14,8 +14,7 @@
     "history": "Riwayat",
     "stats": "Statistik",
     "dictionary": "Kamus",
-    "debug": "Debug",
-    "about": "Tentang"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "Untuk memulai, pilih model transkripsi",
@@ -674,14 +673,6 @@
         "title": "Dukung Pengembangan",
         "description": "Bantu kami terus mengembangkan Handy",
         "button": "Donasi"
-      },
-      "acknowledgments": {
-        "title": "Ucapan Terima Kasih",
-        "ggml": {
-          "title": "ggml",
-          "description": "Pustaka tensor berkinerja tinggi untuk inferensi pembelajaran mesin di perangkat",
-          "details": "Fitur ucapan-ke-teks lokal Handy dibangun menggunakan transcribe.cpp dan ggml. Terima kasih kepada Georgi Gerganov dan para kontributor atas karya luar biasa mereka."
-        }
       }
     }
   },

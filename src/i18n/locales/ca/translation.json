@@ -14,8 +14,7 @@
     "history": "Historial",
     "stats": "Estadístiques",
     "dictionary": "Diccionari",
-    "debug": "Depuració",
-    "about": "Quant a"
+    "debug": "Depuració"
   },
   "onboarding": {
     "subtitle": "Per començar, trieu un model de transcripció",
@@ -676,14 +675,6 @@
         "title": "Dona suport al desenvolupament",
         "description": "Ajudeu-nos a continuar desenvolupant el Handy",
         "button": "Feu una donació"
-      },
-      "acknowledgments": {
-        "title": "Agraïments",
-        "ggml": {
-          "title": "ggml",
-          "description": "Biblioteca de tensors d'alt rendiment per a la inferència d'aprenentatge automàtic al dispositiu",
-          "details": "La transcripció local de veu a text del Handy es basa en el transcribe.cpp i el ggml. Gràcies a la gran feina de Georgi Gerganov i dels col·laboradors."
-        }
       }
     }
   },

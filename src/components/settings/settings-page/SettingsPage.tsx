@@ -35,6 +35,7 @@ import { AudioFeedback } from "../AudioFeedback";
 import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { VolumeSlider } from "../VolumeSlider";
 import { ModelLanguageSettings } from "./ModelLanguageSettings";
+import { AboutTab } from "./AboutTab";
 
 const TABS = [
   { id: "keybinding", labelKey: "settings.advanced.groups.keybinding" },
@@ -44,6 +45,7 @@ const TABS = [
   { id: "transcription", labelKey: "settings.advanced.groups.transcription" },
   { id: "history", labelKey: "settings.advanced.groups.history" },
   { id: "experimental", labelKey: "settings.advanced.groups.experimental" },
+  { id: "about", labelKey: "settings.about.title" },
 ] as const;
 
 type TabId = (typeof TABS)[number]["id"];
@@ -154,6 +156,8 @@ export const SettingsPage: React.FC = () => {
           <VadBackendSelector descriptionMode="inline" grouped={true} />
         </SettingsGroup>
       )}
+
+      {activeTab === "about" && <AboutTab />}
     </div>
   );
 };

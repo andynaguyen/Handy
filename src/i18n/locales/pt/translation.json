@@ -14,8 +14,7 @@
     "history": "Histórico",
     "stats": "Estatísticas",
     "dictionary": "Dicionário",
-    "debug": "Depuração",
-    "about": "Sobre"
+    "debug": "Depuração"
   },
   "onboarding": {
     "subtitle": "Para começar, escolha um modelo de transcrição",
@@ -672,14 +671,6 @@
         "title": "Apoiar o Desenvolvimento",
         "description": "Ajude-nos a continuar construindo o Handy",
         "button": "Doar"
-      },
-      "acknowledgments": {
-        "title": "Agradecimentos",
-        "ggml": {
-          "title": "ggml",
-          "description": "Inferência de alto desempenho do modelo de reconhecimento automático de fala Whisper da OpenAI",
-          "details": "O Handy usa ggml para processamento rápido e local de fala para texto. Agradecemos ao incrível trabalho de Georgi Gerganov e colaboradores."
-        }
       },
       "whatsNewUpdates": {
         "label": "Mostrar novidades",

@@ -14,8 +14,7 @@
     "history": "Geschiedenis",
     "stats": "Statistieken",
     "dictionary": "Woordenboek",
-    "debug": "Probleemoplossing",
-    "about": "Over Handy"
+    "debug": "Probleemoplossing"
   },
   "onboarding": {
     "subtitle": "Kies een transcriptiemodel om aan de slag te gaan",
@@ -674,14 +673,6 @@
         "title": "Ontwikkeling ondersteunen",
         "description": "Help ons om te blijven bouwen aan Handy",
         "button": "Doneren"
-      },
-      "acknowledgments": {
-        "title": "Dankbetuigingen",
-        "ggml": {
-          "title": "ggml",
-          "description": "Krachtige tensorbibliotheek voor lokale AI-verwerking",
-          "details": "Handy's lokale spraak-naar-tekst is gebouwd op transcribe.cpp en ggml. Met dank aan het geweldige werk van Georgi Gerganov en alle bijdragers."
-        }
       }
     }
   },

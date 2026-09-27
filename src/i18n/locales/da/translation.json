@@ -14,8 +14,7 @@
     "history": "Historik",
     "stats": "Statistik",
     "dictionary": "Ordbog",
-    "debug": "Fejlfinding",
-    "about": "Om"
+    "debug": "Fejlfinding"
   },
   "onboarding": {
     "subtitle": "For at komme i gang skal du vælge en transskriptionsmodel",
@@ -674,14 +673,6 @@
         "title": "Støt udviklingen",
         "description": "Hjælp os med at fortsætte udviklingen af Handy",
         "button": "Donér"
-      },
-      "acknowledgments": {
-        "title": "Anerkendelser",
-        "ggml": {
-          "title": "ggml",
-          "description": "Højtydende tensor-bibliotek til maskinlæringsinferens på enheden",
-          "details": "Handys lokale tale-til-tekst funktionalitet er bygget på transcribe.cpp og ggml. Tak for det fantastiske arbejde af Georgi Gerganov og bidragyderne."
-        }
       }
     }
   },

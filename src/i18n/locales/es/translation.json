@@ -14,8 +14,7 @@
     "history": "Historial",
     "stats": "Estadísticas",
     "dictionary": "Diccionario",
-    "debug": "Depuración",
-    "about": "Acerca de"
+    "debug": "Depuración"
   },
   "onboarding": {
     "subtitle": "Para comenzar, elige un modelo de transcripción",
@@ -672,14 +671,6 @@
         "title": "Apoyar el desarrollo",
         "description": "Ayúdanos a continuar construyendo Handy",
         "button": "Donar"
-      },
-      "acknowledgments": {
-        "title": "Reconocimientos",
-        "ggml": {
-          "title": "ggml",
-          "description": "Biblioteca de tensores de alto rendimiento para inferencia de aprendizaje automático en el dispositivo",
-          "details": "El habla a texto local de Handy está construido sobre transcribe.cpp y ggml. Gracias al increíble trabajo de Georgi Gerganov y colaboradores."
-        }
       },
       "whatsNewUpdates": {
         "label": "Mostrar novedades",

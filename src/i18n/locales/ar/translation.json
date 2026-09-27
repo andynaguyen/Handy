@@ -14,7 +14,6 @@
     "stats": "الإحصائيات",
     "dictionary": "القاموس",
     "debug": "تصحيح الأخطاء",
-    "about": "حول",
     "models": "النماذج"
   },
   "onboarding": {
@@ -658,14 +657,6 @@
         "title": "دعم التطوير",
         "description": "ساعدنا في مواصلة بناء Handy",
         "button": "تبرع"
-      },
-      "acknowledgments": {
-        "title": "شكر وتقدير",
-        "ggml": {
-          "title": "ggml",
-          "description": "استنتاج عالي الأداء لنموذج التعرف التلقائي على الكلام Whisper من OpenAI",
-          "details": ".يستخدم Handy برنامج ggml لمعالجة سريعة ومحلية لتحويل الكلام إلى نص. شكراً للعمل الرائع الذي قام به Georgi Gerganov والمساهمون"
-        }
       },
       "whatsNewUpdates": {
         "label": "إظهار الجديد",

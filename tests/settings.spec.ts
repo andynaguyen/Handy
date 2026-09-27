@@ -50,6 +50,7 @@ test("shows the Experimental tab only when experimental is on", async ({
     "Output",
     "Transcription",
     "History",
+    "About",
   ]);
 
   // The experimental toggle is the last switch on the App tab
@@ -58,8 +59,28 @@ test("shows the Experimental tab only when experimental is on", async ({
     .locator("label", { has: page.getByRole("checkbox") })
     .last()
     .click();
+  await expect(page.getByRole("tab").last()).toHaveText("About");
   await page.getByRole("tab", { name: "Experimental" }).click();
   await expect(
     page.getByText("Keep Mic Open Between Transcriptions"),
   ).toBeVisible();
+});
+
+test("shows About as the last tab", async ({ page }) => {
+  await page.goto("/tests/fixtures/settings.html?experimental=1");
+  await expect(page.getByRole("tab").last()).toHaveText("About");
+
+  await page.getByRole("tab", { name: "About" }).click();
+  await expect(
+    page.getByText("Application Language", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Version", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Support Development", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Source Code", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("App Data Directory", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByText("Start Hidden")).toBeHidden();
 });

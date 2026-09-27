@@ -14,8 +14,7 @@
     "history": "歷史紀錄",
     "stats": "統計",
     "dictionary": "詞典",
-    "debug": "偵錯",
-    "about": "關於"
+    "debug": "偵錯"
   },
   "onboarding": {
     "subtitle": "首先，請選擇一種模型",
@@ -670,14 +669,6 @@
         "title": "支持開發",
         "description": "幫助我們繼續開發 Handy",
         "button": "捐贈"
-      },
-      "acknowledgments": {
-        "title": "致謝",
-        "ggml": {
-          "title": "ggml",
-          "description": "針對 OpenAI Whisper 自動語音辨識模型的高效能推理引擎",
-          "details": "Handy 使用 ggml 進行快速的本機語音轉文字處理。感謝 Georgi Gerganov 和貢獻者們的傑出工作"
-        }
       },
       "whatsNewUpdates": {
         "label": "顯示新功能",

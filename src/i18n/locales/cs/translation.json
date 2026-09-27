@@ -14,8 +14,7 @@
     "history": "Historie",
     "stats": "Statistiky",
     "dictionary": "Slovník",
-    "debug": "Ladění",
-    "about": "O aplikaci"
+    "debug": "Ladění"
   },
   "onboarding": {
     "subtitle": "Pro začátek vyberte model pro přepis",
@@ -674,14 +673,6 @@
         "title": "Podpořte vývoj",
         "description": "Pomozte nám pokračovat ve vývoji Handy",
         "button": "Přispět"
-      },
-      "acknowledgments": {
-        "title": "Poděkování",
-        "ggml": {
-          "title": "ggml",
-          "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
-          "details": "Handy používá ggml pro rychlé lokální zpracování řeči na text. Díky skvělé práci Georgiho Gerganova a přispěvatelů."
-        }
       },
       "whatsNewUpdates": {
         "label": "Zobrazovat novinky",

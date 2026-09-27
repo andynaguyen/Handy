@@ -16,8 +16,7 @@
     "stats": "Stats",
     "dictionary": "Dictionary",
     "style": "Style",
-    "debug": "Debug",
-    "about": "About"
+    "debug": "Debug"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -716,14 +715,6 @@
         "title": "Support Development",
         "description": "Help us continue building Handy",
         "button": "Donate"
-      },
-      "acknowledgments": {
-        "title": "Acknowledgments",
-        "ggml": {
-          "title": "ggml",
-          "description": "High-performance tensor library for on-device machine learning inference",
-          "details": "Handy's local speech-to-text is built on transcribe.cpp and ggml. Thanks to the amazing work by Georgi Gerganov and contributors."
-        }
       }
     }
   },

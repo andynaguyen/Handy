@@ -5,7 +5,6 @@ import {
   ChartColumn,
   FlaskConical,
   History,
-  Info,
   Cpu,
   MessageSquareText,
   Settings,
@@ -22,7 +21,6 @@ import {
   DictionarySettings,
   StyleSettings,
   DebugSettings,
-  AboutSettings,
   ModelsSettings,
 } from "./settings";
 
@@ -76,12 +74,6 @@ export const SECTIONS_CONFIG = {
     component: ModelsSettings,
     enabled: () => true,
   },
-  settings: {
-    labelKey: "sidebar.settings",
-    icon: Settings,
-    component: SettingsPage,
-    enabled: () => true,
-  },
   debug: {
     labelKey: "sidebar.debug",
     icon: FlaskConical,
@@ -89,10 +81,10 @@ export const SECTIONS_CONFIG = {
     enabled: (settings) => settings?.debug_mode ?? false,
     secondary: true,
   },
-  about: {
-    labelKey: "sidebar.about",
-    icon: Info,
-    component: AboutSettings,
+  settings: {
+    labelKey: "sidebar.settings",
+    icon: Settings,
+    component: SettingsPage,
     enabled: () => true,
     secondary: true,
   },
