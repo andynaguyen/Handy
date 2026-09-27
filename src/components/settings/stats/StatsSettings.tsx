@@ -161,9 +161,16 @@ export const StatsSettings: React.FC = () => {
   const tabStopDate = focusDate ?? toDateKey(view.today);
   const activeUsage = activeDate ? view.usageByDate.get(activeDate) : undefined;
 
-  const showDay = (cell: HTMLElement, date: string) => {
-    activeCellRef.current = cell;
-    setActiveDate(date);
+  // Empty days get no popover; their aria-label already says 0 words.
+  const showDay = (
+    element: HTMLElement,
+    cell: { date: string; words: number },
+  ) => {
+    if (cell.words === 0) {
+      return;
+    }
+    activeCellRef.current = element;
+    setActiveDate(cell.date);
   };
 
   const moveFocus = (
@@ -269,17 +276,15 @@ export const StatsSettings: React.FC = () => {
                     role="img"
                     data-date={cell.date}
                     tabIndex={cell.date === tabStopDate ? 0 : -1}
-                    aria-label={longDateFormat.format(parseDateKey(cell.date))}
+                    aria-label={`${longDateFormat.format(parseDateKey(cell.date))}, ${t("settings.stats.dayPopover.words")}: ${number.format(cell.words)}`}
                     aria-describedby={
                       cell.date === activeDate ? DAY_POPOVER_ID : undefined
                     }
-                    onMouseEnter={(event) =>
-                      showDay(event.currentTarget, cell.date)
-                    }
+                    onMouseEnter={(event) => showDay(event.currentTarget, cell)}
                     onMouseLeave={() => setActiveDate(null)}
                     onFocus={(event) => {
                       setFocusDate(cell.date);
-                      showDay(event.currentTarget, cell.date);
+                      showDay(event.currentTarget, cell);
                     }}
                     onBlur={() => setActiveDate(null)}
                     onKeyDown={(event) => moveFocus(event, weekIndex, dayIndex)}
