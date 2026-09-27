@@ -1,6 +1,6 @@
 use crate::audio_toolkit::{
     apply_custom_words, detect_output_language, normalize_transcription_output,
-    remove_filler_words, strip_trailing_keyword, OutputLanguageEvidence,
+    remove_filler_words, scrub_before_keyword, strip_trailing_keyword, OutputLanguageEvidence,
 };
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::model::{EngineType, ModelManager};
@@ -308,6 +308,9 @@ pub struct RecordingTranscript {
     pub text: String,
     /// The recording ended with the voice-submit keyword.
     pub submit: bool,
+    /// Text before the scrub keyword was thrown away, so an empty `text` is
+    /// what the user asked for.
+    pub scrubbed: bool,
 }
 
 /// Raw engine output before custom-word correction and filler removal.
@@ -324,6 +327,17 @@ fn split_voice_submit(raw: String, keyword: Option<&str>) -> (String, bool) {
     match keyword.and_then(|keyword| strip_trailing_keyword(&raw, keyword)) {
         Some(rest) => (rest, true),
         None => (raw, false),
+    }
+}
+
+/// Keep only what follows the last scrub keyword. Runs right after the
+/// voice-submit split, on raw engine text for the same reason, so every later
+/// step (custom words, fillers, style, snippets, paste, history) sees the
+/// scrubbed text.
+fn apply_scrub(text: String, keyword: &str) -> (String, bool) {
+    match scrub_before_keyword(&text, keyword) {
+        Some(rest) => (rest, true),
+        None => (text, false),
     }
 }
 
@@ -1206,6 +1220,7 @@ impl TranscriptionManager {
 
         let settings = get_settings(&self.app_handle);
         let (text, submit) = split_voice_submit(finalized.text, voice_submit_keyword);
+        let (text, scrubbed) = apply_scrub(text, &settings.scrub_keyword);
         // Streaming models do not receive a decode prompt, so custom words
         // always go through the shared fuzzy post-correction path.
         let filtered = post_process_transcription_text(
@@ -1220,6 +1235,7 @@ impl TranscriptionManager {
         Ok(Some(RecordingTranscript {
             text: filtered,
             submit,
+            scrubbed,
         }))
     }
 
@@ -1313,6 +1329,7 @@ impl TranscriptionManager {
         // whisper-kind run extension), so they still get fuzzy correction here,
         // same as the ONNX engines.
         let (text, submit) = split_voice_submit(raw.text, voice_submit_keyword);
+        let (text, scrubbed) = apply_scrub(text, &settings.scrub_keyword);
         let filtered_result = post_process_transcription_text(
             text,
             &settings,
@@ -1354,6 +1371,7 @@ impl TranscriptionManager {
         Ok(RecordingTranscript {
             text: final_result,
             submit,
+            scrubbed,
         })
     }
 

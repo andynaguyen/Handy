@@ -469,6 +469,41 @@ pub fn strip_trailing_keyword(text: &str, keyword: &str) -> Option<String> {
     Some(rest.to_string())
 }
 
+/// If `text` contains the spoken scrub `keyword`, returns only what follows its
+/// last occurrence, with leading separators trimmed and the first letter
+/// capitalized; otherwise `None`. Words match like [`strip_trailing_keyword`],
+/// so "Scrub that." and ", scrub that," both count. An empty keyword never
+/// matches. A common keyword also fires mid-sentence: with "scrub that",
+/// "Please scrub that pan tonight." becomes "Pan tonight.", which is why the
+/// keyword is configurable.
+pub fn scrub_before_keyword(text: &str, keyword: &str) -> Option<String> {
+    let keyword_keys: Vec<String> = keyword.split_whitespace().map(build_match_key).collect();
+    if keyword_keys.is_empty() || keyword_keys.iter().any(String::is_empty) {
+        return None;
+    }
+
+    let tokens: Vec<&str> = text.split_whitespace().collect();
+    let keys: Vec<String> = tokens.iter().map(|token| build_match_key(token)).collect();
+    let start = keys
+        .windows(keyword_keys.len())
+        .rposition(|window| window == keyword_keys.as_slice())?;
+
+    // `split_whitespace` yields subslices of `text`, so the last matched
+    // token's end marks where the kept text begins.
+    let last = tokens[start + keyword_keys.len() - 1];
+    let keyword_end = last.as_ptr() as usize - text.as_ptr() as usize + last.len();
+    let rest = text[keyword_end..].trim_start_matches(|c: char| {
+        c.is_whitespace()
+            || ".,;:!?-\u{2013}\u{2014}\u{3001}\u{3002}\u{FF0C}\u{FF01}\u{FF1F}".contains(c)
+    });
+
+    let mut chars = rest.chars();
+    Some(match chars.next() {
+        Some(first) => first.to_uppercase().chain(chars).collect(),
+        None => String::new(),
+    })
+}
+
 /// Replaces each spoken snippet trigger in `text` with its expansion. Triggers
 /// match whole words case-insensitively on their letters and digits, like the
 /// voice-submit keyword, so "My email." matches the trigger "my email" but
@@ -628,6 +663,104 @@ mod tests {
             strip_trailing_keyword("submit submit", "submit").as_deref(),
             Some("submit")
         );
+    }
+
+    #[test]
+    fn scrub_before_keyword_keeps_text_after_the_keyword() {
+        assert_eq!(
+            scrub_before_keyword(
+                "Let's meet Tuesday. Scrub that. Let's meet Wednesday.",
+                "scrub that"
+            )
+            .as_deref(),
+            Some("Let's meet Wednesday.")
+        );
+        assert_eq!(
+            scrub_before_keyword("Hi Bob, scrub that, hey Alice, how are you?", "scrub that")
+                .as_deref(),
+            Some("Hey Alice, how are you?")
+        );
+        assert_eq!(
+            scrub_before_keyword("Please scrub that pan tonight.", "scrub that").as_deref(),
+            Some("Pan tonight.")
+        );
+    }
+
+    #[test]
+    fn scrub_before_keyword_uses_the_last_occurrence() {
+        assert_eq!(
+            scrub_before_keyword("One. Scrub that. Two. Scrub that. Three.", "scrub that")
+                .as_deref(),
+            Some("Three.")
+        );
+    }
+
+    #[test]
+    fn scrub_before_keyword_returns_empty_when_nothing_follows() {
+        assert_eq!(
+            scrub_before_keyword("Draft email. Scrub that.", "scrub that").as_deref(),
+            Some("")
+        );
+        assert_eq!(
+            scrub_before_keyword("scrub that", "scrub that").as_deref(),
+            Some("")
+        );
+        assert_eq!(
+            scrub_before_keyword("Draft email, scrub that!  ", "scrub that").as_deref(),
+            Some("")
+        );
+    }
+
+    #[test]
+    fn scrub_before_keyword_handles_punctuation_variants() {
+        for text in [
+            "Old text. Scrub that. New text",
+            "Old text, scrub that, new text",
+            "Old text scrub that! new text",
+            "Old text SCRUB THAT? new text",
+            "Old text scrub that new text",
+            "Old text \"scrub that\" new text",
+            "Old text scrub that - new text",
+            "Old text scrub that \u{2014} new text",
+        ] {
+            assert_eq!(
+                scrub_before_keyword(text, "scrub that").as_deref(),
+                Some("New text"),
+                "{text}"
+            );
+        }
+    }
+
+    #[test]
+    fn scrub_before_keyword_supports_custom_keywords() {
+        assert_eq!(
+            scrub_before_keyword(
+                "Hello there. Start over please. Goodbye.",
+                "start over please"
+            )
+            .as_deref(),
+            Some("Goodbye.")
+        );
+        assert_eq!(
+            scrub_before_keyword("Hello there. Restart, goodbye.", "Restart").as_deref(),
+            Some("Goodbye.")
+        );
+        assert_eq!(
+            scrub_before_keyword("I will restart the server", "start"),
+            None
+        );
+    }
+
+    #[test]
+    fn scrub_before_keyword_leaves_other_text_alone() {
+        assert_eq!(
+            scrub_before_keyword("Scrub the pan, then that.", "scrub that"),
+            None
+        );
+        assert_eq!(scrub_before_keyword("", "scrub that"), None);
+        assert_eq!(scrub_before_keyword("Hi Bob, scrub that, hey", ""), None);
+        assert_eq!(scrub_before_keyword("Hi Bob, scrub that, hey", "   "), None);
+        assert_eq!(scrub_before_keyword("Hi Bob, -- hey", "--"), None);
     }
 
     /// Exercise the complete cleanup sequence with an explicitly selected

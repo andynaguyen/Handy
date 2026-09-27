@@ -161,6 +161,7 @@ const settingUpdaters: {
     commands.changeVoiceSubmitEnabledSetting(value as boolean),
   voice_submit_keyword: (value) =>
     commands.changeVoiceSubmitKeywordSetting(value as string),
+  scrub_keyword: (value) => commands.changeScrubKeywordSetting(value as string),
   history_limit: (value) => commands.updateHistoryLimit(value as number),
   post_process_enabled: (value) =>
     commands.changePostProcessEnabledSetting(value as boolean),

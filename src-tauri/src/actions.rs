@@ -784,9 +784,12 @@ impl ShortcutAction for TranscribeAction {
                         // transcription of the same audio. A finalize timeout is
                         // surfaced instead — the worker may still hold the engine,
                         // so a batch fallback would contend with it.
-                        // A keyword-only result is empty on purpose, not a failure.
+                        // A keyword-only or scrubbed-to-nothing result is empty
+                        // on purpose, not a failure.
                         Ok(Some(transcript))
-                            if transcript.submit || !transcript.text.trim().is_empty() =>
+                            if transcript.submit
+                                || transcript.scrubbed
+                                || !transcript.text.trim().is_empty() =>
                         {
                             Ok(transcript)
                         }

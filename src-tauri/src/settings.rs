@@ -482,6 +482,10 @@ pub struct AppSettings {
     pub voice_submit_enabled: bool,
     #[serde(default = "default_voice_submit_keyword")]
     pub voice_submit_keyword: String,
+    /// Saying this throws away everything dictated before it in the current
+    /// recording. Empty turns scrubbing off.
+    #[serde(default = "default_scrub_keyword")]
+    pub scrub_keyword: String,
     #[serde(default = "default_post_process_enabled")]
     pub post_process_enabled: bool,
     #[serde(default = "default_post_process_provider_id")]
@@ -660,6 +664,10 @@ fn default_app_styles() -> Vec<AppStyleRule> {
 
 pub fn default_voice_submit_keyword() -> String {
     "submit".to_string()
+}
+
+fn default_scrub_keyword() -> String {
+    "scrub that".to_string()
 }
 
 fn default_auto_submit() -> bool {
@@ -1002,6 +1010,7 @@ pub fn get_default_settings() -> AppSettings {
         auto_submit_key: AutoSubmitKey::default(),
         voice_submit_enabled: false,
         voice_submit_keyword: default_voice_submit_keyword(),
+        scrub_keyword: default_scrub_keyword(),
         post_process_enabled: default_post_process_enabled(),
         post_process_provider_id: default_post_process_provider_id(),
         post_process_providers: default_post_process_providers(),
@@ -1460,6 +1469,7 @@ mod tests {
         assert_eq!(settings.vad_backend, VadBackend::Silero);
         assert!(!settings.voice_submit_enabled);
         assert_eq!(settings.voice_submit_keyword, "submit");
+        assert_eq!(settings.scrub_keyword, "scrub that");
         assert_eq!(settings.app_styles, default_app_styles());
 
         // The 0.1 integer device index is cleared once for transcribe.cpp 0.2.

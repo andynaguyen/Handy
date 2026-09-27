@@ -50,6 +50,20 @@ test("opens on Dictation and switches tabs", async ({ page }) => {
   await expect(heading(page, "Experimental")).toBeVisible();
 });
 
+test("shows the Scrub Keyword row in Transcription > Cleanup", async ({
+  page,
+}) => {
+  await page.goto("/tests/fixtures/settings.html");
+  await page.getByRole("tab", { name: "Transcription" }).click();
+  const cleanup = page.locator("section", {
+    has: heading(page, "Cleanup"),
+  });
+  await expect(
+    cleanup.getByText("Scrub Keyword", { exact: true }),
+  ).toBeVisible();
+  await expect(cleanup.getByRole("textbox")).toHaveValue("scrub that");
+});
+
 test("shows the Experimental tab only when experimental is on", async ({
   page,
 }) => {

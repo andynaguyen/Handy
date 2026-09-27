@@ -418,6 +418,11 @@
       "fillerWordRemoval": {
         "title": "Remove Filler Words",
         "description": "Removes common hesitation words from transcriptions. Turn off to keep them."
+      },
+      "scrubKeyword": {
+        "title": "Scrub Keyword",
+        "description": "Say this to throw away everything before it and start over. Leave empty to turn off.",
+        "invalid": "Use words with letters or numbers, or leave it empty."
       }
     },
     "postProcessing": {

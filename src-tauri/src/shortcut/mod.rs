@@ -1031,6 +1031,24 @@ pub fn change_voice_submit_keyword_setting(app: AppHandle, keyword: String) -> R
     Ok(())
 }
 
+/// An empty keyword turns scrubbing off. Otherwise every word needs a letter
+/// or digit, like the voice submit keyword.
+#[tauri::command]
+#[specta::specta]
+pub fn change_scrub_keyword_setting(app: AppHandle, keyword: String) -> Result<(), String> {
+    let keyword = keyword.split_whitespace().collect::<Vec<_>>().join(" ");
+    if !keyword
+        .split_whitespace()
+        .all(|word| word.chars().any(char::is_alphanumeric))
+    {
+        return Err("Scrub keyword must contain letters or digits".to_string());
+    }
+    let mut settings = settings::get_settings(&app);
+    settings.scrub_keyword = keyword;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn change_auto_submit_key_setting(app: AppHandle, key: String) -> Result<(), String> {

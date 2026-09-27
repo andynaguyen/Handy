@@ -15,6 +15,7 @@ import { TypingToolSetting } from "../TypingTool";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AutoSubmit } from "../AutoSubmit";
 import { VoiceSubmit } from "../VoiceSubmit";
+import { ScrubKeyword } from "../ScrubKeyword";
 import { PostProcessingToggle } from "../PostProcessingToggle";
 import { PostProcessingSettingsApi } from "../PostProcessingSettingsApi";
 import { PostProcessingSettingsPrompts } from "../PostProcessingSettingsPrompts";
@@ -144,6 +145,7 @@ export const SettingsPage: React.FC = () => {
           <SettingsGroup title={t("settings.advanced.groups.cleanup")}>
             <FillerWordRemoval descriptionMode="inline" grouped={true} />
             <AppendTrailingSpace descriptionMode="inline" grouped={true} />
+            <ScrubKeyword grouped={true} />
           </SettingsGroup>
           <SettingsGroup title={t("settings.advanced.groups.pasting")}>
             <PasteMethodSetting descriptionMode="inline" grouped={true} />
