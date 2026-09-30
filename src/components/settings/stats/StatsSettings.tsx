@@ -70,7 +70,7 @@ export const StatsSettings: React.FC = () => {
   const { t, i18n } = useTranslation();
   const [days, setDays] = useState<DailyUsage[] | null>(null);
   const [error, setError] = useState(false);
-  const [rangeId, setRangeId] = useState<RangeId>("week");
+  const [rangeId, setRangeId] = useState<RangeId>("today");
   // The cell that takes Tab focus; arrow keys move it. Null means today.
   const [focusDate, setFocusDate] = useState<string | null>(null);
   const [activeDate, setActiveDate] = useState<string | null>(null);
