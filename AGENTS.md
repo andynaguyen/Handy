@@ -131,6 +131,10 @@ Settings are stored using Tauri's store plugin with reactive updates:
 
 The app enforces single instance behavior — launching when already running brings the settings window to front rather than creating a new process. Remote control flags (`--toggle-transcription`, etc.) work by launching a second instance that sends args to the running instance via `tauri_plugin_single_instance`, then exits.
 
+## GPUI port (`src-gpui/`)
+
+`src-gpui/` is a GPUI rewrite of this app with the same features and UI. It copies the `src-tauri/src` backend without Tauri and reads translations and release notes from `src/`. Read `src-gpui/README.md` before working in `src-gpui/`. A behavior change in the Tauri app or the React UI usually needs the same change in `src-gpui/`.
+
 ## Internationalization (i18n)
 
 All user-facing strings must use i18next translations. ESLint enforces this (no hardcoded strings in JSX).
